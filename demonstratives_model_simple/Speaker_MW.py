@@ -248,16 +248,35 @@ class Speaker:
 		costs = [x[1] for x in values]
 		softmaxed = self.Softmax_Utilities(costs,method='visualsearch',normalize=True)
 		Details = str(self.referent)+","+str(self.spos)+","+str(self.lpos)+","+str(self.latt)+","+str(words)+","+str(self.stau)+","+str(self.ltau)
-		if not self.verbose:
-			sys.stdout.write(self.method+","+values[0][0]+","+str(np.round(softmaxed[0],2))+","+Details+"\n")
-			sys.stdout.write(self.method+","+values[1][0]+","+str(np.round(softmaxed[1],2))+","+Details+"\n")
-			if words==3:
-				sys.stdout.write(self.method+","+values[2][0]+","+str(np.round(softmaxed[2],2))+","+Details+"\n")
-		else:
+		########################################################################################
+		# MW: Commented out the print statements below, because everything is saved to pandas dataframe now
+		# if not self.verbose:
+		# 	sys.stdout.write(self.method+","+values[0][0]+","+str(np.round(softmaxed[0],2))+","+Details+"\n")
+		# 	sys.stdout.write(self.method+","+values[1][0]+","+str(np.round(softmaxed[1],2))+","+Details+"\n")
+		# 	if words==3:
+		# 		sys.stdout.write(self.method+","+values[2][0]+","+str(np.round(softmaxed[2],2))+","+Details+"\n")
+		########################################################################################
+		# else:
+		if self.verbose: # MW: Changed else: to if self.verbose:, because I commented out if statement above.
 			sys.stdout.write(values[0][0]+"("+str(np.round(softmaxed[0],2))+"), "+values[1][0]+"("+str(np.round(softmaxed[1],2))+")")
 			if words==3:
 				sys.stdout.write(", "+values[2][0]+"("+str(np.round(softmaxed[2],2))+")")
 			sys.stdout.write("\n")
+		########################################################################################
+		# MW: Added the code block below to create output that can be written to pandas dataframe
+		for w in range(words):
+			self.output_dict["Model"].append(self.method)
+			self.output_dict["Word"].append(values[w][0])
+			self.output_dict["Cost"].append(np.round(costs[w], 3))
+			self.output_dict["Probability"].append(np.round(softmaxed[w], 2))
+			self.output_dict["Referent"].append(self.referent)
+			self.output_dict["Speaker_pos"].append(self.spos)
+			self.output_dict["Listener_pos"].append(self.lpos)
+			self.output_dict["Listener_att"].append(self.latt)
+			self.output_dict["WordNo"].append(words)
+			self.output_dict["SpeakerTau"].append(round(self.stau, 2))
+			self.output_dict["ListenerTau"].append(round(self.ltau, 2))
+		########################################################################################
 
 	def PrintHeader(self):
 		sys.stdout.write("Model,Word,Probability,Referent,Speaker_pos,Listener_pos,Listener_att,WordNo,SpeakerTau,ListenerTau\n")
