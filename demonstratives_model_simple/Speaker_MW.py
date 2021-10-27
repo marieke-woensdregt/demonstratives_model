@@ -61,7 +61,7 @@ class Speaker:
 		"""
 		Simple function to normalize a utility function
 		"""
-		utilities_scaled = [x+3 for x in utilities] # shift by 3 so we're on a 0-3 scale
+		utilities_scaled = [x+3 for x in values] # shift by 3 so we're on a 0-3 scale
 		return(utilities_scaled)
 
 	def Softmax_Utilities(self, utilities, method='utilities', normalize=True):
