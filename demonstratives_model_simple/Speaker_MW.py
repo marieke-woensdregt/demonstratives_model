@@ -3,7 +3,7 @@ import sys
 
 class Speaker:
 
-	def __init__(self, method=None, referent=0, lpos=0, latt=0, stau=0.01, ltau=0.01, verbose=False):
+	def __init__(self, output_dict, method=None, referent=0, lpos=0, latt=0, stau=0.01, ltau=0.01, verbose=False): # MW added output_dict input parameter
 		# Static prameters
 		self.ObjectNo = 4 # Four objects!
 		self.spos = 0 # speaker position
@@ -15,6 +15,9 @@ class Speaker:
 		self.stau = stau # speaker rationality
 		self.ltau = ltau # listener rationality
 		self.verbose = verbose
+		########################################################################################
+		self.output_dict = output_dict # MW added this to easily save output as pandas dataframe
+		########################################################################################
 		# Semantic models
 		self.modelcosts = {
 		'distance':{'este':self.Este_distance,'ese':self.Ese_distance,'aquel':self.Aquel_distance},
