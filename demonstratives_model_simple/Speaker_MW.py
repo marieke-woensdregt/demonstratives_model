@@ -49,7 +49,7 @@ class Speaker:
 		"""
 		Simple function to normalize a utility function
 		"""
-		utilities_scaled = [x - min(utilities) for x in utilities]
+		utilities_scaled = [x - min(values) for x in values]
 		if sum(utilities_scaled)==0:
 			return [1.0/len(utilities_scaled)] * len(utilities_scaled)
 		else:
