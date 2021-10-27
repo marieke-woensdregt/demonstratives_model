@@ -22,12 +22,12 @@ print(input_dataframe.columns)
 
 def get_prob_ranges_per_word(dataframe, model, stau, ltau):
 	"""
-	Takes a dataframe with model predictions, and returns the probability ranges per word+system combination, for a given speaker_rationality (stau) and listener_rationality (ltau)
-	:param dataframe: pandas dataframe containing at least the columns "
+	Takes a dataframe with model predictions, and returns the cost ranges and probability ranges per word+system combination, for a given speaker_rationality (stau) and listener_rationality (ltau)
+	:param dataframe: pandas dataframe containing at least the columns "Model", "SpeakerTau", "ListenerTau", "Word", "WordNo", "Cost", and "Probability"
 	:param model: string specifying the model: 'distance', 'person' or 'pdhybrid'
 	:param stau: float specifying speaker_rationality
 	:param ltau: float specifying listener_rationality
-	:return: a dictionary containing a numpy array of probabilities for each word+system combination
+	:return: two dictionaries: (1) a dictionary containing a numpy array of cost values for each word+system combination; (2) a dictionary containing a numpy array of probabilities for each word+system combination
 	"""
 	prob_range_dict = {"este_two":np.array([]),
 	"aquel_two":np.array([]),
