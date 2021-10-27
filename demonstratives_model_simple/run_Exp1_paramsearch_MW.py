@@ -10,8 +10,8 @@ listener_rationality = 1.
 speaker_rationality = 2.
 
 tau_start = 0.1
-tau_stop = 5.4
-tau_step = 0.5
+tau_stop = 0.61
+tau_step = 0.02
 
 output_dict = {"Model":[],
 			   "Word":[],
@@ -25,7 +25,7 @@ output_dict = {"Model":[],
 			   "SpeakerTau":[],
 			   "ListenerTau":[]}
 
-Model = Speaker_MW.Speaker(output_dict, stau=speaker_rationality,ltau=listener_rationality,verbose=False)
+Model = Speaker_MW.Speaker(output_dict, stau=speaker_rationality, ltau=listener_rationality, verbose=False)
 
 # Model.PrintHeader()  # MW: Got rid of this, because everything is being saved to a pandas dataframe now.
 
