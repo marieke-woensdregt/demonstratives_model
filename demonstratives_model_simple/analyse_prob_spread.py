@@ -20,7 +20,7 @@ print('')
 print(input_dataframe.columns)
 
 
-def get_prob_ranges_per_word(dataframe, model, stau, ltau):
+def get_ranges_per_word(dataframe, model, stau, ltau):
 	"""
 	Takes a dataframe with model predictions, and returns the cost ranges and probability ranges per word+system combination, for a given speaker_rationality (stau) and listener_rationality (ltau)
 	:param dataframe: pandas dataframe containing at least the columns "Model", "SpeakerTau", "ListenerTau", "Word", "WordNo", "Cost", and "Probability"
@@ -87,7 +87,7 @@ def turn_bins_used_dict_into_spread_dict(input_df, measure, range_min, range_max
 					   "n_bins_used":[]}
 	for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
 		for speaker_rationality in np.arange(tau_start, tau_stop, tau_step):
-			prob_range_dict, cost_range_dict = get_prob_ranges_per_word(input_df, model, speaker_rationality, listener_rationality)
+			prob_range_dict, cost_range_dict = get_ranges_per_word(input_df, model, speaker_rationality, listener_rationality)
 			if measure == "Cost":
 				n_bins_used_dict = bincount_ranges(cost_range_dict, range_min, range_max, n_bins, min_bin_usage)
 			elif measure == "Probability":
