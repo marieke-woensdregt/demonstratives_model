@@ -10,8 +10,8 @@ listener_rationality = 1.
 speaker_rationality = 2.
 
 tau_start = 0.1
-tau_stop = 0.61
-tau_step = 0.02
+tau_stop = 6.1
+tau_step = 0.1
 
 output_dict = {"Model":[],
 			   "Word":[],
