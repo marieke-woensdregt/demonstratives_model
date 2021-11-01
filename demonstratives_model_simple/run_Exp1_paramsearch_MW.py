@@ -9,6 +9,9 @@ start = time.time()
 listener_rationality = 1.
 speaker_rationality = 2.
 
+########################################################################################
+# MW added code below:
+
 tau_start = 0.1
 tau_stop = 1.2
 tau_step = 0.02
@@ -24,6 +27,8 @@ output_dict = {"Model":[],
 			   "WordNo":[],
 			   "SpeakerTau":[],
 			   "ListenerTau":[]}
+
+########################################################################################
 
 Model = Speaker_MW.Speaker(output_dict, stau=speaker_rationality, ltau=listener_rationality, verbose=False)
 
@@ -41,7 +46,7 @@ for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
 					for words in [2,3]:
 						Model.SetEvent(method=method, referent=referent, lpos=lpos)
 						Model.RunEvent(words=words,header=False)
-		output_dict = Model.output_dict # MW has to be updated every time, so each new speaker gets updated with the existing output_dict, and new data is written to the existing output_dict
+		output_dict = Model.output_dict # MW: has to be updated every time, so each new speaker gets updated with the existing output_dict, and new data is written to the existing output_dict
 
 
 
