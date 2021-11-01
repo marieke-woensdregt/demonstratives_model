@@ -20,7 +20,7 @@ class PragmaticSpeaker:
 			self.target=target
 		values = self.ComputeUtilities()
 		costs = [x[1] for x in values]
-		softmaxed = self.Softmax_utilities(costs, method='speaker',normalize=True)
+		softmaxed = self.Softmax_Utilities(costs, method='speaker',normalize=True)
 		return(softmaxed)
 		#sys.stdout.write(str(softmaxed))
 
