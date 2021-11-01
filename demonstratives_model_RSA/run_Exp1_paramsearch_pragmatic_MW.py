@@ -5,11 +5,7 @@ import sys
 import numpy as np
 import itertools
 
-
-########################################################################################
-# Comments from JJE:
-
-# itertools.chain(np.arange(0.1,0.5,0.1),np.arange(0.1,0.5,0.1))
+itertools.chain(np.arange(0.1,0.5,0.1),np.arange(0.1,0.5,0.1))
 
 # LEARNED FROM SIMULATIONS:
 
@@ -17,28 +13,6 @@ import itertools
 # FOR LISTENER: 1.1 PUTS .37 ON CLOSEST FOR 'ESTE'
 
 # FOR SPEAKER: >1 IT'S JUST CHANCE. RANGE SEEMS TO BE 0.1 TO 0.5
-########################################################################################
-
-
-########################################################################################
-# MW added code below:
-
-tau_start = 0.1
-tau_stop = 1.2
-tau_step = 0.02
-
-output_dict = {"Model":[],
-			   "Word":[],
-			   "Cost":[],
-			   "Probability":[],
-			   "Referent":[],
-			   "Speaker_pos":[],
-			   "Listener_pos":[],
-			   "Listener_att":[],
-			   "WordNo":[],
-			   "SpeakerTau":[],
-			   "ListenerTau":[]}
-########################################################################################
 
 sys.stdout.write("Model,Word,Probability,Referent,Speaker_pos,Listener_pos,Listener_att,WordNo,SpeakerTau,ListenerTau\n")
 
