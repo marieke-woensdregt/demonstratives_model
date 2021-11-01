@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 
 tau_start = 0.1
-tau_stop = 0.61
-tau_step = 0.01
+tau_stop = 6.1
+tau_step = 0.1
 
 n_bins = 20
 min_bin_usage = 1
