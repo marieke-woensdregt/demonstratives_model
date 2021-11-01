@@ -10,3 +10,6 @@
 /demonstratives_model_RSA/LiteralSpeaker_with_bug.py
 /demonstratives_model_RSA/PragmaticSpeaker_with_bug.py
 /demonstratives_model_RSA/PragmaticListener_with_bug.py
+.RData
+.Rhistory
+Getting started with PyMC3 - Work-through.ipynb
