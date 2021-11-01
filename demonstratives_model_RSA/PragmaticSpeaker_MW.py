@@ -42,7 +42,7 @@ class PragmaticSpeaker:
 		else:
 			return([a,c])
 
-	def normalize(self, utilities, type="listener"):
+	def normalize(self, utilities, type="listener"): #TODO: Work in the same changes that we made to Speaker.py in terms of separating this into two methods: normalizeUtilities() and normalizeSearchCost().
 		"""
 		Simple function to normalize a utility function
 		"""
