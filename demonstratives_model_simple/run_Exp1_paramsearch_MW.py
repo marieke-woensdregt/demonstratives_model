@@ -27,7 +27,6 @@ output_dict = {"Model":[],
 			   "WordNo":[],
 			   "SpeakerTau":[],
 			   "ListenerTau":[]}
-
 ########################################################################################
 
 Model = Speaker_MW.Speaker(output_dict, stau=speaker_rationality, ltau=listener_rationality, verbose=False)
