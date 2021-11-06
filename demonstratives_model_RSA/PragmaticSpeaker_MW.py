@@ -110,10 +110,13 @@ class PragmaticSpeaker:
 		else:
 			utterances = ['este','ese','aquel']
 		Details = str(self.target)+","+str(self.PL.LS.spos)+","+str(self.PL.LS.lpos)+","+str(self.PL.LS.latt)+","+str(self.words)+","+str(self.stau)+","+str(self.PL.LS.ltau)
-		sys.stdout.write(self.PL.LS.method+","+utterances[0]+","+str(np.round(probabilities[0],2))+","+Details+"\n")
-		sys.stdout.write(self.PL.LS.method+","+utterances[1]+","+str(np.round(probabilities[1],2))+","+Details+"\n")
-		if self.words==3:
-			sys.stdout.write(self.PL.LS.method+","+utterances[2]+","+str(np.round(probabilities[2],2))+","+Details+"\n")
+		########################################################################################
+		# MW: Commented out the print statements below, because everything is saved to pandas dataframe now
+		# sys.stdout.write(self.PL.LS.method+","+utterances[0]+","+str(np.round(probabilities[0],2))+","+Details+"\n")
+		# sys.stdout.write(self.PL.LS.method+","+utterances[1]+","+str(np.round(probabilities[1],2))+","+Details+"\n")
+		# if self.words==3:
+		# 	sys.stdout.write(self.PL.LS.method+","+utterances[2]+","+str(np.round(probabilities[2],2))+","+Details+"\n")
+		########################################################################################
 		########################################################################################
 		# MW: Added the code block below to create output that can be written to pandas dataframe
 		for w in range(self.words):
