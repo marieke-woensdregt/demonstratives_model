@@ -25,7 +25,7 @@ class PragmaticListener:
 			values = self.LS.ComputeUtilities(self.words)
 			costs = [x[1] for x in values]
 			utterances = [x[0] for x in values]
-			softmaxed = self.LS.Softmax_Utilities(costs,method='speaker')
+			softmaxed = self.LS.Softmax_Utilities(costs,method='visualsearch')
 			# TEMPO CODE FOR UNDERSTANDING SOFTMAX
 			#temp = [np.round(x,2) for x in softmaxed]
 			#sys.stdout.write(str(temp)+"\n")
