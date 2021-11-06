@@ -39,19 +39,23 @@ class PragmaticSpeaker:
 		else:
 			return([a,c])
 
-	def normalize(self, utilities, type="listener"):
+	def normalizeUtilities(self, values):
 		"""
 		Simple function to normalize a utility function
 		"""
-		if type=="listener":
-			utilities_scaled = [x+3 for x in utilities] # shift by 3 so we're on a 0-3 scale
-			return(utilities_scaled)
-		utilities_scaled = [x - min(utilities) for x in utilities]
+		utilities_scaled = [x - min(values) for x in values]
 		if sum(utilities_scaled)==0:
 			return [1.0/len(utilities_scaled)] * len(utilities_scaled)
 		else:
 			utilities_scaled = [x*1.0/max(utilities_scaled) for x in utilities_scaled]
 		#sys.stdout.write(str(utilities_scaled)+"\n")
+		return(utilities_scaled)
+
+	def normalizeSearchCost(self, values):
+		"""
+		Simple function to normalize a utility function
+		"""
+		utilities_scaled = [x+3 for x in values] # shift by 3 so we're on a 0-3 scale
 		return(utilities_scaled)
 
 	def Softmax_Utilities(self, utilities, method='listener', normalize=True):
