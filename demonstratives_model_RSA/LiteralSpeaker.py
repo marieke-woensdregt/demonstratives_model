@@ -64,24 +64,26 @@ class LiteralSpeaker:
 		utilities_scaled = [x+3 for x in values] # shift by 3 so we're on a 0-3 scale
 		return(utilities_scaled)
 
-	def Softmax_Utilities(self, utilities, method='listener', normalize=True):
+	def Softmax_Utilities(self, utilities, method='utilities', normalize=True):
 		"""
 		General function to softmax a utility function.
-		When normalize is true, utilities are first normalized
+		When normalize is true, utilities are first normalized.
+		methods = 'utilities' or 'visual search'.
+		For utilities it means you're getting word valuers. visual search means you're getting visual cost estimates
 		"""
-		if method=='listener':
+		if method=='utilities':
 			tau = self.ltau
 		else:
 			tau = self.stau #speaker
 		if normalize:
-			utilities = self.normalize(utilities, method)
+			if method=='utilities':
+				utilities = self.normalizeUtilities(utilities)
+			else:
+				utilities = self.normalizeSearchCost(utilities)
 		if sum(utilities)==0:
 			return [1.0/len(utilities)] * len(utilities)
 		Softmaxed = [np.exp(x*1.0/tau) for x in utilities]
 		Softmaxed = [x/sum(Softmaxed) for x in Softmaxed]
-		#if method=='listener':
-		#	temp = [np.round(x,2) for x in Softmaxed]
-		#	sys.stdout.write(str(temp)+"\n")
 		return(Softmaxed)
 
 	def Este_distance(self):
