@@ -167,7 +167,7 @@ class LiteralSpeaker:
 		# Use negative so that farther-away objects have lower utilities
 		Distance=[-np.abs(x-self.spos) for x in range(self.ObjectNo)]
 		# Now scale over 0-1 range and use these are core!
-		Utilities_core = self.normalize(Distance)
+		Utilities_core = self.normalizeUtilities(Distance)
 		if self.verbose:
 			sys.stdout.write("\tmain utilities: "+str(np.round(Utilities_core,2))+"\n")
 		# PART 2: ATTENTION UTILITY
@@ -176,7 +176,7 @@ class LiteralSpeaker:
 		if self.latt >= self.referent:
 			Utilities_attention = [1 if x<self.latt else 0 for x in range(self.ObjectNo)]
 			Utilities_attention = [x - min(Utilities_attention) for x in Utilities_attention] # will always be 0, but just to keep code consistent
-		Utilities_attention = self.normalize(Utilities_attention)
+		Utilities_attention = self.normalizeUtilities(Utilities_attention)
 		if self.verbose:
 			sys.stdout.write("\tattention-based utilites: "+str(np.round(Utilities_attention,2))+"\n")
 		# PART 3: MERGE AND ESTIMATE COSTS
@@ -198,7 +198,7 @@ class LiteralSpeaker:
 			sys.stdout.write("AQUEL\n")
 		# PART 1: GET DISTANCE-BASED SCORE and scale
 		Distance=[np.abs(x-self.spos) for x in range(self.ObjectNo)]
-		Utilities_core = self.normalize(Distance)
+		Utilities_core = self.normalizeUtilities(Distance)
 		if self.verbose:
 			sys.stdout.write("\tmain utilities: "+str(np.round(Utilities_core,2))+"\n")
 		# PART 2: GET ATTENTION-BASED SCORE and scale
@@ -214,7 +214,7 @@ class LiteralSpeaker:
 			if Attention_Distance[x] < 0:
 				Attention_Distance[x] = 0
 				#Attention_Distance[x] = -1
-		Utilities_attention = self.normalize(Attention_Distance)
+		Utilities_attention = self.normalizeUtilities(Attention_Distance)
 		if self.verbose:
 			sys.stdout.write("\tattention-based utilites: "+str(np.round(Utilities_attention,2))+"\n")
 		#print(str(Attention_Distance))
