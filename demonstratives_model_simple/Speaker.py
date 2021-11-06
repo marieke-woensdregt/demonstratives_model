@@ -68,7 +68,7 @@ class Speaker:
 		"""
 		General function to softmax a utility function.
 		When normalize is true, utilities are first normalized.
-		methods = 'utilities' or 'visual search'.
+		methods = 'utilities' or 'visualsearch'.
 		For utilities it means you're getting word valuers. visual search means you're getting visual cost estimates
 		"""
 		if method=='utilities':
