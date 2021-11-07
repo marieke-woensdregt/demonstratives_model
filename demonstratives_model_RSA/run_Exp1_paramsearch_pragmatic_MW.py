@@ -29,12 +29,12 @@ import pandas as pd
 start = time.time()
 
 tau_start = 0.1
-tau_stop = 1.2
-tau_step = 0.02
+tau_stop = 1.1
+tau_step = 0.5
 
 output_dict = {"Model":[],
 			   "Word":[],
-			   "Cost":[],
+			   # "Cost":[],
 			   "Probability":[],
 			   "Referent":[],
 			   "Speaker_pos":[],
@@ -47,9 +47,14 @@ output_dict = {"Model":[],
 
 # sys.stdout.write("Model,Word,Probability,Referent,Speaker_pos,Listener_pos,Listener_att,WordNo,SpeakerTau,ListenerTau\n")
 
-for listener_rationality in itertools.chain(np.arange(0.01,0.1,0.01),np.arange(0.1,1.2,0.2)):
-	for speaker_rationality in np.arange(0.1,1,0.1):
-		LS = LiteralSpeaker.LiteralSpeaker(stau=speaker_rationality,ltau=listener_rationality,verbose=False)
+# for listener_rationality in itertools.chain(np.arange(0.01,0.1,0.01),np.arange(0.1,1.2,0.2)):
+for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
+	print('')
+	print(f"listener_rationality is {listener_rationality}:")
+	# for speaker_rationality in np.arange(0.1,1,0.1):
+	for speaker_rationality in np.arange(tau_start, tau_stop, tau_step):
+		print(f"speaker_rationality is {speaker_rationality}:")
+		LS = LiteralSpeaker.LiteralSpeaker(stau=speaker_rationality,ltau=listener_rationality,verbose=False) #TODO: Move the rounding to here instead of elsewhere?
 		for method in ['distance','person','pdhybrid']:
 			for lpos in [0,1,2,3]:
 				for referent in [0,1,2,3]:
@@ -60,6 +65,17 @@ for listener_rationality in itertools.chain(np.arange(0.01,0.1,0.01),np.arange(0
 						PS.RunEvent()
 		output_dict = PS.output_dict  # MW: has to be updated every time, so each new speaker gets updated with the existing output_dict, and new data is written to the existing output_dict
 
+print('')
+print('')
+print(output_dict)
+for key, value in output_dict.items():
+	print('')
+	print("key is:")
+	print(key)
+	print("value is:")
+	print(value)
+	print("len(value) is:")
+	print(len(value))
 
 output_dataframe = pd.DataFrame(data=output_dict)
 pd.set_option('display.max_columns', None)
