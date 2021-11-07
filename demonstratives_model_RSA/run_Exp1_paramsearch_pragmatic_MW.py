@@ -65,17 +65,6 @@ for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
 						PS.RunEvent()
 		output_dict = PS.output_dict  # MW: has to be updated every time, so each new speaker gets updated with the existing output_dict, and new data is written to the existing output_dict
 
-print('')
-print('')
-print(output_dict)
-for key, value in output_dict.items():
-	print('')
-	print("key is:")
-	print(key)
-	print("value is:")
-	print(value)
-	print("len(value) is:")
-	print(len(value))
 
 output_dataframe = pd.DataFrame(data=output_dict)
 pd.set_option('display.max_columns', None)
