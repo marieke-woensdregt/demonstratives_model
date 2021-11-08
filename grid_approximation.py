@@ -13,8 +13,8 @@ model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_tau_star
 
 
 # PARAMETER SETTINGS: #
-model = "distance"  # can be set to either "distance" or "person"
-language = "Italian"  # can be set to "English", "Italian", "Portuguese" or "Spanish"
+model = "person"  # can be set to either "distance" or "person"
+language = "Spanish"  # can be set to "English", "Italian", "Portuguese" or "Spanish"
 object_positions = [0, 1, 2, 3]  # array of all possible object (= referent) positions
 listener_positions = [0, 1, 2, 3]  # array of all possible listener positions
 tau_start = 0.1
