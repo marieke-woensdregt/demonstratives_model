@@ -5,7 +5,7 @@ import seaborn as sns
 
 # PARAMETER SETTINGS: #
 model = "distance"  # can be set to either "distance" or "person"
-language = "English"  # can be set to "English", "Italian", "Portuguese" or "Spanish"
+language = "Spanish"  # can be set to "English", "Italian", "Portuguese" or "Spanish"
 tau_start = 0.1
 tau_stop = 0.61
 tau_step = 0.05
@@ -23,6 +23,7 @@ def plot_heatmap(likelihood_df):
     ax = sns.heatmap(likelihood_df,
                      xticklabels=likelihood_df.columns.values.round(2),
                      yticklabels=likelihood_df.index.values.round(2))
+    plt.title(f"{language} + {model}")
     plt.savefig('heatmap_log_likelihood_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
