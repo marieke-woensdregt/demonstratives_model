@@ -14,7 +14,7 @@ model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_tau_star
 
 # PARAMETER SETTINGS: #
 model = "distance"  # can be set to either "distance" or "person"
-language = "English"  # can be set to "English", "Italian", "Portuguese" or "Spanish"
+language = "Italian"  # can be set to "English", "Italian", "Portuguese" or "Spanish"
 object_positions = [0, 1, 2, 3]  # array of all possible object (= referent) positions
 listener_positions = [0, 1, 2, 3]  # array of all possible listener positions
 tau_start = 0.1
@@ -55,42 +55,54 @@ def calc_multinom_pmf(pd_model_predictions, pd_data, model, language, object_pos
 
 
 def product_logpmf_over_situations(pd_model_predictions, pd_data, model, language, speaker_tau, listener_tau, object_positions, listener_positions):
-    logproduct = np.log(1.0)  # The first probability should be multiplied with 1.0, which is equivalent to 0.0 in log-space
+    log_product = np.log(1.0)  # The first probability should be multiplied with 1.0, which is equivalent to 0.0 in log-space
+    prob_product = 1.0
     for object_pos in object_positions:
         for listener_pos in listener_positions:
             multinom_pmf, multinom_logpmf = calc_multinom_pmf(pd_model_predictions, pd_data, model, language, object_pos, listener_pos, speaker_tau, listener_tau)
-            logproduct += multinom_logpmf  # multiplication in probability space is equivalent to addition in log-space
-    return logproduct
+            log_product += multinom_logpmf  # multiplication in probability space is equivalent to addition in log-space
+            prob_product *= multinom_pmf
+    return log_product, prob_product
 
 
 def likelihood_across_parameter_settings(pd_model_predictions, pd_data, model, language, tau_start, tau_stop, tau_step, object_positions, listener_positions):
-    likelihood_dict = {"SpeakerTau":[],
+    log_likelihood_dict = {"SpeakerTau":[],
                    "ListenerTau":[],
                    "LogLikelihood":[]}
+    likelihood_dict = {"SpeakerTau":[],
+                   "ListenerTau":[],
+                   "Likelihood":[]}
     for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
         print('')
         print(f"listener_rationality is {listener_rationality}:")
         for speaker_rationality in np.arange(tau_start, tau_stop, tau_step):
             print(f"speaker_rationality is {speaker_rationality}:")
-            logproduct = product_logpmf_over_situations(model_predictions, data_pd, model, language, round(speaker_rationality, 2), round(listener_rationality, 2), object_positions, listener_positions)
-            print("logproduct is:")
-            print(logproduct)
-            print("np.exp(logproduct) is:")
-            print(np.exp(logproduct))
+            log_product, prob_product = product_logpmf_over_situations(pd_model_predictions, pd_data, model, language, round(speaker_rationality, 2), round(listener_rationality, 2), object_positions, listener_positions)
+            log_likelihood_dict["SpeakerTau"].append(speaker_rationality)
+            log_likelihood_dict["ListenerTau"].append(listener_rationality)
+            log_likelihood_dict["LogLikelihood"].append(log_product)
             likelihood_dict["SpeakerTau"].append(speaker_rationality)
             likelihood_dict["ListenerTau"].append(listener_rationality)
-            likelihood_dict["LogLikelihood"].append(logproduct)
+            likelihood_dict["Likelihood"].append(prob_product)
+    log_likelihood_df = pd.DataFrame(data=log_likelihood_dict)
     likelihood_df = pd.DataFrame(data=likelihood_dict)
-    return likelihood_df
+    return log_likelihood_df, likelihood_df
 
 
 print('')
 print('')
 print(f"LANGUAGE = {language} + MODEL = {model}:")
-likelihood_df = likelihood_across_parameter_settings(model_predictions, data_pd, model, language, tau_start, tau_stop, tau_step, object_positions, listener_positions)
+log_likelihood_df, likelihood_df = likelihood_across_parameter_settings(model_predictions, data_pd, model, language, tau_start, tau_stop, tau_step, object_positions, listener_positions)
+print('')
+print('')
+print("log_likelihood_df is:")
+print(log_likelihood_df)
+print('')
 print('')
 print("likelihood_df is:")
 print(likelihood_df)
 
+
+log_likelihood_df.to_pickle('./log_likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
 
 likelihood_df.to_pickle('./likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
