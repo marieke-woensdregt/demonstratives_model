@@ -10,30 +10,16 @@ tau_start = 0.1
 tau_stop = 0.61
 tau_step = 0.05
 
-likelihood_df = pd.read_pickle('./likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
+likelihood_df = pd.read_pickle('./log_likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
 print("likelihood_df is:")
 print(likelihood_df)
 
 def plot_heatmap(likelihood_df):
     fig, ax = plt.subplots(figsize=(11, 9))
-
-    # likelihood_df = likelihood_df.set_index('SpeakerTau')
-    # print('')
-    # print("likelihood_df AFTER SET_INDEX is:")
-    # print(likelihood_df)
-    # likelihood_df = likelihood_df.groupby(['SpeakerTau', 'ListenerTau']).mean()
-    # print("likelihood_df AFTER GROUPBY is:")
-    # print(likelihood_df)
-    # likelihood_df = likelihood_df.unstack(level=0)
-    # print("likelihood_df AFTER UNSTACK is:")
-    # print(likelihood_df)
-
     likelihood_df = likelihood_df.pivot(index='SpeakerTau', columns='ListenerTau', values='LogLikelihood')
     print("likelihood_df AFTER PIVOT is:")
     print(likelihood_df)
-
     sns.heatmap(likelihood_df)
-
     ax = sns.heatmap(likelihood_df,
                      xticklabels=likelihood_df.columns.values.round(2),
                      yticklabels=likelihood_df.index.values.round(2))
