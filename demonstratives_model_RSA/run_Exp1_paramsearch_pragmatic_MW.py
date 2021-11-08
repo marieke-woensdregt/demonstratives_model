@@ -29,8 +29,8 @@ import pandas as pd
 start = time.time()
 
 tau_start = 0.1
-tau_stop = 1.1
-tau_step = 0.5
+tau_stop = 0.61
+tau_step = 0.02
 
 output_dict = {"Model":[],
 			   "Word":[],
@@ -76,7 +76,7 @@ print(output_dataframe.columns)
 
 
 output_file_path = '/Users/U968195/PycharmProjects/demonstratives_model/model_predictions/'
-output_file_name = 'HigherSearchD_MW_RSA_'+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv'
+output_file_name = 'HigherSearchD_MW_RSA'+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv'
 output_dataframe.to_csv(output_file_path+output_file_name, index=False)
 
 # end time:
