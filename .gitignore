@@ -1,4 +1,5 @@
 /data
+/model_fitting_data
 /model_predictions
 /Plots
 /R_scripts
