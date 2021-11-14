@@ -28,8 +28,8 @@ import pandas as pd
 # starting time:
 start = time.time()
 
-tau_start = 0.61
-tau_stop = 0.81
+tau_start = 0.41
+tau_stop = 1.41
 tau_step = 0.02
 
 output_dict = {"Model":[],
