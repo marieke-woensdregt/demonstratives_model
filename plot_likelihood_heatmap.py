@@ -6,8 +6,8 @@ import seaborn as sns
 # PARAMETER SETTINGS: #
 model = "person"  # can be set to either "distance" or "person"
 language = "Spanish"  # can be set to "English", "Italian", "Portuguese" or "Spanish"
-tau_start = 0.61
-tau_stop = 0.81
+tau_start = 0.41
+tau_stop = 1.41
 tau_step = 0.02
 
 
