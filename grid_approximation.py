@@ -9,22 +9,13 @@ data_exp_1_three_system = pd.read_csv('data/with_counts/ThreeSystem.csv', index_
 
 
 # PARAMETER SETTINGS: #
-model = "person"  # can be set to either "distance" or "person"
-language = "Spanish"  # can be set to "English", "Italian", "Portuguese" or "Spanish"
+# model = "distance"  # can be set to either "distance" or "person"
+# language = "English"  # can be set to "English", "Italian", "Portuguese" or "Spanish"
 object_positions = [0, 1, 2, 3]  # array of all possible object (= referent) positions
 listener_positions = [0, 1, 2, 3]  # array of all possible listener positions
-tau_start = 0.61
-tau_stop = 0.81
+tau_start = 0.41
+tau_stop = 1.41
 tau_step = 0.02
-
-if language == "English" or language == "Italian":
-    data_pd = data_exp_1_two_system
-elif language == "Portuguese" or language == "Spanish":
-    data_pd = data_exp_1_three_system
-
-
-# LOAD IN MODEL PREDICTIONS: #
-model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA'+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
 
 
 # FUNCTION DEFINITIONS: #
@@ -130,20 +121,41 @@ def likelihood_across_parameter_settings(pd_model_predictions, pd_data, model, l
     return log_likelihood_df, likelihood_df
 
 
-print('')
-print('')
-print(f"LANGUAGE = {language} + MODEL = {model}:")
-log_likelihood_df, likelihood_df = likelihood_across_parameter_settings(model_predictions, data_pd, model, language, tau_start, tau_stop, tau_step, object_positions, listener_positions)
-print('')
-print('')
-print("log_likelihood_df is:")
-print(log_likelihood_df)
-print('')
-print('')
-print("likelihood_df is:")
-print(likelihood_df)
+models = ["distance", "person"]
+languages = ["English", "Italian", "Portuguese", "Spanish"]
+
+for language in languages:
+    print('')
+    print('')
+    print(language)
+    for model in models:
+        print('')
+        print(model)
+
+        if language == "English" or language == "Italian":
+            data_pd = data_exp_1_two_system
+        elif language == "Portuguese" or language == "Spanish":
+            data_pd = data_exp_1_three_system
 
 
-log_likelihood_df.to_pickle('model_fitting_data/'+'log_likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
+        # LOAD IN MODEL PREDICTIONS: #
+        model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA'+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
 
-likelihood_df.to_pickle('model_fitting_data/'+'likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
+
+        print('')
+        print('')
+        print(f"LANGUAGE = {language} + MODEL = {model}:")
+        log_likelihood_df, likelihood_df = likelihood_across_parameter_settings(model_predictions, data_pd, model, language, tau_start, tau_stop, tau_step, object_positions, listener_positions)
+        print('')
+        print('')
+        print("log_likelihood_df is:")
+        print(log_likelihood_df)
+        print('')
+        print('')
+        print("likelihood_df is:")
+        print(likelihood_df)
+
+
+        log_likelihood_df.to_pickle('model_fitting_data/'+'log_likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
+
+        likelihood_df.to_pickle('model_fitting_data/'+'likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
