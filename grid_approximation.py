@@ -155,7 +155,6 @@ for language in languages:
         print("likelihood_df is:")
         print(likelihood_df)
 
-
         log_likelihood_df.to_pickle('model_fitting_data/'+'log_likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
 
         likelihood_df.to_pickle('model_fitting_data/'+'likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
