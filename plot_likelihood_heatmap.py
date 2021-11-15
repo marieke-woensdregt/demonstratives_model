@@ -4,16 +4,12 @@ import seaborn as sns
 
 
 # PARAMETER SETTINGS: #
-model = "person"  # can be set to either "distance" or "person"
-language = "Spanish"  # can be set to "English", "Italian", "Portuguese" or "Spanish"
+# model = "person"  # can be set to either "distance" or "person"
+# language = "Spanish"  # can be set to "English", "Italian", "Portuguese" or "Spanish"
 tau_start = 0.41
 tau_stop = 1.41
 tau_step = 0.02
 
-
-log_likelihood_df = pd.read_pickle('model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-print("LOG likelihood_df is:")
-print(log_likelihood_df)
 
 def plot_heatmap(likelihood_df):
     """
@@ -35,4 +31,22 @@ def plot_heatmap(likelihood_df):
     plt.savefig('plots/'+'heatmap_log_likelihood_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
-plot_heatmap(log_likelihood_df)
+
+models = ["distance", "person"]
+languages = ["English", "Italian", "Portuguese", "Spanish"]
+
+for language in languages:
+    print('')
+    print('')
+    print(language)
+    for model in models:
+        print('')
+        print(model)
+
+        log_likelihood_df = pd.read_pickle(
+            'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
+                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        print("LOG likelihood_df is:")
+        print(log_likelihood_df)
+
+        plot_heatmap(log_likelihood_df)
