@@ -28,9 +28,9 @@ import pandas as pd
 # starting time:
 start = time.time()
 
-tau_start = 0.41
-tau_stop = 1.41
-tau_step = 0.02
+tau_start = 0.5
+tau_stop = 3.7
+tau_step = 0.2
 
 output_dict = {"Model":[],
 			   "Word":[],
