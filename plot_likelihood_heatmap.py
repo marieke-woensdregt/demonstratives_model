@@ -4,14 +4,15 @@ import seaborn as sns
 
 
 # PARAMETER SETTINGS: #
-# model = "person"  # can be set to either "distance" or "person"
-# language = "Spanish"  # can be set to "English", "Italian", "Portuguese" or "Spanish"
+models = ["distance", "person"]
+languages = ["English", "Italian", "Portuguese", "Spanish"]
 tau_start = 0.41
 tau_stop = 1.41
 tau_step = 0.02
+tau_start_for_plot = 0.5
+# tau_stop_for_plot = 1.41
 
-
-def plot_heatmap(likelihood_df):
+def plot_heatmap(likelihood_df, tau_start_for_plot):
     """
     Plots the (log) likelihoods of the parameters given the data in a 2D heatmap with speaker_rationality ("SpeakerTau") on the y-axis and listener_rationality ("ListenerTau") on the x-axis.
 
@@ -21,6 +22,18 @@ def plot_heatmap(likelihood_df):
     fig, ax = plt.subplots(figsize=(11, 9))
 
     #TODO: Should I consider replacing all -inf values in the log likelihood df with NAN? Just to make sure the heatmap is being produced on a fair scale?
+
+    print('')
+    print('')
+    print("likelihood_df BEFORE SLICING is:")
+    print(likelihood_df)
+
+    likelihood_df = likelihood_df[likelihood_df["SpeakerTau"] >= tau_start_for_plot][likelihood_df["ListenerTau"] >= tau_start_for_plot]
+
+    print('')
+    print('')
+    print("likelihood_df AFTER SLICING is:")
+    print(likelihood_df)
 
     likelihood_df = likelihood_df.pivot(index='SpeakerTau', columns='ListenerTau', values='LogLikelihood')
     sns.heatmap(likelihood_df)
@@ -32,8 +45,6 @@ def plot_heatmap(likelihood_df):
     plt.show()
 
 
-models = ["distance", "person"]
-languages = ["English", "Italian", "Portuguese", "Spanish"]
 
 for language in languages:
     print('')
@@ -49,4 +60,4 @@ for language in languages:
         print("LOG likelihood_df is:")
         print(log_likelihood_df)
 
-        plot_heatmap(log_likelihood_df)
+        plot_heatmap(log_likelihood_df, tau_start_for_plot)
