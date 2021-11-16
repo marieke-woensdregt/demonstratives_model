@@ -2,15 +2,9 @@ import pandas as pd
 import numpy as np
 from scipy.stats import binom, multinomial
 
-
-# LOAD IN DATA: #
-data_exp_1_two_system = pd.read_csv('data/with_counts/TwoSystem.csv', index_col=0)
-data_exp_1_three_system = pd.read_csv('data/with_counts/ThreeSystem.csv', index_col=0)
-
-
 # PARAMETER SETTINGS: #
-# model = "distance"  # can be set to either "distance" or "person"
-# language = "English"  # can be set to "English", "Italian", "Portuguese" or "Spanish"
+models = ["distance", "person"]
+languages = ["English", "Italian", "Portuguese", "Spanish"]
 object_positions = [0, 1, 2, 3]  # array of all possible object (= referent) positions
 listener_positions = [0, 1, 2, 3]  # array of all possible listener positions
 tau_start = 0.41
@@ -121,26 +115,23 @@ def likelihood_across_parameter_settings(pd_model_predictions, pd_data, model, l
     return log_likelihood_df, likelihood_df
 
 
-models = ["distance", "person"]
-languages = ["English", "Italian", "Portuguese", "Spanish"]
+# LOAD IN MODEL PREDICTIONS: #
+model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
 for language in languages:
     print('')
     print('')
     print(language)
+
+    # LOAD IN DATA: #
+    if language == "English" or language == "Italian":
+        data_pd = pd.read_csv('data/with_counts/TwoSystem.csv', index_col=0)
+    elif language == "Portuguese" or language == "Spanish":
+        data_pd = pd.read_csv('data/with_counts/ThreeSystem.csv', index_col=0)
+
     for model in models:
         print('')
         print(model)
-
-        if language == "English" or language == "Italian":
-            data_pd = data_exp_1_two_system
-        elif language == "Portuguese" or language == "Spanish":
-            data_pd = data_exp_1_three_system
-
-
-        # LOAD IN MODEL PREDICTIONS: #
-        model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA'+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
-
 
         print('')
         print('')
