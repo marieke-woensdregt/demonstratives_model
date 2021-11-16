@@ -78,3 +78,12 @@ for language in languages:
     print(likelihood_df_person)
     print("likelihood_df_person.shape is:")
     print(likelihood_df_person.shape)
+
+
+    bayes_factor_array = likelihood_ratio(likelihood_np_array_distance, likelihood_np_array_person)
+    print('')
+    print('')
+    print("bayes_factor_array is:")
+    print(bayes_factor_array)
+    print("bayes_factor_array.shape is:")
+    print(bayes_factor_array.shape)
