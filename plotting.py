@@ -8,10 +8,10 @@ import seaborn as sns
 # PARAMETER SETTINGS: #
 models = ["distance", "person"]
 languages = ["English", "Italian", "Portuguese", "Spanish"]
-tau_start = 0.41
-tau_stop = 1.41
-tau_step = 0.02
-tau_start_for_plot = 0.41
+tau_start = 0.5
+tau_stop = 10.
+tau_step = 0.5
+tau_start_for_plot = 0.5
 # tau_stop_for_plot = 1.41
 tau_start_for_comparison = 0.5
 # tau_stop_for_comparison = 1.41
@@ -19,6 +19,20 @@ tau_start_for_comparison = 0.5
 
 def rounddown(x):
     return int(math.floor(x / 100.0)) * 100
+
+
+def calc_min_log_likelihood(words, object_positions, listener_positions):
+    max_prob = 1.0
+    max_log_prob = np.log(max_prob)
+    likelihood_product = 1.0
+    max_log_likelihood_sum = np.log(1.0) # The first probability should be multiplied with 1.0, which is equivalent to 0.0 in log-space
+    for object_pos in object_positions:
+        for listener_pos in listener_positions:
+            likelihood_product *= max_prob
+            max_log_likelihood_sum += max_log_prob  # multiplication in probability space is equivalent to addition in log-space
+    return likelihood_product, max_log_likelihood_sum
+
+
 
 
 def plot_likelihood_heatmap(likelihood_df, tau_start_for_plot, min_log_likelihood):
@@ -64,8 +78,9 @@ def plot_bayes_factor_heatmap(bayes_factor_df, tau_start_for_comparison):
     plt.show()
 
 
-min_log_value = 0
-for language in languages:
+
+min_log_value_two_system = 0
+for language in ["English", "Italian"]:
     print('')
     print('')
     print(language)
@@ -95,14 +110,57 @@ for language in languages:
         print("min is:")
         print(min)
 
-        if min < min_log_value:
-            min_log_value = min
+        if min < min_log_value_two_system:
+            min_log_value_two_system = min
 
         print('')
-        print("min_log_value is:")
-        print(min_log_value)
+        print("min_log_value_two_system is:")
+        print(min_log_value_two_system)
 
-        min_log_for_plotting = rounddown(min_log_value)
+        min_log_value_two_system = rounddown(min_log_value_two_system)
+
+
+
+
+min_log_value_three_system = 0
+for language in ["Portuguese", "Spanish"]:
+    print('')
+    print('')
+    print(language)
+    for model in models:
+        print('')
+        print('')
+        print(model)
+
+        log_likelihood_df = pd.read_pickle(
+            'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
+                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        print("LOG likelihood_df is:")
+        print(log_likelihood_df)
+
+        log_likelihood_array = log_likelihood_df.to_numpy()
+        print('')
+        print("log_likelihood_array BEFORE NAN_TO_NUM is:")
+        print(log_likelihood_array)
+
+        log_likelihood_array = np.nan_to_num(log_likelihood_df, neginf=0)
+        print('')
+        print("log_likelihood_array AFTER NAN_TO_NUMis:")
+        print(log_likelihood_array)
+
+        min = np.min(log_likelihood_array)
+        print('')
+        print("min is:")
+        print(min)
+
+        if min < min_log_value_three_system:
+            min_log_value_three_system = min
+
+        print('')
+        print("min_log_value_three_system is:")
+        print(min_log_value_three_system)
+
+        min_log_value_three_system = rounddown(min_log_value_three_system)
 
 
 
@@ -121,7 +179,10 @@ for language in languages:
         print("LOG likelihood_df is:")
         print(log_likelihood_df)
 
-        plot_likelihood_heatmap(log_likelihood_df, tau_start_for_plot, min_log_for_plotting)
+        if language == "English" or language == "Italian":
+            plot_likelihood_heatmap(log_likelihood_df, tau_start_for_plot, min_log_value_two_system)
+        elif language == "Portuguese" or language == "Spanish":
+            plot_likelihood_heatmap(log_likelihood_df, tau_start_for_plot, min_log_value_three_system)
 
 
 
