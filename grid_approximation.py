@@ -7,9 +7,9 @@ models = ["distance", "person"]
 languages = ["English", "Italian", "Portuguese", "Spanish"]
 object_positions = [0, 1, 2, 3]  # array of all possible object (= referent) positions
 listener_positions = [0, 1, 2, 3]  # array of all possible listener positions
-tau_start = 0.41
-tau_stop = 1.41
-tau_step = 0.02
+tau_start = 0.5
+tau_stop = 10.
+tau_step = 0.5
 
 
 # FUNCTION DEFINITIONS: #
