@@ -30,7 +30,7 @@ start = time.time()
 
 tau_start = 0.5
 tau_stop = 10.
-tau_step = 0.5
+tau_step = 0.25
 
 output_dict = {"Model":[],
 			   "Word":[],
