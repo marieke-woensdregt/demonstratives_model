@@ -10,7 +10,7 @@ tau_start = 0.41
 tau_stop = 1.41
 tau_step = 0.02
 
-tau_start_for_comparison = 0.5
+tau_start_for_comparison = 0.41
 # tau_stop_for_comparison = 1.41
 
 
@@ -28,8 +28,11 @@ def convert_to_distance_wins(bayes_factor_df):
     distance_wins_array = np.array(bayes_factor_array > 1)
     person_wins_array = np.array(bayes_factor_array < 1)
 
-    distance_wins_array = distance_wins_array.astype(int)
-    person_wins_array = person_wins_array.astype(int)
+    distance_wins_array = distance_wins_array.astype(int)  # to convert from True/False to 1/0
+    person_wins_array = person_wins_array.astype(int)  # to convert from True/False to 1/0
+
+    distance_wins_array = distance_wins_array.astype(float)  # to convert from int to float
+    person_wins_array = person_wins_array.astype(float)  # to convert from int to float
 
     for i in range(len(distance_wins_array)):
         for j in range(len(distance_wins_array[i])):
@@ -164,5 +167,5 @@ for language in languages:
         tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
 
-    bayes_factor_df.to_pickle('model_fitting_data/' + 'bayes_factor_df_' + language + '_' + '_tau_start_' + str(
+    distance_wins_df.to_pickle('model_fitting_data/' + 'distance_wins_df_' + language + '_' + '_tau_start_' + str(
         tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
