@@ -6,11 +6,11 @@ import pandas as pd
 # PARAMETER SETTINGS: #
 models = ["distance", "person"]
 languages = ["English", "Italian", "Portuguese", "Spanish"]
-tau_start = 0.41
-tau_stop = 1.41
-tau_step = 0.02
+tau_start = 0.5
+tau_stop = 10.0
+tau_step = 0.5
 
-tau_start_for_comparison = 0.41
+tau_start_for_comparison = 0.5
 # tau_stop_for_comparison = 1.41
 
 
