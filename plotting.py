@@ -8,13 +8,13 @@ import seaborn as sns
 # PARAMETER SETTINGS: #
 models = ["distance", "person"]
 languages = ["English", "Italian", "Portuguese", "Spanish"]
-tau_start = 0.4
-tau_stop = 4.1
-tau_step = 0.1
+tau_start = 0.5
+tau_stop = 10.0
+tau_step = 0.5
 
-tau_start_for_plot = 0.4
+tau_start_for_plot = 0.5
 # tau_stop_for_plot = 1.41
-tau_start_for_comparison = 0.4
+tau_start_for_comparison = 0.5
 # tau_stop_for_comparison = 1.41
 
 
@@ -101,6 +101,31 @@ def plot_which_model_wins(distance_wins_df, tau_start_for_comparison):
 
     plt.title(f"Which model 'wins': {language}")
     plt.savefig('plots/'+'heatmap_which_model_wins_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    plt.show()
+
+
+
+def plot_strength_of_evidence(evidence_strength_df, tau_start_for_comparison):
+    fig, ax = plt.subplots(figsize=(11, 9))
+
+    vmap = {0:'no evidence', 1:'anecdotal', 2:'moderate', 3:'strong', 4:'very strong', 5:'extreme'}
+    n = len(vmap)
+
+    cmap = sns.color_palette("flare", n)
+    ax = sns.heatmap(evidence_strength_df,
+                     xticklabels=evidence_strength_df.columns.values.round(2),
+                     yticklabels=evidence_strength_df.index.values.round(2),
+                     cmap=cmap)
+
+    # Get the colorbar object from the Seaborn heatmap
+    colorbar = ax.collections[0].colorbar
+    # The list comprehension calculates the positions to place the labels to be evenly distributed across the colorbar
+    r = colorbar.vmax - colorbar.vmin
+    colorbar.set_ticks([colorbar.vmin + 0.5 * r / (n) + r * i / (n) for i in range(n)])
+    colorbar.set_ticklabels(list(vmap.values()))
+
+    plt.title(f"Strength of evidence in favour of likely model: {language}")
+    plt.savefig('plots/'+'heatmap_strength_of_evidence_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
@@ -229,12 +254,23 @@ for language in languages:
 
     distance_wins_df = pd.read_pickle('model_fitting_data/' + 'distance_wins_df_' + language + '_' + '_tau_start_' + str(
         tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-    print('')
-    print('')
-    print("distance_wins_df is:")
-    print(distance_wins_df)
-    print("distance_wins_df.shape is:")
-    print(distance_wins_df.shape)
+    # print('')
+    # print('')
+    # print("distance_wins_df is:")
+    # print(distance_wins_df)
+    # print("distance_wins_df.shape is:")
+    # print(distance_wins_df.shape)
 
 
     plot_which_model_wins(distance_wins_df, tau_start_for_comparison)
+
+
+    evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_' + language + '_' + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+    print('')
+    print('')
+    print("evidence_strength_df is:")
+    print(evidence_strength_df)
+    print("evidence_strength_df.shape is:")
+    print(evidence_strength_df.shape)
+
+    plot_strength_of_evidence(evidence_strength_df, tau_start_for_comparison)
