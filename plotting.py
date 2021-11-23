@@ -8,13 +8,13 @@ import seaborn as sns
 # PARAMETER SETTINGS: #
 models = ["distance", "person"]
 languages = ["English", "Italian", "Portuguese", "Spanish"]
-tau_start = 0.5
-tau_stop = 10.
-tau_step = 0.25
+tau_start = 0.4
+tau_stop = 4.1
+tau_step = 0.1
 
-tau_start_for_plot = 0.5
+tau_start_for_plot = 0.4
 # tau_stop_for_plot = 1.41
-tau_start_for_comparison = 0.5
+tau_start_for_comparison = 0.4
 # tau_stop_for_comparison = 1.41
 
 
@@ -210,6 +210,11 @@ for language in languages:
             plot_likelihood_heatmap(log_likelihood_df, tau_start_for_plot, min_log_value_three_system)
 
 
+        likelihood_df = pd.read_pickle(
+            'model_fitting_data/' + 'likelihood_df_' + language + '_' + model + '_tau_start_' + str(
+                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        print("likelihood_df is:")
+        print(likelihood_df)
 
 
 for language in languages:
