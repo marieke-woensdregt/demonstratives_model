@@ -30,7 +30,7 @@ start = time.time()
 
 tau_start = 0.1
 tau_stop = 2.1
-tau_step = 0.5
+tau_step = 0.1
 
 methods = ['distance', 'person']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
 
