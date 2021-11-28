@@ -20,8 +20,8 @@ class LiteralSpeaker:
 		'distance':{'este':self.Este_distance,'ese':self.Ese_distance,'aquel':self.Aquel_distance},
 		'person':{'este':self.Este_distance,'ese':self.Ese_person,'aquel':self.Aquel_person},
 		'pdhybrid':{'este':self.Este_distance,'ese':self.Ese_distance,'aquel':self.Aquel_person},
-		'person_attention':{'este':self.Este_attention,'ese':self.Ese_person,'aquel':self.Aquel_attention},
-		'distance_attention':{'este':self.Este_attention,'ese':self.Ese_distance,'aquel':self.Aquel_attention},
+		'person_attention':{'este':self.Este_attention,'ese':self.Ese_person,'aquel':self.Aquel_distance_attention},
+		'distance_attention':{'este':self.Este_attention,'ese':self.Ese_distance,'aquel':self.Aquel_distance_attention},
 		}
 
 	def SetEvent(self, method=None, referent=0, lpos=0, latt=0):
@@ -130,6 +130,7 @@ class LiteralSpeaker:
 		Softmaxed = self.Softmax_Utilities(Distance)
 		return(self.GetCost(Softmaxed))
 
+
 	def Ese_person(self):
 		"""
 		# Far from me and close to you
@@ -190,7 +191,7 @@ class LiteralSpeaker:
 			sys.stdout.write("\t\tExpected search cost: "+str(np.round(Costs,2))+"\n")
 		return(Costs)
 
-	def Aquel_attention(self):
+	def Aquel_distance_attention(self):
 		"""
 		# Compute utility of listener. "Aquel" means look further away from me!
 		"""
@@ -201,6 +202,52 @@ class LiteralSpeaker:
 		Utilities_core = self.normalizeUtilities(Distance)
 		if self.verbose:
 			sys.stdout.write("\tmain utilities: "+str(np.round(Utilities_core,2))+"\n")
+		# PART 2: GET ATTENTION-BASED SCORE and scale
+		# Speaker distance
+		Speaker_Distance=[np.abs(x-self.spos) for x in range(self.ObjectNo)]
+		#print(str(Speaker_Distance))
+		# Now get difference from attentional point
+		Attention_Distance=[x-self.latt for x in Speaker_Distance]
+		# Now just mark in which direction they go
+		for x in range(len(Attention_Distance)):
+			if Attention_Distance[x] > 0:
+				Attention_Distance[x] = 1
+			if Attention_Distance[x] < 0:
+				Attention_Distance[x] = 0
+				#Attention_Distance[x] = -1
+		Utilities_attention = self.normalizeUtilities(Attention_Distance)
+		if self.verbose:
+			sys.stdout.write("\tattention-based utilites: "+str(np.round(Utilities_attention,2))+"\n")
+		#print(str(Attention_Distance))
+		# PART 3 COMBINE!
+		Utilities = [sum(x) for x in zip(Utilities_core, Utilities_attention)]
+		# Now sample objects based on distance!
+		Softmaxed = self.Softmax_Utilities(Utilities)
+		if self.verbose:
+			sys.stdout.write("\tprobabilities of visual search: "+str(np.round(Softmaxed,2))+"\n")
+		Costs = self.GetCost(Softmaxed)
+		if self.verbose:
+			sys.stdout.write("\t\tExpected search cost: "+str(np.round(Costs,2))+"\n")
+		return(Costs)
+
+	def Aquel_person_attention(self):
+		"""
+		# Compute utility of listener. "Aquel" means look further away from me!
+		"""
+		if self.verbose:
+			sys.stdout.write("AQUEL\n")
+		# PART 1: GET DISTANCE-BASED SCORE and scale
+
+		# Speaker distance
+		Speaker_Distance=[np.abs(x-self.spos) for x in range(self.ObjectNo)]
+		# Listener distance
+		Listener_Distance=[np.abs(x-self.lpos) for x in range(self.ObjectNo)]
+		#print(str(Listener_Distance))
+		Distance = [Speaker_Distance[x]+Listener_Distance[x] for x in range(len(Speaker_Distance))]
+		Utilities_core = self.normalizeUtilities(Distance)
+		if self.verbose:
+			sys.stdout.write("\tmain utilities: "+str(np.round(Utilities_core,2))+"\n")
+		
 		# PART 2: GET ATTENTION-BASED SCORE and scale
 		# Speaker distance
 		Speaker_Distance=[np.abs(x-self.spos) for x in range(self.ObjectNo)]
