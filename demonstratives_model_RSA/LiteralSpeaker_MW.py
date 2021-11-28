@@ -20,7 +20,7 @@ class LiteralSpeaker:
 		'distance':{'este':self.Este_distance,'ese':self.Ese_distance,'aquel':self.Aquel_distance},
 		'person':{'este':self.Este_distance,'ese':self.Ese_person,'aquel':self.Aquel_person},
 		'pdhybrid':{'este':self.Este_distance,'ese':self.Ese_distance,'aquel':self.Aquel_person},
-		'person_attention':{'este':self.Este_attention,'ese':self.Ese_person,'aquel':self.Aquel_distance_attention},
+		'person_attention':{'este':self.Este_attention,'ese':self.Ese_person,'aquel':self.Aquel_person_attention},  #MW: Split the Aquel_attention() method into two separate methods: Aquel_person_attention() and Aquel_distance_attention
 		'distance_attention':{'este':self.Este_attention,'ese':self.Ese_distance,'aquel':self.Aquel_distance_attention},
 		}
 
@@ -236,7 +236,13 @@ class LiteralSpeaker:
 		"""
 		if self.verbose:
 			sys.stdout.write("AQUEL\n")
-		# PART 1: GET DISTANCE-BASED SCORE and scale
+		# PART 1: GET PERSON-BASED SCORE and scale
+
+		##############################################################################################
+		# BIT THAT MARIEKE CHANGED:
+		# Just replaced the part that was taken from the Aquel_distance() method and insterted in the
+		# Aquel_distance_attention() method above, and instead inserted the equivalent part of the
+		# Aquel_person() method below. Left the rest the same.
 
 		# Speaker distance
 		Speaker_Distance=[np.abs(x-self.spos) for x in range(self.ObjectNo)]
@@ -247,7 +253,9 @@ class LiteralSpeaker:
 		Utilities_core = self.normalizeUtilities(Distance)
 		if self.verbose:
 			sys.stdout.write("\tmain utilities: "+str(np.round(Utilities_core,2))+"\n")
-		
+
+		##############################################################################################
+
 		# PART 2: GET ATTENTION-BASED SCORE and scale
 		# Speaker distance
 		Speaker_Distance=[np.abs(x-self.spos) for x in range(self.ObjectNo)]
