@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 import PragmaticListener
-import LiteralSpeaker
+import LiteralSpeaker_MW
 
 class PragmaticSpeaker:
 
