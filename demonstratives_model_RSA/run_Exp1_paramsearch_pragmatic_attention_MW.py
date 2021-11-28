@@ -29,8 +29,8 @@ import pandas as pd
 start = time.time()
 
 tau_start = 0.1
-tau_stop = 2.5
-tau_step = 0.5
+tau_stop = 2.1
+tau_step = 0.1
 
 methods = ['distance_attention', 'person_attention']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
 
@@ -59,7 +59,7 @@ for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
 		LS = LiteralSpeaker.LiteralSpeaker(stau=speaker_rationality,ltau=listener_rationality,verbose=False) #TODO: Move the rounding to here instead of elsewhere?
 		for method in methods:
 			for latt in [0,1,2,3]:
-				for referent in [0,1,2,3]:
+				for referent in [1,2,3]:  # If I understood the design correctly, Exp. 2 only uses object positions [1, 2, 3]
 					LS.SetEvent(method=method, referent=referent, lpos=referent, latt=latt)
 					for words in [2,3]:
 						PL = PragmaticListener.PragmaticListener(LS,words=words)
