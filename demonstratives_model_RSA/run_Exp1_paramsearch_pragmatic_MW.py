@@ -55,7 +55,7 @@ for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
 	for speaker_rationality in np.arange(tau_start, tau_stop, tau_step):
 		print(f"speaker_rationality is {speaker_rationality}:")
 		LS = LiteralSpeaker.LiteralSpeaker(stau=speaker_rationality,ltau=listener_rationality,verbose=False) #TODO: Move the rounding to here instead of elsewhere?
-		for method in ['distance','person','pdhybrid']:
+		for method in ['distance','person']: # for method in ['distance','person','pdhybrid']:
 			for lpos in [0,1,2,3]:
 				for referent in [0,1,2,3]:
 					LS.SetEvent(method=method, referent=referent, lpos=lpos)
