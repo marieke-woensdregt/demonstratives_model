@@ -1,4 +1,4 @@
-import LiteralSpeaker
+import LiteralSpeaker_MW
 import PragmaticListener
 import PragmaticSpeaker_MW
 import sys
@@ -28,9 +28,9 @@ import pandas as pd
 # starting time:
 start = time.time()
 
-tau_start = 0.1
-tau_stop = 2.1
-tau_step = 0.1
+tau_start = 0.4
+tau_stop = 2.01
+tau_step = 0.01
 
 methods = ['distance', 'person']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
 
@@ -51,12 +51,12 @@ output_dict = {"Model":[],
 
 # for listener_rationality in itertools.chain(np.arange(0.01,0.1,0.01),np.arange(0.1,1.2,0.2)):
 for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
-	print('')
-	print(f"listener_rationality is {listener_rationality}:")
+	# print('')
+	# print(f"listener_rationality is {listener_rationality}:")
 	# for speaker_rationality in np.arange(0.1,1,0.1):
 	for speaker_rationality in np.arange(tau_start, tau_stop, tau_step):
-		print(f"speaker_rationality is {speaker_rationality}:")
-		LS = LiteralSpeaker.LiteralSpeaker(stau=speaker_rationality,ltau=listener_rationality,verbose=False) #TODO: Move the rounding to here instead of elsewhere?
+		# print(f"speaker_rationality is {speaker_rationality}:")
+		LS = LiteralSpeaker_MW.LiteralSpeaker(stau=speaker_rationality,ltau=listener_rationality,verbose=False) #TODO: Move the rounding to here instead of elsewhere?
 		for method in methods:
 			for lpos in [0,1,2,3]:
 				for referent in [0,1,2,3]:
@@ -70,11 +70,11 @@ for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
 
 output_dataframe = pd.DataFrame(data=output_dict)
 pd.set_option('display.max_columns', None)
-print('')
-print('')
-print(output_dataframe)
-print('')
-print(output_dataframe.columns)
+# print('')
+# print('')
+# print(output_dataframe)
+# print('')
+# print(output_dataframe.columns)
 
 
 output_file_path = '/Users/U968195/PycharmProjects/demonstratives_model/model_predictions/'
