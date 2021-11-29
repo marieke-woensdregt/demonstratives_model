@@ -29,8 +29,8 @@ import pandas as pd
 start = time.time()
 
 tau_start = 0.4
-tau_stop = 2.05
-tau_step = 0.5
+tau_stop = 2.01
+tau_step = 0.01
 
 methods = ['distance_attention', 'person_attention']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
 
