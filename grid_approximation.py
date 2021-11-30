@@ -12,6 +12,8 @@ tau_stop = 4.1
 tau_step = 0.1
 
 
+experiment = "attention"
+
 
 # FUNCTION DEFINITIONS: #
 
@@ -117,7 +119,11 @@ def likelihood_across_parameter_settings(pd_model_predictions, pd_data, model, l
 
 
 # LOAD IN MODEL PREDICTIONS: #
-model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+if experiment == "attention":
+    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention'+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+else:
+    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(
+        tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
 for language in languages:
     print('')
@@ -125,10 +131,18 @@ for language in languages:
     print(language)
 
     # LOAD IN DATA: #
-    if language == "English" or language == "Italian":
-        data_pd = pd.read_csv('data/with_counts/TwoSystem.csv', index_col=0)
-    elif language == "Portuguese" or language == "Spanish":
-        data_pd = pd.read_csv('data/with_counts/ThreeSystem.csv', index_col=0)
+    if experiment == "attention":
+
+        if language == "English" or language == "Italian":
+            data_pd = pd.read_csv('data/with_counts/TwoSystem.csv', index_col=0)
+        elif language == "Portuguese" or language == "Spanish":
+            data_pd = pd.read_csv('data/with_counts/ThreeSystem.csv', index_col=0)
+
+    else:
+        if language == "English" or language == "Italian":
+            data_pd = pd.read_csv('data/with_counts/TwoSystem.csv', index_col=0)
+        elif language == "Portuguese" or language == "Spanish":
+            data_pd = pd.read_csv('data/with_counts/ThreeSystem.csv', index_col=0)
 
     for model in models:
         print('')
@@ -147,6 +161,11 @@ for language in languages:
         print("likelihood_df is:")
         print(likelihood_df)
 
-        log_likelihood_df.to_pickle('model_fitting_data/'+'log_likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
+        if experiment == "attention":
+            log_likelihood_df.to_pickle('model_fitting_data/'+'log_likelihood_df_Attention_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
 
-        likelihood_df.to_pickle('model_fitting_data/'+'likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
+            likelihood_df.to_pickle('model_fitting_data/'+'likelihood_df_Attention_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
+        else:
+            log_likelihood_df.to_pickle('model_fitting_data/'+'log_likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
+
+            likelihood_df.to_pickle('model_fitting_data/'+'likelihood_df_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
