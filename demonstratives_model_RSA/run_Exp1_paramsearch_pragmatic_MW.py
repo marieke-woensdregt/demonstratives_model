@@ -77,7 +77,8 @@ pd.set_option('display.max_columns', None)
 # print(output_dataframe.columns)
 
 
-output_file_path = '/Users/U968195/PycharmProjects/demonstratives_model/model_predictions/'
+# output_file_path = '/Users/U968195/PycharmProjects/demonstratives_model/model_predictions/'
+output_file_path = 'pickles/'
 output_file_name = 'HigherSearchD_MW_RSA' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(
 		tau_stop) + '_tau_step_' + str(tau_step) + '.csv'
 output_dataframe.to_csv(output_file_path+output_file_name, index=False)
