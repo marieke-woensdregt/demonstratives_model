@@ -4,13 +4,17 @@ import pandas as pd
 
 
 # PARAMETER SETTINGS: #
-models = ["distance", "person"]
+experiment = "attention"
+if experiment == "attention":
+    models = ["distance_attention", "person_attention"]
+else:
+    models = ["distance", "person"]
 languages = ["English", "Italian", "Portuguese", "Spanish"]
-tau_start = 0.5
-tau_stop = 10.0
-tau_step = 0.5
+tau_start = 0.4
+tau_stop = 2.02
+tau_step = 0.02
 
-tau_start_for_comparison = 0.5
+tau_start_for_comparison = 0.4
 # tau_stop_for_comparison = 1.41
 
 
@@ -90,17 +94,30 @@ for language in languages:
     print('')
     print(language)
 
-    likelihood_df_distance = pd.read_pickle(
-        'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'distance' + '_tau_start_' + str(
-            tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-    # print("likelihood_df_distance DISTANCE BEFORE SLICING is:")
-    # print(likelihood_df_distance)
+    if experiment == "attention":
+        likelihood_df_distance = pd.read_pickle(
+            'model_fitting_data/' + 'likelihood_df_Attention_' + language + '_' + 'distance_attention' + '_tau_start_' + str(
+                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        print("likelihood_df_distance DISTANCE BEFORE SLICING is:")
+        print(likelihood_df_distance)
 
-    likelihood_df_person = pd.read_pickle(
-        'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'person' + '_tau_start_' + str(
-            tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-    # print("likelihood_df_person PERSON BEFORE SLICING is:")
-    # print(likelihood_df_person)
+        likelihood_df_person = pd.read_pickle(
+            'model_fitting_data/' + 'likelihood_df_Attention_' + language + '_' + 'person_attention' + '_tau_start_' + str(
+                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        print("likelihood_df_person PERSON BEFORE SLICING is:")
+        print(likelihood_df_person)
+    else:
+        likelihood_df_distance = pd.read_pickle(
+            'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'distance' + '_tau_start_' + str(
+                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        # print("likelihood_df_distance DISTANCE BEFORE SLICING is:")
+        # print(likelihood_df_distance)
+
+        likelihood_df_person = pd.read_pickle(
+            'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'person' + '_tau_start_' + str(
+                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        # print("likelihood_df_person PERSON BEFORE SLICING is:")
+        # print(likelihood_df_person)
 
 
     likelihood_df_distance = likelihood_df_distance[likelihood_df_distance["SpeakerTau"] >= tau_start_for_comparison][likelihood_df_distance["ListenerTau"] >= tau_start_for_comparison]
@@ -158,41 +175,43 @@ for language in languages:
 
 
     likelihood_np_array_distance = likelihood_df_distance.to_numpy()
-    # print('')
-    # print('')
-    # print("likelihood_np_array_distance AFTER CONVERTING TO NUMPY is:")
-    # print(likelihood_np_array_distance)
-    # print("likelihood_np_array_distance.shape is:")
-    # print(likelihood_np_array_distance.shape)
-    max_likelihood_distance = np.amax(likelihood_np_array_distance)
+    print('')
+    print('')
+    print("likelihood_np_array_distance AFTER CONVERTING TO NUMPY is:")
+    print(likelihood_np_array_distance)
+    print("likelihood_np_array_distance.shape is:")
+    print(likelihood_np_array_distance.shape)
+    # max_likelihood_distance = np.amax(likelihood_np_array_distance)
+    max_likelihood_distance = np.nanmax(likelihood_np_array_distance)
     print('')
     print('')
     print("max_likelihood_distance is:")
     print(max_likelihood_distance)
     max_index_likelihood_distance = np.where(likelihood_np_array_distance == max_likelihood_distance)
-    # print('')
-    # print('')
-    # print("max_index_likelihood_distance is:")
-    # print(max_index_likelihood_distance)
+    print('')
+    print('')
+    print("max_index_likelihood_distance is:")
+    print(max_index_likelihood_distance)
 
 
     likelihood_np_array_person = likelihood_df_person.to_numpy()
-    # print('')
-    # print('')
-    # print("likelihood_np_array_person AFTER CONVERTING TO NUMPY is:")
-    # print(likelihood_np_array_person)
-    # print("likelihood_np_array_person.shape is:")
-    # print(likelihood_np_array_person.shape)
-    max_likelihood_person = np.amax(likelihood_np_array_person)
+    print('')
+    print('')
+    print("likelihood_np_array_person AFTER CONVERTING TO NUMPY is:")
+    print(likelihood_np_array_person)
+    print("likelihood_np_array_person.shape is:")
+    print(likelihood_np_array_person.shape)
+    # max_likelihood_person = np.amax(likelihood_np_array_person)
+    max_likelihood_person = np.nanmax(likelihood_np_array_person)
     print('')
     print('')
     print("max_likelihood_person is:")
     print(max_likelihood_person)
     max_index_likelihood_person = np.where(likelihood_np_array_person == max_likelihood_person)
-    # print('')
-    # print('')
-    # print("max_index_likelihood_person is:")
-    # print(max_index_likelihood_person)
+    print('')
+    print('')
+    print("max_index_likelihood_person is:")
+    print(max_index_likelihood_person)
 
 
     if language == "English" or language == "Italian":
@@ -202,9 +221,9 @@ for language in languages:
         print("bayes_factor_max_likelihood DISTANCE / PERSON is:")
         print(bayes_factor_max_likelihood)
         max_likelihood_coordinates = max_index_likelihood_distance
-        # print('')
-        # print("max_likelihood_coordinates are:")
-        # print(max_likelihood_coordinates)
+        print('')
+        print("max_likelihood_coordinates are:")
+        print(max_likelihood_coordinates)
         speaker_tau_max_likelihood = index_distance[max_likelihood_coordinates[0][0]]
         print('')
         print("speaker_tau_max_likelihood is:")
@@ -221,9 +240,9 @@ for language in languages:
         print("bayes_factor_max_likelihood PERSON / DISTANCE is:")
         print(bayes_factor_max_likelihood)
         max_likelihood_coordinates = max_index_likelihood_person
-        # print('')
-        # print("max_likelihood_coordinates are:")
-        # print(max_likelihood_coordinates)
+        print('')
+        print("max_likelihood_coordinates are:")
+        print(max_likelihood_coordinates)
         speaker_tau_max_likelihood = index_person[max_likelihood_coordinates[0][0]]
         print('')
         print("speaker_tau_max_likelihood is:")
