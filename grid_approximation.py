@@ -9,6 +9,7 @@ if experiment == "attention":
 else:
     models = ["distance", "person"]
 languages = ["English", "Italian", "Portuguese", "Spanish"]
+# languages = ["Spanish"]
 if experiment == "attention":
     object_positions = [1, 2, 3]  # array of all possible object (= referent) positions
 else:
@@ -157,10 +158,10 @@ def likelihood_across_parameter_settings(experiment, pd_model_predictions, pd_da
                    "ListenerTau":[],
                    "Likelihood":[]}
     for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
-        print('')
-        print(f"listener_rationality is {listener_rationality}:")
+        # print('')
+        # print(f"listener_rationality is {listener_rationality}:")
         for speaker_rationality in np.arange(tau_start, tau_stop, tau_step):
-            print(f"speaker_rationality is {speaker_rationality}:")
+            # print(f"speaker_rationality is {speaker_rationality}:")
             if experiment == "attention":
                 log_product, prob_product = product_logpmf_over_situations(experiment, pd_model_predictions, pd_data, model, language, round(speaker_rationality, 2), round(listener_rationality, 2), object_positions, listener_attentions=listener_attentions)
             else:
@@ -184,9 +185,9 @@ else:
         tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
 for language in languages:
-    print('')
-    print('')
-    print(language)
+    # print('')
+    # print('')
+    # print(language)
 
     # LOAD IN DATA: #
     if experiment == "attention":
@@ -203,24 +204,24 @@ for language in languages:
             data_pd = pd.read_csv('data/experiment_1/with_counts/ThreeSystem.csv', index_col=0)
 
     for model in models:
-        print('')
-        print(model)
-
-        print('')
-        print('')
-        print(f"LANGUAGE = {language} + MODEL = {model}:")
+        # print('')
+        # print(model)
+        #
+        # print('')
+        # print('')
+        # print(f"LANGUAGE = {language} + MODEL = {model}:")
         if experiment == "attention":
             log_likelihood_df, likelihood_df = likelihood_across_parameter_settings(experiment, model_predictions, data_pd, model, language, tau_start, tau_stop, tau_step, object_positions, listener_attentions=listener_attentions)
         else:
             log_likelihood_df, likelihood_df = likelihood_across_parameter_settings(experiment, model_predictions, data_pd, model, language, tau_start, tau_stop, tau_step, object_positions, listener_positions=listener_positions)
-        print('')
-        print('')
-        print("log_likelihood_df is:")
-        print(log_likelihood_df)
-        print('')
-        print('')
-        print("likelihood_df is:")
-        print(likelihood_df)
+        # print('')
+        # print('')
+        # print("log_likelihood_df is:")
+        # print(log_likelihood_df)
+        # print('')
+        # print('')
+        # print("likelihood_df is:")
+        # print(likelihood_df)
 
         if experiment == "attention":
             log_likelihood_df.to_pickle('model_fitting_data/'+'log_likelihood_df_Attention_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
