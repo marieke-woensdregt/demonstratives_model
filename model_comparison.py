@@ -95,58 +95,59 @@ for language in languages:
     print(language)
 
     if experiment == "attention":
-        likelihood_df_distance = pd.read_pickle(
-            'model_fitting_data/' + 'likelihood_df_Attention_' + language + '_' + 'distance_attention' + '_tau_start_' + str(
-                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-        print("likelihood_df_distance DISTANCE BEFORE SLICING is:")
-        print(likelihood_df_distance)
 
-        likelihood_df_person = pd.read_pickle(
-            'model_fitting_data/' + 'likelihood_df_Attention_' + language + '_' + 'person_attention' + '_tau_start_' + str(
-                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-        print("likelihood_df_person PERSON BEFORE SLICING is:")
-        print(likelihood_df_person)
+        if language == 'English' or language == 'Italian':
+            likelihood_df_baseline = pd.read_pickle(
+                'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'distance' + '_tau_start_' + str(
+                    tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            # print("likelihood_df_distance DISTANCE BEFORE SLICING is:")
+            # print(likelihood_df_distance)
+
+            likelihood_df_comparison = pd.read_pickle(
+                'model_fitting_data/' + 'likelihood_df_Attention_' + language + '_' + 'person_attention' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            print("likelihood_df_person PERSON BEFORE SLICING is:")
+            print(likelihood_df_comparison)
     else:
-        likelihood_df_distance = pd.read_pickle(
+        likelihood_df_baseline = pd.read_pickle(
             'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'distance' + '_tau_start_' + str(
                 tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         # print("likelihood_df_distance DISTANCE BEFORE SLICING is:")
         # print(likelihood_df_distance)
 
-        likelihood_df_person = pd.read_pickle(
+        likelihood_df_comparison = pd.read_pickle(
             'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'person' + '_tau_start_' + str(
                 tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         # print("likelihood_df_person PERSON BEFORE SLICING is:")
         # print(likelihood_df_person)
 
 
-    likelihood_df_distance = likelihood_df_distance[likelihood_df_distance["SpeakerTau"] >= tau_start_for_comparison][likelihood_df_distance["ListenerTau"] >= tau_start_for_comparison]
+    likelihood_df_baseline = likelihood_df_baseline[likelihood_df_baseline["SpeakerTau"] >= tau_start_for_comparison][likelihood_df_baseline["ListenerTau"] >= tau_start_for_comparison]
     # print('')
     # print('')
     # print("likelihood_df_distance AFTER SLICING is:")
     # print(likelihood_df_distance)
 
-    likelihood_df_person = likelihood_df_person[likelihood_df_person["SpeakerTau"] >= tau_start_for_comparison][likelihood_df_person["ListenerTau"] >= tau_start_for_comparison]
+    likelihood_df_comparison = likelihood_df_comparison[likelihood_df_comparison["SpeakerTau"] >= tau_start_for_comparison][likelihood_df_comparison["ListenerTau"] >= tau_start_for_comparison]
     # print('')
     # print('')
     # print("likelihood_df_person AFTER SLICING is:")
     # print(likelihood_df_person)
 
-    likelihood_df_distance = likelihood_df_distance.pivot(index='SpeakerTau', columns='ListenerTau', values='Likelihood')
+    likelihood_df_baseline = likelihood_df_baseline.pivot(index='SpeakerTau', columns='ListenerTau', values='Likelihood')
     # print('')
     # print('')
     # print("likelihood_df_distance AFTER PIVOTING is:")
     # print(likelihood_df_distance)
 
-    likelihood_df_person = likelihood_df_person.pivot(index='SpeakerTau', columns='ListenerTau', values='Likelihood')
+    likelihood_df_comparison = likelihood_df_comparison.pivot(index='SpeakerTau', columns='ListenerTau', values='Likelihood')
     # print('')
     # print('')
     # print("likelihood_df_person AFTER PIVOTING is:")
     # print(likelihood_df_person)
 
 
-    index_distance = likelihood_df_distance.index
-    column_distance = likelihood_df_distance.columns
+    index_distance = likelihood_df_baseline.index
+    column_distance = likelihood_df_baseline.columns
     # print('')
     # print('')
     # print("index_distance is:")
@@ -159,8 +160,8 @@ for language in languages:
     # print("len(column_distance) is:")
     # print(len(column_distance))
 
-    index_person = likelihood_df_person.index
-    column_person = likelihood_df_person.columns
+    index_person = likelihood_df_comparison.index
+    column_person = likelihood_df_comparison.columns
     # print('')
     # print('')
     # print("index_person is:")
@@ -174,7 +175,7 @@ for language in languages:
     # print(len(column_person))
 
 
-    likelihood_np_array_distance = likelihood_df_distance.to_numpy()
+    likelihood_np_array_distance = likelihood_df_baseline.to_numpy()
     print('')
     print('')
     print("likelihood_np_array_distance AFTER CONVERTING TO NUMPY is:")
@@ -194,7 +195,7 @@ for language in languages:
     print(max_index_likelihood_distance)
 
 
-    likelihood_np_array_person = likelihood_df_person.to_numpy()
+    likelihood_np_array_person = likelihood_df_comparison.to_numpy()
     print('')
     print('')
     print("likelihood_np_array_person AFTER CONVERTING TO NUMPY is:")
@@ -253,14 +254,14 @@ for language in languages:
         print(listener_tau_max_likelihood)
 
 
-    index = likelihood_df_person.index
+    index = likelihood_df_comparison.index
     # print('')
     # print('')
     # print("index is:")
     # print(index)
 
 
-    column = likelihood_df_person.columns
+    column = likelihood_df_comparison.columns
     # print('')
     # print('')
     # print("column is:")
