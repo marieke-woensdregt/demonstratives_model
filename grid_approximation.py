@@ -5,11 +5,12 @@ from scipy.stats import binom, multinomial
 # PARAMETER SETTINGS: #
 experiment = "attention"
 if experiment == "attention":
-    models = ["distance_attention", "person_attention"]
+    # models = ["distance_attention", "person_attention"]
+    models = ["person_attention"]
 else:
     models = ["distance", "person"]
-languages = ["English", "Italian", "Portuguese", "Spanish"]
-# languages = ["Spanish"]
+# languages = ["English", "Italian", "Portuguese", "Spanish"]
+languages = ["Spanish"]
 if experiment == "attention":
     object_positions = [1, 2, 3]  # array of all possible object (= referent) positions
 else:
@@ -17,8 +18,8 @@ else:
 listener_positions = [0, 1, 2, 3]  # array of all possible listener positions
 listener_attentions = [0, 1, 2, 3]  # array of all possible listener positions
 tau_start = 0.4
-tau_stop = 2.02
-tau_step = 0.02
+tau_stop = 2.05
+tau_step = 0.05
 
 
 
@@ -177,12 +178,6 @@ def likelihood_across_parameter_settings(experiment, pd_model_predictions, pd_da
     return log_likelihood_df, likelihood_df
 
 
-# LOAD IN MODEL PREDICTIONS: #
-if experiment == "attention":
-    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention'+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
-else:
-    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(
-        tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
 for language in languages:
     # print('')
@@ -191,12 +186,10 @@ for language in languages:
 
     # LOAD IN DATA: #
     if experiment == "attention":
-
         if language == "English" or language == "Italian":
             data_pd = pd.read_csv('data/experiment_2/with_counts/TwoSystem_Attention.csv', index_col=0)
         elif language == "Portuguese" or language == "Spanish":
             data_pd = pd.read_csv('data/experiment_2/with_counts/ThreeSystem_Attention.csv', index_col=0)
-
     else:
         if language == "English" or language == "Italian":
             data_pd = pd.read_csv('data/experiment_1/with_counts/TwoSystem.csv', index_col=0)
@@ -210,6 +203,20 @@ for language in languages:
         # print('')
         # print('')
         # print(f"LANGUAGE = {language} + MODEL = {model}:")
+        # LOAD IN MODEL PREDICTIONS: #
+        if experiment == "attention":
+
+
+            if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
+                models_for_filename = ["distance_attention", "person_attention"]
+                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+
+
+            else:
+                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+        else:
+            model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_' +str(models).replace(" ", "")+'_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+
         if experiment == "attention":
             log_likelihood_df, likelihood_df = likelihood_across_parameter_settings(experiment, model_predictions, data_pd, model, language, tau_start, tau_stop, tau_step, object_positions, listener_attentions=listener_attentions)
         else:
