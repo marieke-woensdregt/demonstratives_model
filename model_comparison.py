@@ -11,8 +11,8 @@ else:
     models = ["distance", "person"]
 languages = ["English", "Italian", "Portuguese", "Spanish"]
 tau_start = 0.4
-tau_stop = 2.02
-tau_step = 0.02
+tau_stop = 2.05
+tau_step = 0.05
 
 tau_start_for_comparison = 0.4
 # tau_stop_for_comparison = 1.41
@@ -98,15 +98,28 @@ for language in languages:
 
         if language == 'English' or language == 'Italian':
             likelihood_df_baseline = pd.read_pickle(
-                'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'distance' + '_tau_start_' + str(
+                'model_fitting_data/' + 'likelihood_df_Attention_' + language + '_' + 'distance' + '_tau_start_' + str(
                     tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-            # print("likelihood_df_distance DISTANCE BEFORE SLICING is:")
-            # print(likelihood_df_distance)
+            print("likelihood_df_baseline DISTANCE BEFORE SLICING is:")
+            print(likelihood_df_baseline)
+
+            likelihood_df_comparison = pd.read_pickle(
+                'model_fitting_data/' + 'likelihood_df_Attention_' + language + '_' + 'distance_attention' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            print("likelihood_df_comparison DISTANCE + ATTENTION BEFORE SLICING is:")
+            print(likelihood_df_comparison)
+
+        if language == 'Spanish' or language == 'Portuguese':
+            likelihood_df_baseline = pd.read_pickle(
+                'model_fitting_data/' + 'likelihood_df_Attention_' + language + '_' + 'person' + '_tau_start_' + str(
+                    tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            print("likelihood_df_baseline PERSON BEFORE SLICING is:")
+            print(likelihood_df_baseline)
 
             likelihood_df_comparison = pd.read_pickle(
                 'model_fitting_data/' + 'likelihood_df_Attention_' + language + '_' + 'person_attention' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-            print("likelihood_df_person PERSON BEFORE SLICING is:")
+            print("likelihood_df_comparison PERSON + ATTENTION BEFORE SLICING is:")
             print(likelihood_df_comparison)
+
     else:
         likelihood_df_baseline = pd.read_pickle(
             'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'distance' + '_tau_start_' + str(
@@ -146,8 +159,8 @@ for language in languages:
     # print(likelihood_df_person)
 
 
-    index_distance = likelihood_df_baseline.index
-    column_distance = likelihood_df_baseline.columns
+    index_baseline = likelihood_df_baseline.index
+    column_baseline = likelihood_df_baseline.columns
     # print('')
     # print('')
     # print("index_distance is:")
@@ -160,8 +173,8 @@ for language in languages:
     # print("len(column_distance) is:")
     # print(len(column_distance))
 
-    index_person = likelihood_df_comparison.index
-    column_person = likelihood_df_comparison.columns
+    index_comparison = likelihood_df_comparison.index
+    column_comparison = likelihood_df_comparison.columns
     # print('')
     # print('')
     # print("index_person is:")
@@ -175,83 +188,103 @@ for language in languages:
     # print(len(column_person))
 
 
-    likelihood_np_array_distance = likelihood_df_baseline.to_numpy()
+    likelihood_np_array_baseline = likelihood_df_baseline.to_numpy()
     print('')
     print('')
-    print("likelihood_np_array_distance AFTER CONVERTING TO NUMPY is:")
-    print(likelihood_np_array_distance)
-    print("likelihood_np_array_distance.shape is:")
-    print(likelihood_np_array_distance.shape)
-    # max_likelihood_distance = np.amax(likelihood_np_array_distance)
-    max_likelihood_distance = np.nanmax(likelihood_np_array_distance)
+    print("likelihood_np_array_baseline AFTER CONVERTING TO NUMPY is:")
+    print(likelihood_np_array_baseline)
+    print("likelihood_np_array_baseline.shape is:")
+    print(likelihood_np_array_baseline.shape)
+    # max_likelihood_baseline = np.amax(likelihood_np_array_baseline)
+    max_likelihood_baseline = np.nanmax(likelihood_np_array_baseline)
     print('')
     print('')
-    print("max_likelihood_distance is:")
-    print(max_likelihood_distance)
-    max_index_likelihood_distance = np.where(likelihood_np_array_distance == max_likelihood_distance)
+    print("max_likelihood_baseline is:")
+    print(max_likelihood_baseline)
+    max_index_likelihood_baseline = np.where(likelihood_np_array_baseline == max_likelihood_baseline)
     print('')
     print('')
-    print("max_index_likelihood_distance is:")
-    print(max_index_likelihood_distance)
+    print("max_index_likelihood_baseline is:")
+    print(max_index_likelihood_baseline)
 
 
-    likelihood_np_array_person = likelihood_df_comparison.to_numpy()
+    likelihood_np_array_comparison = likelihood_df_comparison.to_numpy()
     print('')
     print('')
-    print("likelihood_np_array_person AFTER CONVERTING TO NUMPY is:")
-    print(likelihood_np_array_person)
-    print("likelihood_np_array_person.shape is:")
-    print(likelihood_np_array_person.shape)
-    # max_likelihood_person = np.amax(likelihood_np_array_person)
-    max_likelihood_person = np.nanmax(likelihood_np_array_person)
+    print("likelihood_np_array_comparison AFTER CONVERTING TO NUMPY is:")
+    print(likelihood_np_array_comparison)
+    print("likelihood_np_array_comparison.shape is:")
+    print(likelihood_np_array_comparison.shape)
+    # max_likelihood_comparison = np.amax(likelihood_np_array_comparison)
+    max_likelihood_comparison = np.nanmax(likelihood_np_array_comparison)
     print('')
     print('')
-    print("max_likelihood_person is:")
-    print(max_likelihood_person)
-    max_index_likelihood_person = np.where(likelihood_np_array_person == max_likelihood_person)
+    print("max_likelihood_comparison is:")
+    print(max_likelihood_comparison)
+    max_index_likelihood_comparison = np.where(likelihood_np_array_comparison == max_likelihood_comparison)
     print('')
     print('')
-    print("max_index_likelihood_person is:")
-    print(max_index_likelihood_person)
+    print("max_index_likelihood_comparison is:")
+    print(max_index_likelihood_comparison)
 
 
-    if language == "English" or language == "Italian":
-        bayes_factor_max_likelihood = max_likelihood_distance / max_likelihood_person
+    if experiment == "attention":
+        bayes_factor_max_likelihood = max_likelihood_comparison / max_likelihood_baseline
         print('')
         print('')
-        print("bayes_factor_max_likelihood DISTANCE / PERSON is:")
+        print("bayes_factor_max_likelihood COMPARISON / BASELINE is:")
         print(bayes_factor_max_likelihood)
-        max_likelihood_coordinates = max_index_likelihood_distance
+        max_likelihood_coordinates = max_index_likelihood_comparison
         print('')
         print("max_likelihood_coordinates are:")
         print(max_likelihood_coordinates)
-        speaker_tau_max_likelihood = index_distance[max_likelihood_coordinates[0][0]]
+        speaker_tau_max_likelihood = index_comparison[max_likelihood_coordinates[0][0]]
         print('')
         print("speaker_tau_max_likelihood is:")
         print(speaker_tau_max_likelihood)
-        listener_tau_max_likelihood = column_distance[max_likelihood_coordinates[1][0]]
+        listener_tau_max_likelihood = column_comparison[max_likelihood_coordinates[1][0]]
         print('')
         print("listener_tau_max_likelihood is:")
         print(listener_tau_max_likelihood)
 
-    elif language == "Portuguese" or language == "Spanish":
-        bayes_factor_max_likelihood = max_likelihood_person / max_likelihood_distance
-        print('')
-        print('')
-        print("bayes_factor_max_likelihood PERSON / DISTANCE is:")
-        print(bayes_factor_max_likelihood)
-        max_likelihood_coordinates = max_index_likelihood_person
-        print('')
-        print("max_likelihood_coordinates are:")
-        print(max_likelihood_coordinates)
-        speaker_tau_max_likelihood = index_person[max_likelihood_coordinates[0][0]]
-        print('')
-        print("speaker_tau_max_likelihood is:")
-        print(speaker_tau_max_likelihood)
-        listener_tau_max_likelihood = column_person[max_likelihood_coordinates[1][0]]
-        print('')
-        print("listener_tau_max_likelihood is:")
-        print(listener_tau_max_likelihood)
+    else:
+        if language == "English" or language == "Italian":
+            bayes_factor_max_likelihood = max_likelihood_baseline / max_likelihood_comparison
+            print('')
+            print('')
+            print("bayes_factor_max_likelihood DISTANCE / PERSON is:")
+            print(bayes_factor_max_likelihood)
+            max_likelihood_coordinates = max_index_likelihood_baseline
+            print('')
+            print("max_likelihood_coordinates are:")
+            print(max_likelihood_coordinates)
+            speaker_tau_max_likelihood = index_baseline[max_likelihood_coordinates[0][0]]
+            print('')
+            print("speaker_tau_max_likelihood is:")
+            print(speaker_tau_max_likelihood)
+            listener_tau_max_likelihood = column_baseline[max_likelihood_coordinates[1][0]]
+            print('')
+            print("listener_tau_max_likelihood is:")
+            print(listener_tau_max_likelihood)
+
+        elif language == "Portuguese" or language == "Spanish":
+            bayes_factor_max_likelihood = max_likelihood_comparison / max_likelihood_baseline
+            print('')
+            print('')
+            print("bayes_factor_max_likelihood PERSON / DISTANCE is:")
+            print(bayes_factor_max_likelihood)
+            max_likelihood_coordinates = max_index_likelihood_comparison
+            print('')
+            print("max_likelihood_coordinates are:")
+            print(max_likelihood_coordinates)
+            speaker_tau_max_likelihood = index_comparison[max_likelihood_coordinates[0][0]]
+            print('')
+            print("speaker_tau_max_likelihood is:")
+            print(speaker_tau_max_likelihood)
+            listener_tau_max_likelihood = column_comparison[max_likelihood_coordinates[1][0]]
+            print('')
+            print("listener_tau_max_likelihood is:")
+            print(listener_tau_max_likelihood)
 
 
     index = likelihood_df_comparison.index
@@ -268,41 +301,84 @@ for language in languages:
     # print(column)
 
 
-    bayes_factor_array = bayes_factor(likelihood_np_array_distance, likelihood_np_array_person)
-    # print('')
-    # print("bayes_factor_array is:")
-    # print(bayes_factor_array)
-    # print("bayes_factor_array.shape is:")
-    # print(bayes_factor_array.shape)
+    if experiment == "attention":
+
+        bayes_factor_array = bayes_factor(likelihood_np_array_comparison, likelihood_np_array_baseline)
+        # print('')
+        # print("bayes_factor_array is:")
+        # print(bayes_factor_array)
+        # print("bayes_factor_array.shape is:")
+        # print(bayes_factor_array.shape)
 
 
-    bayes_factor_df = pd.DataFrame(data=bayes_factor_array, index=index, columns=column)
-    print('')
-    print('')
-    print("bayes_factor_df is:")
-    print(bayes_factor_df)
+        bayes_factor_df = pd.DataFrame(data=bayes_factor_array, index=index, columns=column)
+        print('')
+        print('')
+        print("bayes_factor_df is:")
+        print(bayes_factor_df)
 
 
-    distance_wins_df = convert_to_distance_wins(bayes_factor_df)
-    print('')
-    print('')
-    print("distance_wins_df is:")
-    print(distance_wins_df)
+        attention_wins_df = convert_to_distance_wins(bayes_factor_df)
+        print('')
+        print('')
+        print("distance_wins_df is:")
+        print(attention_wins_df)
 
 
-    evidence_strength_df = convert_to_strength_of_evidence(bayes_factor_df)
-    print('')
-    print('')
-    print("evidence_strength_df is:")
-    print(evidence_strength_df)
+        evidence_strength_df = convert_to_strength_of_evidence(bayes_factor_df)
+        print('')
+        print('')
+        print("evidence_strength_df is:")
+        print(evidence_strength_df)
 
 
-    bayes_factor_df.to_pickle('model_fitting_data/' + 'bayes_factor_df_' + language + '_' + '_tau_start_' + str(
-        tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        bayes_factor_df.to_pickle('model_fitting_data/' + 'bayes_factor_df_Attention_' + language + '_' + '_tau_start_' + str(
+            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
 
-    distance_wins_df.to_pickle('model_fitting_data/' + 'distance_wins_df_' + language + '_' + '_tau_start_' + str(
-        tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        attention_wins_df.to_pickle('model_fitting_data/' + 'distance_wins_df_Attention_' + language + '_' + '_tau_start_' + str(
+            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
-    evidence_strength_df.to_pickle('model_fitting_data/' + 'evidence_strength_df_' + language + '_' + '_tau_start_' + str(
-        tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        evidence_strength_df.to_pickle('model_fitting_data/' + 'evidence_strength_df_Attention_' + language + '_' + '_tau_start_' + str(
+            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+
+    else:
+
+        bayes_factor_array = bayes_factor(likelihood_np_array_baseline, likelihood_np_array_comparison)
+        # print('')
+        # print("bayes_factor_array is:")
+        # print(bayes_factor_array)
+        # print("bayes_factor_array.shape is:")
+        # print(bayes_factor_array.shape)
+
+
+        bayes_factor_df = pd.DataFrame(data=bayes_factor_array, index=index, columns=column)
+        print('')
+        print('')
+        print("bayes_factor_df is:")
+        print(bayes_factor_df)
+
+
+        attention_wins_df = convert_to_distance_wins(bayes_factor_df)
+        print('')
+        print('')
+        print("distance_wins_df is:")
+        print(attention_wins_df)
+
+
+        evidence_strength_df = convert_to_strength_of_evidence(bayes_factor_df)
+        print('')
+        print('')
+        print("evidence_strength_df is:")
+        print(evidence_strength_df)
+
+
+        bayes_factor_df.to_pickle('model_fitting_data/' + 'bayes_factor_df_' + language + '_' + '_tau_start_' + str(
+            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+
+
+        attention_wins_df.to_pickle('model_fitting_data/' + 'distance_wins_df_' + language + '_' + '_tau_start_' + str(
+            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+
+        evidence_strength_df.to_pickle('model_fitting_data/' + 'evidence_strength_df_' + language + '_' + '_tau_start_' + str(
+            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
