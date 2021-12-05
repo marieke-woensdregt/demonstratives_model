@@ -6,15 +6,17 @@ import seaborn as sns
 
 
 # PARAMETER SETTINGS: #
-models = ["distance", "person"]
-languages = ["English", "Italian", "Portuguese", "Spanish"]
-tau_start = 0.5
-tau_stop = 10.0
-tau_step = 0.5
+experiment = "attention"
 
-tau_start_for_plot = 0.5
+models = ["distance", "person", "distance_attention", "person_attention"]  # Possibilities are: ["distance", "person", "distance_attention", "person_attention"]
+languages = ["English", "Italian", "Portuguese", "Spanish"]  # Possibilities are: ["English", "Italian", "Portuguese", "Spanish"]
+tau_start = 0.4
+tau_stop = 2.05
+tau_step = 0.05
+
+tau_start_for_plot = 0.4
 # tau_stop_for_plot = 1.41
-tau_start_for_comparison = 0.5
+tau_start_for_comparison = 0.4
 # tau_stop_for_comparison = 1.41
 
 
@@ -83,7 +85,10 @@ def plot_bayes_factor_heatmap(bayes_factor_df, tau_start_for_comparison):
 def plot_which_model_wins(distance_wins_df, tau_start_for_comparison):
     fig, ax = plt.subplots(figsize=(11, 9))
 
-    vmap = {0:'person', 1:'distance'}
+    if experiment == "attention":
+        vmap = {0: 'baseline', 1: 'attention-correction'}
+    else:
+        vmap = {0:'person', 1:'distance'}
     n = len(vmap)
 
     cmap = sns.color_palette("colorblind", n)
@@ -99,7 +104,7 @@ def plot_which_model_wins(distance_wins_df, tau_start_for_comparison):
     colorbar.set_ticks([colorbar.vmin + 0.5 * r / (n) + r * i / (n) for i in range(n)])
     colorbar.set_ticklabels(list(vmap.values()))
 
-    plt.title(f"Which model 'wins': {language}")
+    plt.title(f"Most likely model: {language}")
     plt.savefig('plots/'+'heatmap_which_model_wins_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
@@ -139,9 +144,14 @@ for language in ["English", "Italian"]:
         print('')
         print(model)
 
-        log_likelihood_df = pd.read_pickle(
-            'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
-                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        if experiment == "attention":
+            log_likelihood_df = pd.read_pickle(
+                'model_fitting_data/' + 'log_likelihood_df_Attention_' + language + '_' + model + '_tau_start_' + str(
+                    tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        else:
+            log_likelihood_df = pd.read_pickle(
+                'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
+                    tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         print("LOG likelihood_df is:")
         print(log_likelihood_df)
 
@@ -182,7 +192,12 @@ for language in ["Portuguese", "Spanish"]:
         print('')
         print(model)
 
-        log_likelihood_df = pd.read_pickle(
+        if experiment == "attention":
+            log_likelihood_df = pd.read_pickle(
+            'model_fitting_data/' + 'log_likelihood_df_Attention_' + language + '_' + model + '_tau_start_' + str(
+                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        else:
+            log_likelihood_df = pd.read_pickle(
             'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
                 tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         print("LOG likelihood_df is:")
@@ -223,7 +238,12 @@ for language in languages:
         print('')
         print(model)
 
-        log_likelihood_df = pd.read_pickle(
+        if experiment == "attention":
+            log_likelihood_df = pd.read_pickle(
+            'model_fitting_data/' + 'log_likelihood_df_Attention_' + language + '_' + model + '_tau_start_' + str(
+                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        else:
+            log_likelihood_df = pd.read_pickle(
             'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
                 tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         print("LOG likelihood_df is:")
@@ -234,8 +254,12 @@ for language in languages:
         elif language == "Portuguese" or language == "Spanish":
             plot_likelihood_heatmap(log_likelihood_df, tau_start_for_plot, min_log_value_three_system)
 
-
-        likelihood_df = pd.read_pickle(
+        if experiment == "attention":
+            likelihood_df = pd.read_pickle(
+            'model_fitting_data/' + 'likelihood_df_Attention_' + language + '_' + model + '_tau_start_' + str(
+                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        else:
+            likelihood_df = pd.read_pickle(
             'model_fitting_data/' + 'likelihood_df_' + language + '_' + model + '_tau_start_' + str(
                 tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         print("likelihood_df is:")
@@ -247,12 +271,12 @@ for language in languages:
     print('')
     print(language)
 
-    bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_' + language + '_' + '_tau_start_' + str(
+    bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_Attention_' + language + '_' + '_tau_start_' + str(
         tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
     plot_bayes_factor_heatmap(bayes_factor_df, tau_start_for_comparison)
 
-    distance_wins_df = pd.read_pickle('model_fitting_data/' + 'distance_wins_df_' + language + '_' + '_tau_start_' + str(
+    distance_wins_df = pd.read_pickle('model_fitting_data/' + 'distance_wins_df_Attention_' + language + '_' + '_tau_start_' + str(
         tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
     # print('')
     # print('')
@@ -265,7 +289,7 @@ for language in languages:
     plot_which_model_wins(distance_wins_df, tau_start_for_comparison)
 
 
-    evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_' + language + '_' + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+    evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_Attention_' + language + '_' + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
     print('')
     print('')
     print("evidence_strength_df is:")
