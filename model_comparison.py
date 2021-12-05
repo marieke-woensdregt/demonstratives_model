@@ -336,7 +336,7 @@ for language in languages:
             tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
 
-        attention_wins_df.to_pickle('model_fitting_data/' + 'distance_wins_df_Attention_' + language + '_' + '_tau_start_' + str(
+        attention_wins_df.to_pickle('model_fitting_data/' + 'attention_wins_df_Attention_' + language + '_' + '_tau_start_' + str(
             tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
         evidence_strength_df.to_pickle('model_fitting_data/' + 'evidence_strength_df_Attention_' + language + '_' + '_tau_start_' + str(
@@ -359,11 +359,11 @@ for language in languages:
         print(bayes_factor_df)
 
 
-        attention_wins_df = convert_to_distance_wins(bayes_factor_df)
+        distance_wins_df = convert_to_distance_wins(bayes_factor_df)
         print('')
         print('')
         print("distance_wins_df is:")
-        print(attention_wins_df)
+        print(distance_wins_df)
 
 
         evidence_strength_df = convert_to_strength_of_evidence(bayes_factor_df)
@@ -377,7 +377,7 @@ for language in languages:
             tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
 
-        attention_wins_df.to_pickle('model_fitting_data/' + 'distance_wins_df_' + language + '_' + '_tau_start_' + str(
+        distance_wins_df.to_pickle('model_fitting_data/' + 'distance_wins_df_' + language + '_' + '_tau_start_' + str(
             tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
         evidence_strength_df.to_pickle('model_fitting_data/' + 'evidence_strength_df_' + language + '_' + '_tau_start_' + str(
