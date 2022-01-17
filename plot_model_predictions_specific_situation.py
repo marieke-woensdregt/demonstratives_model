@@ -178,7 +178,10 @@ def plot_stacked_bar_across_model_and_data(experiment, pd_word_probs_over_situat
     else:
         plt.legend(bbox_to_anchor=(1.01, 1), borderaxespad=0, prop={"size":16})
     plt.tight_layout()
-    plt.savefig('plots/'+'stacked_bars_'+experiment+'_object_pos_'+str(object_pos_of_interest)+'_'+origin.replace(" ", "")+'_'+language+'_'+model+'.png', transparent=transparent_plots)
+    if transparent_plots is True:
+        plt.savefig('plots/'+'stacked_bars_'+experiment+'_object_pos_'+str(object_pos_of_interest)+'_'+origin.replace(" ", "")+'_'+language+'_'+model+'.png', transparent=transparent_plots)
+    else:
+        plt.savefig('plots/'+'stacked_bars_'+experiment+'_object_pos_'+str(object_pos_of_interest)+'_'+origin.replace(" ", "")+'_'+language+'_'+model+'.pdf', transparent=transparent_plots)
     plt.show()
 
 
