@@ -5,8 +5,8 @@ from scipy.stats import binom, multinomial
 # PARAMETER SETTINGS: #
 experiment = "attention"
 if experiment == "attention":
-    # models = ["distance_attention", "person_attention"]
-    models = ["person_attention"]
+    models = ["distance_attention", "person_attention"]
+    # models = ["person_attention"]
 else:
     models = ["distance", "person"]
 # languages = ["English", "Italian", "Portuguese", "Spanish"]
@@ -79,7 +79,7 @@ def calc_multinom_pmf(experiment, pd_model_predictions, pd_data, model, language
             data_count = data_count_row[word]
 
         if len(data_count) > 1:
-            data_count = np.mean(data_count)  #TODO: Check whether this is really the right way to handle this.
+            data_count = np.mean(data_count)  #TODO: Check whether this is really the right way to handle this. For some reason these rows are repeated in the data files (twice for the 2-word languages, and thrice for the 3-word languages), due to my bad R skills for doing data preprocessing...
             # print("data_count AFTER AVERAGING is:")
             # print(data_count)
             counts_per_word[i] = data_count
