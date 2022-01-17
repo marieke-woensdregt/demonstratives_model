@@ -28,7 +28,7 @@ if experiment == "attention":
     object_pos_of_interest = 1
 else:
     object_pos_of_interest = 1
-transparent_plots = True  # Can be set to True or False
+transparent_plots = False  # Can be set to True or False
 
 
 
