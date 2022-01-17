@@ -8,6 +8,7 @@ import seaborn as sns
 # PARAMETER SETTINGS: #
 experiment = "attention"
 
+# models = ["distance", "person"]
 models = ["distance", "person", "distance_attention", "person_attention"]  # Possibilities are: ["distance", "person", "distance_attention", "person_attention"]
 languages = ["English", "Italian", "Portuguese", "Spanish"]  # Possibilities are: ["English", "Italian", "Portuguese", "Spanish"]
 tau_start = 0.4
@@ -66,7 +67,10 @@ def plot_likelihood_heatmap(likelihood_df, tau_start_for_plot, min_log_likelihoo
                      xticklabels=likelihood_df.columns.values.round(2),
                      yticklabels=likelihood_df.index.values.round(2))
     plt.title(f"LOG likelihood: {language} + {model}")
-    plt.savefig('plots/'+'heatmap_log_likelihood_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    if experiment == "attention":
+        plt.savefig('plots/'+'heatmap_log_likelihood_Attention_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    else:
+        plt.savefig('plots/'+'heatmap_log_likelihood_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
@@ -77,7 +81,10 @@ def plot_bayes_factor_heatmap(bayes_factor_df, tau_start_for_comparison):
                      xticklabels=bayes_factor_df.columns.values.round(2),
                      yticklabels=bayes_factor_df.index.values.round(2))
     plt.title(f"Bayes Factors Distance/Person {language}")
-    plt.savefig('plots/'+'heatmap_bayes_factors_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    if experiment == "attention":
+        plt.savefig('plots/'+'heatmap_bayes_factors_Attention_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    else:
+        plt.savefig('plots/'+'heatmap_bayes_factors_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
@@ -105,7 +112,10 @@ def plot_which_model_wins(distance_wins_df, tau_start_for_comparison):
     colorbar.set_ticklabels(list(vmap.values()))
 
     plt.title(f"Most likely model: {language}")
-    plt.savefig('plots/'+'heatmap_which_model_wins_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    if experiment == "attention":
+        plt.savefig('plots/'+'heatmap_which_model_wins_Attention_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    else:
+        plt.savefig('plots/'+'heatmap_which_model_wins_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
@@ -130,11 +140,18 @@ def plot_strength_of_evidence(evidence_strength_df, tau_start_for_comparison):
     colorbar.set_ticklabels(list(vmap.values()))
 
     plt.title(f"Strength of evidence in favour of likely model: {language}")
-    plt.savefig('plots/'+'heatmap_strength_of_evidence_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    if experiment == "attention":
+        plt.savefig('plots/'+'heatmap_strength_of_evidence_Attention_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    else:
+        plt.savefig('plots/'+'heatmap_strength_of_evidence_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
+
+
 min_log_value_two_system = 0
+min_log_value_english = 0
+min_log_value_italian = 0
 for language in ["English", "Italian"]:
     print('')
     print('')
@@ -170,16 +187,31 @@ for language in ["English", "Italian"]:
         print("min is:")
         print(min)
 
+        if language == "English":
+            if min < min_log_value_english:
+                min_log_value_english = min
+        elif language == "Italian":
+            if min < min_log_value_italian:
+                min_log_value_italian = min
+
         if min < min_log_value_two_system:
             min_log_value_two_system = min
 
-        print('')
-        print("min_log_value_two_system is:")
-        print(min_log_value_two_system)
 
-        min_log_value_two_system = rounddown(min_log_value_two_system)
+min_log_value_english = rounddown(min_log_value_english)
+print('')
+print("min_log_value_english is:")
+print(min_log_value_english)
 
+min_log_value_italian = rounddown(min_log_value_italian)
+print('')
+print("min_log_value_italian is:")
+print(min_log_value_italian)
 
+min_log_value_two_system = rounddown(min_log_value_two_system)
+print('')
+print("min_log_value_two_system is:")
+print(min_log_value_two_system)
 
 
 min_log_value_three_system = 0
@@ -250,7 +282,13 @@ for language in languages:
         print(log_likelihood_df)
 
         if language == "English" or language == "Italian":
-            plot_likelihood_heatmap(log_likelihood_df, tau_start_for_plot, min_log_value_two_system)
+            if experiment == "attention":
+                if language == "English":
+                    plot_likelihood_heatmap(log_likelihood_df, tau_start_for_plot, min_log_value_english)
+                elif language == "Italian":
+                    plot_likelihood_heatmap(log_likelihood_df, tau_start_for_plot, min_log_value_italian)
+            else:
+                plot_likelihood_heatmap(log_likelihood_df, tau_start_for_plot, min_log_value_two_system)
         elif language == "Portuguese" or language == "Spanish":
             plot_likelihood_heatmap(log_likelihood_df, tau_start_for_plot, min_log_value_three_system)
 
@@ -271,25 +309,42 @@ for language in languages:
     print('')
     print(language)
 
-    bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_Attention_' + language + '_' + '_tau_start_' + str(
-        tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+    if experiment == "attention":
+        bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_Attention_' + language + '_' + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+    else:
+        bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_' + language + '_' + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
     plot_bayes_factor_heatmap(bayes_factor_df, tau_start_for_comparison)
 
-    distance_wins_df = pd.read_pickle('model_fitting_data/' + 'distance_wins_df_Attention_' + language + '_' + '_tau_start_' + str(
-        tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-    # print('')
-    # print('')
-    # print("distance_wins_df is:")
-    # print(distance_wins_df)
-    # print("distance_wins_df.shape is:")
-    # print(distance_wins_df.shape)
+    if experiment == "attention":
+        attention_wins_df = pd.read_pickle('model_fitting_data/' + 'attention_wins_df_Attention_' + language + '_' + '_tau_start_' + str(
+            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        # print('')
+        # print('')
+        # print("attention_wins_df is:")
+        # print(attention_wins_df)
+        # print("attention_wins_df.shape is:")
+        # print(attention_wins_df.shape)
 
+        plot_which_model_wins(attention_wins_df, tau_start_for_comparison)
 
-    plot_which_model_wins(distance_wins_df, tau_start_for_comparison)
+    else:
+        distance_wins_df = pd.read_pickle('model_fitting_data/' + 'distance_wins_df_' + language + '_' + '_tau_start_' + str(
+            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        # print('')
+        # print('')
+        # print("distance_wins_df is:")
+        # print(distance_wins_df)
+        # print("distance_wins_df.shape is:")
+        # print(distance_wins_df.shape)
 
+        plot_which_model_wins(distance_wins_df, tau_start_for_comparison)
 
-    evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_Attention_' + language + '_' + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+    if experiment == "attention":
+        evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_Attention_' + language + '_' + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+    else:
+        evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_' + language + '_' + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+
     print('')
     print('')
     print("evidence_strength_df is:")
