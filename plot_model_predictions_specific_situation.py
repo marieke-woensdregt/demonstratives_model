@@ -187,172 +187,174 @@ def plot_stacked_bar_across_model_and_data(experiment, pd_word_probs_over_situat
 
 
 
+if __name__ == "__main__":
+    best_fit_parameters_exp1_dict = {"English":[0.75, 0.95],
+                                     "Italian":[0.45, 1.2],
+                                     "Portuguese":[0.45, 0.9],
+                                     "Spanish":[0.45, 0.9]}
 
-best_fit_parameters_exp1_dict = {"English":[0.75, 0.95],
-                                 "Italian":[0.45, 1.2],
-                                 "Portuguese":[0.45, 0.9],
-                                 "Spanish":[0.45, 0.9]}
+    best_fit_parameters_exp2_dict = {"English":[1.7, 1.15],
+                                     "Italian":[0.65, 1.],
+                                     "Portuguese":[0.55, 1.65],
+                                     "Spanish":[0.5, 1.95]}
 
-best_fit_parameters_exp2_dict = {"English":[1.7, 1.15],
-                                 "Italian":[0.65, 1.],
-                                 "Portuguese":[0.55, 1.65],
-                                 "Spanish":[0.5, 1.95]}
+    for language in languages:
+        # print('')
+        # print('')
+        # print(language)
 
-for language in languages:
-    # print('')
-    # print('')
-    # print(language)
-
-    # LOAD IN DATA: #
-    if experiment == "attention":
-        if language == "English" or language == "Italian":
-            data_pd = pd.read_csv('data/experiment_2/with_counts/TwoSystem_Attention.csv', index_col=0)
-        elif language == "Portuguese" or language == "Spanish":
-            data_pd = pd.read_csv('data/experiment_2/with_counts/ThreeSystem_Attention.csv', index_col=0)
-    else:
-        if language == "English" or language == "Italian":
-            data_pd = pd.read_csv('data/experiment_1/with_counts/TwoSystem.csv', index_col=0)
-        elif language == "Portuguese" or language == "Spanish":
-            data_pd = pd.read_csv('data/experiment_1/with_counts/ThreeSystem.csv', index_col=0)
-
-    if experiment == "attention":
-        best_fit_parameters = best_fit_parameters_exp2_dict
-    else:
-        best_fit_parameters = best_fit_parameters_exp1_dict
-
-    speaker_tau = best_fit_parameters[language][0]
-    listener_tau = best_fit_parameters[language][1]
-
-    print('')
-    print('')
-    print("speaker_tau is:")
-    print(speaker_tau)
-    print('')
-    print("listener_tau is:")
-    print(listener_tau)
-
-    if language == "English":
-        proximal = "this"
-        distal = "that"
-    elif language == "Italian":
-        proximal = "questo"
-        distal = "quello"
-    elif language == "Portuguese":
-        proximal = "este"
-        middle = "esse"
-        distal = "aquele"
-    elif language == "Spanish":
-        proximal = "este"
-        middle = "ese"
-        distal = "aquel"
-
-    for model in models:
-        print('')
-        print(model)
-
-        print('')
-        print('')
-        print(f"LANGUAGE = {language} + MODEL = {model}:")
-        # LOAD IN MODEL PREDICTIONS: #
+        # LOAD IN DATA: #
         if experiment == "attention":
+            if language == "English" or language == "Italian":
+                data_pd = pd.read_csv('data/experiment_2/with_counts/TwoSystem_Attention.csv', index_col=0)
+            elif language == "Portuguese" or language == "Spanish":
+                data_pd = pd.read_csv('data/experiment_2/with_counts/ThreeSystem_Attention.csv', index_col=0)
+        else:
+            if language == "English" or language == "Italian":
+                data_pd = pd.read_csv('data/experiment_1/with_counts/TwoSystem.csv', index_col=0)
+            elif language == "Portuguese" or language == "Spanish":
+                data_pd = pd.read_csv('data/experiment_1/with_counts/ThreeSystem.csv', index_col=0)
 
-            if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
-                models_for_filename = ["distance_attention", "person_attention"]
-                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+        if experiment == "attention":
+            best_fit_parameters = best_fit_parameters_exp2_dict
+        else:
+            best_fit_parameters = best_fit_parameters_exp1_dict
 
+        speaker_tau = best_fit_parameters[language][0]
+        listener_tau = best_fit_parameters[language][1]
+
+        print('')
+        print('')
+        print("speaker_tau is:")
+        print(speaker_tau)
+        print('')
+        print("listener_tau is:")
+        print(listener_tau)
+
+        if language == "English":
+            proximal = "this"
+            distal = "that"
+        elif language == "Italian":
+            proximal = "questo"
+            distal = "quello"
+        elif language == "Portuguese":
+            proximal = "este"
+            middle = "esse"
+            distal = "aquele"
+        elif language == "Spanish":
+            proximal = "este"
+            middle = "ese"
+            distal = "aquel"
+
+        for model in models:
+            print('')
+            print(model)
+
+            print('')
+            print('')
+            print(f"LANGUAGE = {language} + MODEL = {model}:")
+            # LOAD IN MODEL PREDICTIONS: #
+            if experiment == "attention":
+
+                if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
+                    models_for_filename = ["distance_attention", "person_attention"]
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+
+                else:
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
             else:
-                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
-        else:
-            model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_' +str(models).replace(" ", "")+'_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_' +str(models).replace(" ", "")+'_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
-        if experiment == "attention":
-            if language == "English" or language == "Italian":
-                word_probs_over_situations_dict = {"listener_att":[],
-                                                   "origin": [],
-                                                   proximal: [],
-                                                   distal:[]}
-            elif language == "Portuguese" or language == "Spanish":
-                word_probs_over_situations_dict = {"listener_att":[],
-                                                   "origin": [],
-                                                   proximal: [],
-                                                   middle:[],
-                                                   distal:[]}
-            for listener_att in listener_attentions:
-                probs_per_word, proportions_per_word = get_probs_and_proportions_for_situation(experiment, model_predictions, data_pd, model, language, speaker_tau, listener_tau, object_pos_of_interest, listener_pos=None, listener_att=listener_att)
+            if experiment == "attention":
                 if language == "English" or language == "Italian":
-                    word_probs_over_situations_dict["listener_att"].append(listener_att)
-                    word_probs_over_situations_dict["origin"].append("model predictions")
-                    word_probs_over_situations_dict[proximal].append(probs_per_word[0])
-                    word_probs_over_situations_dict[distal].append(probs_per_word[1])
-
-                    word_probs_over_situations_dict["listener_att"].append(listener_att)
-                    word_probs_over_situations_dict["origin"].append("human participants")
-                    word_probs_over_situations_dict[proximal].append(proportions_per_word[0])
-                    word_probs_over_situations_dict[distal].append(proportions_per_word[1])
+                    word_probs_over_situations_dict = {"listener_att":[],
+                                                       "origin": [],
+                                                       proximal: [],
+                                                       distal:[]}
                 elif language == "Portuguese" or language == "Spanish":
-                    word_probs_over_situations_dict["listener_att"].append(listener_att)
-                    word_probs_over_situations_dict["origin"].append("model predictions")
-                    word_probs_over_situations_dict[proximal].append(probs_per_word[0])
-                    word_probs_over_situations_dict[middle].append(probs_per_word[1])
-                    word_probs_over_situations_dict[distal].append(probs_per_word[2])
+                    word_probs_over_situations_dict = {"listener_att":[],
+                                                       "origin": [],
+                                                       proximal: [],
+                                                       middle:[],
+                                                       distal:[]}
+                for listener_att in listener_attentions:
+                    probs_per_word, proportions_per_word = get_probs_and_proportions_for_situation(experiment, model_predictions, data_pd, model, language, speaker_tau, listener_tau, object_pos_of_interest, listener_pos=None, listener_att=listener_att)
+                    if language == "English" or language == "Italian":
+                        word_probs_over_situations_dict["listener_att"].append(listener_att)
+                        word_probs_over_situations_dict["origin"].append("model predictions")
+                        word_probs_over_situations_dict[proximal].append(probs_per_word[0])
+                        word_probs_over_situations_dict[distal].append(probs_per_word[1])
 
-                    word_probs_over_situations_dict["listener_att"].append(listener_att)
-                    word_probs_over_situations_dict["origin"].append("human participants")
-                    word_probs_over_situations_dict[proximal].append(proportions_per_word[0])
-                    word_probs_over_situations_dict[middle].append(proportions_per_word[1])
-                    word_probs_over_situations_dict[distal].append(proportions_per_word[2])
-        else:
-            if language == "English" or language == "Italian":
-                word_probs_over_situations_dict = {"listener_pos":[],
-                                                   "origin": [],
-                                                   proximal: [],
-                                                   distal:[]}
-            elif language == "Portuguese" or language == "Spanish":
-                word_probs_over_situations_dict = {"listener_pos":[],
-                                                   "origin": [],
-                                                   proximal: [],
-                                                   middle:[],
-                                                   distal:[]}
-            for listener_pos in listener_positions:
-                probs_per_word, proportions_per_word = get_probs_and_proportions_for_situation(experiment, model_predictions, data_pd, model, language, speaker_tau, listener_tau, object_pos_of_interest, listener_pos=listener_pos, listener_att=None)
+                        word_probs_over_situations_dict["listener_att"].append(listener_att)
+                        word_probs_over_situations_dict["origin"].append("human participants")
+                        word_probs_over_situations_dict[proximal].append(proportions_per_word[0])
+                        word_probs_over_situations_dict[distal].append(proportions_per_word[1])
+                    elif language == "Portuguese" or language == "Spanish":
+                        word_probs_over_situations_dict["listener_att"].append(listener_att)
+                        word_probs_over_situations_dict["origin"].append("model predictions")
+                        word_probs_over_situations_dict[proximal].append(probs_per_word[0])
+                        word_probs_over_situations_dict[middle].append(probs_per_word[1])
+                        word_probs_over_situations_dict[distal].append(probs_per_word[2])
+
+                        word_probs_over_situations_dict["listener_att"].append(listener_att)
+                        word_probs_over_situations_dict["origin"].append("human participants")
+                        word_probs_over_situations_dict[proximal].append(proportions_per_word[0])
+                        word_probs_over_situations_dict[middle].append(proportions_per_word[1])
+                        word_probs_over_situations_dict[distal].append(proportions_per_word[2])
+            else:
                 if language == "English" or language == "Italian":
-                    word_probs_over_situations_dict["listener_pos"].append(listener_pos)
-                    word_probs_over_situations_dict["origin"].append("model predictions")
-                    word_probs_over_situations_dict[proximal].append(probs_per_word[0])
-                    word_probs_over_situations_dict[distal].append(probs_per_word[1])
-
-                    word_probs_over_situations_dict["listener_pos"].append(listener_pos)
-                    word_probs_over_situations_dict["origin"].append("human participants")
-                    word_probs_over_situations_dict[proximal].append(proportions_per_word[0])
-                    word_probs_over_situations_dict[distal].append(proportions_per_word[1])
+                    word_probs_over_situations_dict = {"listener_pos":[],
+                                                       "origin": [],
+                                                       proximal: [],
+                                                       distal:[]}
                 elif language == "Portuguese" or language == "Spanish":
-                    word_probs_over_situations_dict["listener_pos"].append(listener_pos)
-                    word_probs_over_situations_dict["origin"].append("model predictions")
-                    word_probs_over_situations_dict[proximal].append(probs_per_word[0])
-                    word_probs_over_situations_dict[middle].append(probs_per_word[1])
-                    word_probs_over_situations_dict[distal].append(probs_per_word[2])
+                    word_probs_over_situations_dict = {"listener_pos":[],
+                                                       "origin": [],
+                                                       proximal: [],
+                                                       middle:[],
+                                                       distal:[]}
+                for listener_pos in listener_positions:
+                    probs_per_word, proportions_per_word = get_probs_and_proportions_for_situation(experiment, model_predictions, data_pd, model, language, speaker_tau, listener_tau, object_pos_of_interest, listener_pos=listener_pos, listener_att=None)
+                    if language == "English" or language == "Italian":
+                        word_probs_over_situations_dict["listener_pos"].append(listener_pos)
+                        word_probs_over_situations_dict["origin"].append("model predictions")
+                        word_probs_over_situations_dict[proximal].append(probs_per_word[0])
+                        word_probs_over_situations_dict[distal].append(probs_per_word[1])
 
-                    word_probs_over_situations_dict["listener_pos"].append(listener_pos)
-                    word_probs_over_situations_dict["origin"].append("human participants")
-                    word_probs_over_situations_dict[proximal].append(proportions_per_word[0])
-                    word_probs_over_situations_dict[middle].append(proportions_per_word[1])
-                    word_probs_over_situations_dict[distal].append(proportions_per_word[2])
+                        word_probs_over_situations_dict["listener_pos"].append(listener_pos)
+                        word_probs_over_situations_dict["origin"].append("human participants")
+                        word_probs_over_situations_dict[proximal].append(proportions_per_word[0])
+                        word_probs_over_situations_dict[distal].append(proportions_per_word[1])
+                    elif language == "Portuguese" or language == "Spanish":
+                        word_probs_over_situations_dict["listener_pos"].append(listener_pos)
+                        word_probs_over_situations_dict["origin"].append("model predictions")
+                        word_probs_over_situations_dict[proximal].append(probs_per_word[0])
+                        word_probs_over_situations_dict[middle].append(probs_per_word[1])
+                        word_probs_over_situations_dict[distal].append(probs_per_word[2])
+
+                        word_probs_over_situations_dict["listener_pos"].append(listener_pos)
+                        word_probs_over_situations_dict["origin"].append("human participants")
+                        word_probs_over_situations_dict[proximal].append(proportions_per_word[0])
+                        word_probs_over_situations_dict[middle].append(proportions_per_word[1])
+                        word_probs_over_situations_dict[distal].append(proportions_per_word[2])
 
 
-        print('')
-        print('')
-        print("word_probs_over_situations_dict is:")
-        print(word_probs_over_situations_dict)
+            print('')
+            print('')
+            print("word_probs_over_situations_dict is:")
+            print(word_probs_over_situations_dict)
 
 
-        pd_word_probs_over_situations = pd.DataFrame.from_dict(word_probs_over_situations_dict)
+            pd_word_probs_over_situations = pd.DataFrame.from_dict(word_probs_over_situations_dict)
 
-        pd.set_option('display.max_columns', None)
+            pd.set_option('display.max_columns', None)
 
-        print('')
-        print('')
-        print("pd_word_probs_over_situations is:")
-        print(pd_word_probs_over_situations)
+            print('')
+            print('')
+            print("pd_word_probs_over_situations is:")
+            print(pd_word_probs_over_situations)
 
-        for origin in ["model predictions", "human participants"]:
-            plot_stacked_bar_across_model_and_data(experiment, pd_word_probs_over_situations, language, model, origin)
+            for origin in ["model predictions", "human participants"]:
+                plot_stacked_bar_across_model_and_data(experiment, pd_word_probs_over_situations, language, model, origin)
+
+
