@@ -4,7 +4,7 @@ import pandas as pd
 
 
 # PARAMETER SETTINGS: #
-experiment = "attention"
+experiment = "baseline"
 if experiment == "attention":
     models = ["distance_attention", "person_attention"]
 else:
