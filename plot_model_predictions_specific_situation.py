@@ -35,7 +35,7 @@ transparent_plots = False  # Can be set to True or False
 
 
 
-def get_model_predictions_for_situation(experiment, pd_model_predictions, pd_data, model, language, speaker_tau, listener_tau, object_pos, listener_pos=None, listener_att=None):
+def get_probs_and_proportions_for_situation(experiment, pd_model_predictions, pd_data, model, language, speaker_tau, listener_tau, object_pos, listener_pos=None, listener_att=None):
 
     if language == "English" or language == "Italian":
         WordNo = 2
@@ -278,7 +278,7 @@ for language in languages:
                                                    middle:[],
                                                    distal:[]}
             for listener_att in listener_attentions:
-                probs_per_word, proportions_per_word = get_model_predictions_for_situation(experiment, model_predictions, data_pd, model, language, speaker_tau, listener_tau, object_pos_of_interest, listener_pos=None, listener_att=listener_att)
+                probs_per_word, proportions_per_word = get_probs_and_proportions_for_situation(experiment, model_predictions, data_pd, model, language, speaker_tau, listener_tau, object_pos_of_interest, listener_pos=None, listener_att=listener_att)
                 if language == "English" or language == "Italian":
                     word_probs_over_situations_dict["listener_att"].append(listener_att)
                     word_probs_over_situations_dict["origin"].append("model predictions")
@@ -314,7 +314,7 @@ for language in languages:
                                                    middle:[],
                                                    distal:[]}
             for listener_pos in listener_positions:
-                probs_per_word, proportions_per_word = get_model_predictions_for_situation(experiment, model_predictions, data_pd, model, language, speaker_tau, listener_tau, object_pos_of_interest, listener_pos=listener_pos, listener_att=None)
+                probs_per_word, proportions_per_word = get_probs_and_proportions_for_situation(experiment, model_predictions, data_pd, model, language, speaker_tau, listener_tau, object_pos_of_interest, listener_pos=listener_pos, listener_att=None)
                 if language == "English" or language == "Italian":
                     word_probs_over_situations_dict["listener_pos"].append(listener_pos)
                     word_probs_over_situations_dict["origin"].append("model predictions")
