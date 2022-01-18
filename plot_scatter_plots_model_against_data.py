@@ -5,7 +5,7 @@ import seaborn as sns
 
 
 # PARAMETER SETTINGS: #
-experiment = "baseline"
+experiment = "baseline"  # Can be set to either "baseline" (=Experiment 1) or "attention" (=Experiment 2)
 
 if experiment == "attention":
     models = ["distance_attention", "person_attention"]
@@ -83,7 +83,16 @@ def create_probs_and_proportions_dataframe(experiment, pd_model_predictions, pd_
 
                         # Below is object_pos+1 and listener_pos+1, because in the model_predictions dataframe it starts counting
                         # from 0, but in the experimental data dataframe it starts counting from 1.
-                        data_count_row = pd_data[pd_data["Object_Position"] == object_pos+1][pd_data["Listener_Attention"] == listener_att+1][pd_data["Language"] == language]
+                        # TODO: Currently the data dataframe looks different for Experiment 1 and Experiment 2, where the relevant columns in the dataframe for Experiment are called things like "Estep" and "Aquelp", whereas for Experiment 2, the dataframe contains seperate rows for the separate words (e.g. an "este" row and an "aquel" row), and the relevant column within that row is called "Percentage". That's why below the specification "[pd_data["Word"] == word]" is added, whereas that isn't present under the condition where experiment == "baseline" (i.e. for Experiment 1).
+                        data_count_row = pd_data[pd_data["Object_Position"] == object_pos+1][pd_data["Listener_Attention"] == listener_att+1][pd_data["Language"] == language][pd_data["Word"] == word]
+
+
+                        pd.set_option('display.max_columns', None)
+                        print('')
+                        print('')
+                        print("data_count_row is:")
+                        print(data_count_row)
+
 
                         merged_row_dict["Model"].append(model)
                         merged_row_dict["WordNo"].append(WordNo)
@@ -94,7 +103,8 @@ def create_probs_and_proportions_dataframe(experiment, pd_model_predictions, pd_
                         merged_row_dict["Listener_att"].append(listener_att)
                         merged_row_dict["Word"].append(word)
                         merged_row_dict["Probability_model"].append(float(model_prediction_row["Probability"]))
-                        merged_row_dict["Proportion_data"].append(float(data_count_row[word.capitalize()+"p"]))
+                        # TODO: Currently the data dataframe looks different for Experiment 1 and Experiment 2, where the relevant columns in the dataframe for Experiment are called things like "Estep" and "Aquelp", whereas for Experiment 2, the dataframe contains seperate rows for the separate words (e.g. an "este" row and an "aquel" row), and the relevant column within that row is called "Percentage"
+                        merged_row_dict["Proportion_data"].append(float(data_count_row["Percentage"]))
 
     else:
         for i in range(len(language_combo)):
@@ -117,7 +127,14 @@ def create_probs_and_proportions_dataframe(experiment, pd_model_predictions, pd_
 
                         # Below is object_pos+1 and listener_pos+1, because in the model_predictions dataframe it starts counting
                         # from 0, but in the experimental data dataframe it starts counting from 1.
+                        # TODO: Currently the data dataframe looks different for Experiment 1 and Experiment 2, where the relevant columns in the dataframe for Experiment are called things like "Estep" and "Aquelp", whereas for Experiment 2, the dataframe contains seperate rows for the separate words (e.g. an "este" row and an "aquel" row), and the relevant column within that row is called "Percentage". That's why below the specification "[pd_data["Word"] == word]" is not present, whereas for the condition where experiment == "attention" (i.e. for Experiment 2), it is.
                         data_count_row = pd_data[pd_data["Object_Position"] == object_pos+1][pd_data["Listener_Position"] == listener_pos+1][pd_data["Language"] == language]
+
+                        pd.set_option('display.max_columns', None)
+                        print('')
+                        print('')
+                        print("data_count_row is:")
+                        print(data_count_row)
 
                         merged_row_dict["Model"].append(model)
                         merged_row_dict["WordNo"].append(WordNo)
@@ -128,6 +145,7 @@ def create_probs_and_proportions_dataframe(experiment, pd_model_predictions, pd_
                         merged_row_dict["Listener_pos"].append(listener_pos)
                         merged_row_dict["Word"].append(word)
                         merged_row_dict["Probability_model"].append(float(model_prediction_row["Probability"]))
+                        # TODO: Currently the data dataframe looks different for Experiment 1 and Experiment 2, where the relevant columns in the dataframe for Experiment are called things like "Estep" and "Aquelp", whereas for Experiment 2, the dataframe contains seperate rows for the separate words (e.g. an "este" row and an "aquel" row), and the relevant column within that row is called "Percentage"
                         merged_row_dict["Proportion_data"].append(float(data_count_row[word.capitalize()+"p"]))
 
     pd_probs_and_proportions_over_trials = pd.DataFrame.from_dict(merged_row_dict)
@@ -137,7 +155,7 @@ def create_probs_and_proportions_dataframe(experiment, pd_model_predictions, pd_
 
 
 
-def plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, transparent_plots):
+def plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experiment, model, language_combo, transparent_plots):
     # set seaborn plotting aesthetics
     if transparent_plots is True:
         sns.set(style='white')
@@ -152,9 +170,9 @@ def plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, transp
     else:
         plt.title(f"Correlation {model.capitalize()} Model * Experiment 1", fontsize=17)
     if transparent_plots is True:
-        plt.savefig('plots/'+'scatter_'+experiment+'_'+language+'_'+model+'.png', transparent=transparent_plots)
+        plt.savefig('plots/'+'scatter_'+experiment+'_'+str(language_combo).replace(" ", "")+'_'+model+'.png', transparent=transparent_plots)
     else:
-        plt.savefig('plots/'+'scatter_'+experiment+'_'+language+'_'+model+'.pdf', transparent=transparent_plots)
+        plt.savefig('plots/'+'scatter_'+experiment+'_'+str(language_combo).replace(" ", "")+'_'+model+'.pdf', transparent=transparent_plots)
     plt.show()
 
 
@@ -245,4 +263,4 @@ for language_combo in language_combos:
 
 
 
-    plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, transparent_plots)
+    plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experiment, model, language_combo, transparent_plots)
