@@ -148,9 +148,9 @@ def plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, transp
     sns.scatterplot(data=pd_probs_and_proportions_over_trials, x="Probability_model", y="Proportion_data", hue="Language")
 
     if experiment == "attention":
-        plt.title(f"Correlation {model.capitalize()} Model * Experiment 2", fontsize=17, x=0.6)
+        plt.title(f"Correlation {model.capitalize()} Model * Experiment 2", fontsize=17)
     else:
-        plt.title(f"Correlation {model.capitalize()} Model * Experiment 1", fontsize=17, x=0.6)
+        plt.title(f"Correlation {model.capitalize()} Model * Experiment 1", fontsize=17)
     if transparent_plots is True:
         plt.savefig('plots/'+'scatter_'+experiment+'_'+language+'_'+model+'.png', transparent=transparent_plots)
     else:
