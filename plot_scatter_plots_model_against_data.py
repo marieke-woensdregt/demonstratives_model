@@ -5,7 +5,7 @@ import seaborn as sns
 
 
 # PARAMETER SETTINGS: #
-experiment = "baseline"  # Can be set to either "baseline" (=Experiment 1) or "attention" (=Experiment 2)
+experiment = "attention"  # Can be set to either "baseline" (=Experiment 1) or "attention" (=Experiment 2)
 
 if experiment == "attention":
     models = ["distance_attention", "person_attention"]
@@ -27,6 +27,16 @@ tau_step = 0.05
 transparent_plots = False  # Can be set to True or False
 
 language_combos = [["English", "Italian"], ["Portuguese", "Spanish"]]
+
+best_fit_parameters_exp1_dict = {"English":[0.75, 0.95],
+                                 "Italian":[0.45, 1.2],
+                                 "Portuguese":[0.45, 0.9],
+                                 "Spanish":[0.45, 0.9]}
+
+best_fit_parameters_exp2_dict = {"English":[1.7, 1.15],
+                                 "Italian":[0.65, 1.],
+                                 "Portuguese":[0.55, 1.65],
+                                 "Spanish":[0.5, 1.95]}
 
 
 def create_probs_and_proportions_dataframe(experiment, pd_model_predictions, pd_data, model, language_combo, speaker_tau_per_language, listener_tau_per_language, object_positions, listener_positions, listener_attentions):
@@ -64,16 +74,8 @@ def create_probs_and_proportions_dataframe(experiment, pd_model_predictions, pd_
     if experiment == "attention":
         for i in range(len(language_combo)):
             language = language_combo[i]
-            print('')
-            print('')
-            print("language is:")
-            print(language)
             speaker_tau = speaker_tau_per_language[i]
-            print("speaker_tau is:")
-            print(speaker_tau)
             listener_tau = listener_tau_per_language[i]
-            print("listener_tau is:")
-            print(listener_tau)
 
             for object_pos in object_positions:
                 for listener_att in listener_attentions:
@@ -86,13 +88,7 @@ def create_probs_and_proportions_dataframe(experiment, pd_model_predictions, pd_
                         # TODO: Currently the data dataframe looks different for Experiment 1 and Experiment 2, where the relevant columns in the dataframe for Experiment are called things like "Estep" and "Aquelp", whereas for Experiment 2, the dataframe contains seperate rows for the separate words (e.g. an "este" row and an "aquel" row), and the relevant column within that row is called "Percentage". That's why below the specification "[pd_data["Word"] == word]" is added, whereas that isn't present under the condition where experiment == "baseline" (i.e. for Experiment 1).
                         data_count_row = pd_data[pd_data["Object_Position"] == object_pos+1][pd_data["Listener_Attention"] == listener_att+1][pd_data["Language"] == language][pd_data["Word"] == word]
 
-
                         pd.set_option('display.max_columns', None)
-                        print('')
-                        print('')
-                        print("data_count_row is:")
-                        print(data_count_row)
-
 
                         merged_row_dict["Model"].append(model)
                         merged_row_dict["WordNo"].append(WordNo)
@@ -109,16 +105,8 @@ def create_probs_and_proportions_dataframe(experiment, pd_model_predictions, pd_
     else:
         for i in range(len(language_combo)):
             language = language_combo[i]
-            print('')
-            print('')
-            print("language is:")
-            print(language)
             speaker_tau = speaker_tau_per_language[i]
-            print("speaker_tau is:")
-            print(speaker_tau)
             listener_tau = listener_tau_per_language[i]
-            print("listener_tau is:")
-            print(listener_tau)
             for object_pos in object_positions:
                 for listener_pos in listener_positions:
                     for word in words:
@@ -131,10 +119,6 @@ def create_probs_and_proportions_dataframe(experiment, pd_model_predictions, pd_
                         data_count_row = pd_data[pd_data["Object_Position"] == object_pos+1][pd_data["Listener_Position"] == listener_pos+1][pd_data["Language"] == language]
 
                         pd.set_option('display.max_columns', None)
-                        print('')
-                        print('')
-                        print("data_count_row is:")
-                        print(data_count_row)
 
                         merged_row_dict["Model"].append(model)
                         merged_row_dict["WordNo"].append(WordNo)
@@ -177,19 +161,6 @@ def plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experi
 
 
 
-best_fit_parameters_exp1_dict = {"English":[0.75, 0.95],
-                                 "Italian":[0.45, 1.2],
-                                 "Portuguese":[0.45, 0.9],
-                                 "Spanish":[0.45, 0.9]}
-
-best_fit_parameters_exp2_dict = {"English":[1.7, 1.15],
-                                 "Italian":[0.65, 1.],
-                                 "Portuguese":[0.55, 1.65],
-                                 "Spanish":[0.5, 1.95]}
-
-
-
-
 for language_combo in language_combos:
     print('')
     print('')
@@ -212,55 +183,46 @@ for language_combo in language_combos:
     else:
         best_fit_parameters = best_fit_parameters_exp1_dict
 
-    if language_combo == ["English", "Italian"]:
+    for model in models:
+
+        speaker_tau_per_language = []
+        listener_tau_per_language = []
+        for language in language_combo:
+            speaker_tau = best_fit_parameters[language][0]
+            listener_tau = best_fit_parameters[language][1]
+            speaker_tau_per_language.append(speaker_tau)
+            listener_tau_per_language.append(listener_tau)
+
+
+        print('')
+        print('')
+        print("speaker_tau_per_language is:")
+        print(speaker_tau_per_language)
+        print('')
+        print("listener_tau_per_language is:")
+        print(listener_tau_per_language)
+
+        # LOAD IN MODEL PREDICTIONS: #
         if experiment == "attention":
-            model = "distance_attention"
+
+            if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
+                models_for_filename = ["distance_attention", "person_attention"]
+                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+
+            else:
+                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
         else:
-            model = "distance"
-    elif language_combo == ["Portuguese", "Spanish"]:
-        if experiment == "attention":
-            model = "person_attention"
-        else:
-            model = "person"
-
-    speaker_tau_per_language = []
-    listener_tau_per_language = []
-    for language in language_combo:
-        speaker_tau = best_fit_parameters[language][0]
-        listener_tau = best_fit_parameters[language][1]
-        speaker_tau_per_language.append(speaker_tau)
-        listener_tau_per_language.append(listener_tau)
+            model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_' +str(models).replace(" ", "")+'_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
 
-    print('')
-    print('')
-    print("speaker_tau_per_language is:")
-    print(speaker_tau_per_language)
-    print('')
-    print("listener_tau_per_language is:")
-    print(listener_tau_per_language)
+        pd_probs_and_proportions_over_trials = create_probs_and_proportions_dataframe(experiment, model_predictions, data_pd, model, language_combo, speaker_tau_per_language, listener_tau_per_language, object_positions, listener_positions, listener_attentions)
 
-    # LOAD IN MODEL PREDICTIONS: #
-    if experiment == "attention":
-
-        if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
-            models_for_filename = ["distance_attention", "person_attention"]
-            model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
-
-        else:
-            model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
-    else:
-        model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_' +str(models).replace(" ", "")+'_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
-
-
-    pd_probs_and_proportions_over_trials = create_probs_and_proportions_dataframe(experiment, model_predictions, data_pd, model, language_combo, speaker_tau_per_language, listener_tau_per_language, object_positions, listener_positions, listener_attentions)
-
-    pd.set_option('display.max_columns', None)
-    print('')
-    print('')
-    print("pd_probs_and_proportions_over_trials is:")
-    print(pd_probs_and_proportions_over_trials)
+        pd.set_option('display.max_columns', None)
+        print('')
+        print('')
+        print("pd_probs_and_proportions_over_trials is:")
+        print(pd_probs_and_proportions_over_trials)
 
 
 
-    plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experiment, model, language_combo, transparent_plots)
+        plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experiment, model, language_combo, transparent_plots)
