@@ -8,7 +8,7 @@ import seaborn as sns
 experiment = "attention"  # Can be set to either "baseline" (=Experiment 1) or "attention" (=Experiment 2)
 
 if experiment == "attention":
-    models = ["distance_attention", "person_attention"]
+    models = ["distance", "person", "distance_attention", "person_attention"]
 else:
     models = ["distance", "person"]
 # languages = ["English", "Italian", "Portuguese", "Spanish"]
@@ -193,15 +193,6 @@ for language_combo in language_combos:
             speaker_tau_per_language.append(speaker_tau)
             listener_tau_per_language.append(listener_tau)
 
-
-        print('')
-        print('')
-        print("speaker_tau_per_language is:")
-        print(speaker_tau_per_language)
-        print('')
-        print("listener_tau_per_language is:")
-        print(listener_tau_per_language)
-
         # LOAD IN MODEL PREDICTIONS: #
         if experiment == "attention":
 
@@ -210,7 +201,8 @@ for language_combo in language_combos:
                 model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
 
             else:
-                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+                models_for_filename = ["distance", "person"]
+                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
         else:
             model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_' +str(models).replace(" ", "")+'_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
