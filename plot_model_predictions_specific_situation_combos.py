@@ -5,7 +5,7 @@ import seaborn as sns
 
 
 # PARAMETER SETTINGS: #
-experiment = "baseline"
+experiment = "attention"
 
 if experiment == "attention":
     models = ["distance_attention", "person_attention"]
@@ -25,11 +25,11 @@ tau_stop = 2.05
 tau_step = 0.05
 
 if experiment == "attention":
-    object_positions_of_interest = [0, 0, 3, 3]
-    listener_attentions_of_interest = [0, 0, 1, 1]
+    object_positions_of_interest = [1, 1, 2, 2]  # Note that in Experiment 2, object position = 0 doesn't exist!
+    listener_attentions_of_interest = [0, 1, 2, 3]
 else:
-    object_positions_of_interest = [0, 0, 3, 3]
-    listener_positions_of_interest = [0, 0, 1, 1]
+    object_positions_of_interest = [1, 1, 3, 3]
+    listener_positions_of_interest = [1, 3, 1, 3]
 transparent_plots = False  # Can be set to True or False
 
 
@@ -187,6 +187,8 @@ def plot_stacked_bar_across_model_and_data(experiment, pd_word_probs_over_situat
         plt.tick_params(axis="x", colors="white")
         plt.tick_params(axis="y", colors="white")
         plt.ylim(0.0, 1.0)
+
+    plt.axvline(x=1.5, color='k')
 
     if transparent_plots is True:
         plt.legend().remove()
@@ -397,8 +399,8 @@ if __name__ == "__main__":
 
             for origin in ["model predictions", "human participants"]:
                 if experiment == "attention":
-                    plot_stacked_bar_across_model_and_data(experiment, pd_word_probs_over_situations, language, model, origin, object_positions_of_interest, listener_attentions_of_interest=listener_attentions_of_interest)
+                    plot_stacked_bar_across_model_and_data(experiment, pd_word_probs_over_situations, language, model, origin, object_positions_of_interest, listener_positions_of_interest=None, listener_attentions_of_interest=listener_attentions_of_interest)
                 else:
-                    plot_stacked_bar_across_model_and_data(experiment, pd_word_probs_over_situations, language, model, origin, object_positions_of_interest, listener_positions_of_interest=listener_positions_of_interest)
+                    plot_stacked_bar_across_model_and_data(experiment, pd_word_probs_over_situations, language, model, origin, object_positions_of_interest, listener_positions_of_interest=listener_positions_of_interest, listener_attentions_of_interest=None)
 
 
