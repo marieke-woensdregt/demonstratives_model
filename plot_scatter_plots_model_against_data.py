@@ -216,5 +216,29 @@ for language_combo in language_combos:
         print(pd_probs_and_proportions_over_trials)
 
 
+        for language in language_combo:
+            print('')
+            print('')
+            print("language is:")
+            print(language)
+            model_probs = pd_probs_and_proportions_over_trials["Probability_model"][pd_probs_and_proportions_over_trials["Language"] == language]
+            # print('')
+            # print('')
+            # print("model_probs are:")
+            # print(model_probs)
+            data_props = pd_probs_and_proportions_over_trials["Proportion_data"][pd_probs_and_proportions_over_trials["Language"] == language]
+            # print('')
+            # print('')
+            # print("data_props are:")
+            # print(data_props)
+            pearson_correlation = data_props.corr(model_probs)
+            print('')
+            print("pearson_correlation is:")
+            print(pearson_correlation)
+            pearson_correlation_reverse = model_probs.corr(data_props)
+            print('')
+            print("pearson_correlation_reverse is:")
+            print(pearson_correlation_reverse)
+
 
         plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experiment, model, language_combo, transparent_plots)
