@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import pickle5 as p
+import pickle
 
 
 
@@ -121,17 +123,28 @@ for language in languages:
             print(likelihood_df_comparison)
 
     else:
-        likelihood_df_baseline = pd.read_pickle(
-            'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'distance' + '_tau_start_' + str(
-                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-        # print("likelihood_df_distance DISTANCE BEFORE SLICING is:")
-        # print(likelihood_df_distance)
+        with open('model_fitting_data/' + 'likelihood_df_' + language + '_' + 'distance' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+            likelihood_df_baseline = p.load(fh)
+            print('')
+            print("likelihood_df_baseline is:")
+            print(likelihood_df_baseline)
+        # likelihood_df_baseline = pd.read_pickle(
+        #     'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'distance' + '_tau_start_' + str(
+        #         tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        # # print("likelihood_df_distance DISTANCE BEFORE SLICING is:")
+        # # print(likelihood_df_distance)
 
-        likelihood_df_comparison = pd.read_pickle(
-            'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'person' + '_tau_start_' + str(
-                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-        # print("likelihood_df_person PERSON BEFORE SLICING is:")
-        # print(likelihood_df_person)
+        with open('model_fitting_data/' + 'likelihood_df_' + language + '_' + 'person' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+            likelihood_df_comparison = p.load(fh)
+            print('')
+            print("likelihood_df_comparison is:")
+            print(likelihood_df_comparison)
+
+        # likelihood_df_comparison = pd.read_pickle(
+        #     'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'person' + '_tau_start_' + str(
+        #         tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        # # print("likelihood_df_person PERSON BEFORE SLICING is:")
+        # # print(likelihood_df_person)
 
 
     likelihood_df_baseline = likelihood_df_baseline[likelihood_df_baseline["SpeakerTau"] >= tau_start_for_comparison][likelihood_df_baseline["ListenerTau"] >= tau_start_for_comparison]
