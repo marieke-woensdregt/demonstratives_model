@@ -3,13 +3,18 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pickle5 as p
+import pickle
 
 
 # PARAMETER SETTINGS: #
-experiment = "attention"
+experiment = "baseline"
 
-# models = ["distance", "person"]
-models = ["distance", "person", "distance_attention", "person_attention"]  # Possibilities are: ["distance", "person", "distance_attention", "person_attention"]
+if experiment == "attention":
+    models = ["distance", "person", "distance_attention", "person_attention"]
+else:
+    models = ["distance", "person"]
+#models = ["distance", "person", "distance_attention", "person_attention"]  # Possibilities are: ["distance", "person", "distance_attention", "person_attention"]
 languages = ["English", "Italian", "Portuguese", "Spanish"]  # Possibilities are: ["English", "Italian", "Portuguese", "Spanish"]
 tau_start = 0.4
 tau_stop = 2.05
@@ -99,6 +104,14 @@ def plot_which_model_wins(distance_wins_df, tau_start_for_comparison):
     n = len(vmap)
 
     cmap = sns.color_palette("colorblind", n)
+    print('')
+    print('')
+    print("cmap is:")
+    print(cmap)
+    cmap = ["#d95f02", "#7570b3"]
+    print("cmap NEW is:")
+    print(cmap)
+
     ax = sns.heatmap(distance_wins_df,
                      xticklabels=distance_wins_df.columns.values.round(2),
                      yticklabels=distance_wins_df.index.values.round(2),
@@ -113,9 +126,9 @@ def plot_which_model_wins(distance_wins_df, tau_start_for_comparison):
 
     plt.title(f"Most likely model: {language}")
     if experiment == "attention":
-        plt.savefig('plots/'+'heatmap_which_model_wins_Attention_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        plt.savefig('plots/'+'heatmap_most_likely_model_Attention_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     else:
-        plt.savefig('plots/'+'heatmap_which_model_wins_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        plt.savefig('plots/'+'heatmap_most_likely_model_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
@@ -166,9 +179,12 @@ for language in ["English", "Italian"]:
                 'model_fitting_data/' + 'log_likelihood_df_Attention_' + language + '_' + model + '_tau_start_' + str(
                     tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         else:
-            log_likelihood_df = pd.read_pickle(
-                'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
-                    tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            with open('model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
+                    tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+                log_likelihood_df = p.load(fh)
+        #     log_likelihood_df = pd.read_pickle(
+        #         'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
+        #             tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         print("LOG likelihood_df is:")
         print(log_likelihood_df)
 
@@ -229,9 +245,11 @@ for language in ["Portuguese", "Spanish"]:
             'model_fitting_data/' + 'log_likelihood_df_Attention_' + language + '_' + model + '_tau_start_' + str(
                 tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         else:
-            log_likelihood_df = pd.read_pickle(
-            'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
-                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            with open('model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+                log_likelihood_df = p.load(fh)
+            # log_likelihood_df = pd.read_pickle(
+            # 'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
+            #     tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         print("LOG likelihood_df is:")
         print(log_likelihood_df)
 
@@ -275,9 +293,11 @@ for language in languages:
             'model_fitting_data/' + 'log_likelihood_df_Attention_' + language + '_' + model + '_tau_start_' + str(
                 tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         else:
-            log_likelihood_df = pd.read_pickle(
-            'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
-                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            with open('model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+                log_likelihood_df = p.load(fh)
+            # log_likelihood_df = pd.read_pickle(
+            # 'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
+            #     tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         print("LOG likelihood_df is:")
         print(log_likelihood_df)
 
@@ -297,9 +317,11 @@ for language in languages:
             'model_fitting_data/' + 'likelihood_df_Attention_' + language + '_' + model + '_tau_start_' + str(
                 tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         else:
-            likelihood_df = pd.read_pickle(
-            'model_fitting_data/' + 'likelihood_df_' + language + '_' + model + '_tau_start_' + str(
-                tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            with open('model_fitting_data/' + 'likelihood_df_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+                likelihood_df = p.load(fh)
+            # likelihood_df = pd.read_pickle(
+            # 'model_fitting_data/' + 'likelihood_df_' + language + '_' + model + '_tau_start_' + str(
+            #     tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         print("likelihood_df is:")
         print(likelihood_df)
 
