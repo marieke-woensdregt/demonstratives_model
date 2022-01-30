@@ -3,14 +3,14 @@ import numpy as np
 from scipy.stats import binom, multinomial
 
 # PARAMETER SETTINGS: #
-experiment = "attention"
+experiment = "baseline"
 if experiment == "attention":
     models = ["distance_attention", "person_attention"]
     # models = ["person_attention"]
 else:
     models = ["distance", "person"]
-# languages = ["English", "Italian", "Portuguese", "Spanish"]
-languages = ["Spanish"]
+languages = ["English", "Italian", "Portuguese", "Spanish"]
+#languages = ["Portuguese"]
 if experiment == "attention":
     object_positions = [1, 2, 3]  # array of all possible object (= referent) positions
 else:
@@ -159,10 +159,10 @@ def likelihood_across_parameter_settings(experiment, pd_model_predictions, pd_da
                    "ListenerTau":[],
                    "Likelihood":[]}
     for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
-        # print('')
-        # print(f"listener_rationality is {listener_rationality}:")
+        print('')
+        print(f"listener_rationality is {listener_rationality}:")
         for speaker_rationality in np.arange(tau_start, tau_stop, tau_step):
-            # print(f"speaker_rationality is {speaker_rationality}:")
+            print(f"speaker_rationality is {speaker_rationality}:")
             if experiment == "attention":
                 log_product, prob_product = product_logpmf_over_situations(experiment, pd_model_predictions, pd_data, model, language, round(speaker_rationality, 2), round(listener_rationality, 2), object_positions, listener_attentions=listener_attentions)
             else:
@@ -180,9 +180,9 @@ def likelihood_across_parameter_settings(experiment, pd_model_predictions, pd_da
 
 
 for language in languages:
-    # print('')
-    # print('')
-    # print(language)
+    print('')
+    print('')
+    print(language)
 
     # LOAD IN DATA: #
     if experiment == "attention":
@@ -197,13 +197,13 @@ for language in languages:
             data_pd = pd.read_csv('data/experiment_1/with_counts/ThreeSystem.csv', index_col=0)
 
     for model in models:
-        # print('')
-        # print(model)
-        #
-        # print('')
-        # print('')
-        # print(f"LANGUAGE = {language} + MODEL = {model}:")
-        # LOAD IN MODEL PREDICTIONS: #
+        print('')
+        print(model)
+
+        print('')
+        print('')
+        print(f"LANGUAGE = {language} + MODEL = {model}:")
+        #LOAD IN MODEL PREDICTIONS: #
         if experiment == "attention":
 
 
