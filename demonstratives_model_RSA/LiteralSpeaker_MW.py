@@ -34,10 +34,21 @@ class LiteralSpeaker:
 		self.lpos = lpos
 		self.latt = latt
 
-	def GetCost(self, distribution, samples=1000):
+	def GetCost(self, distribution, samples=10000): #TODO: CHANGE THIS BACK TO 1000
 		"""
 		General function that gets costs given a probability distribution
 		"""
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("distribution given as input to LS.GetCost() is:")
+		# sys.stdout.write("\n")
+		# sys.stdout.write(str(distribution))
+		# sys.stdout.write("\n")
+		# sys.stdout.write("str(np.sum(distribution)) is:")
+		# sys.stdout.write("\n")
+		# sys.stdout.write(str(np.sum(distribution)))
+		# sys.stdout.write("\n")
+
 		CostSamples = [0] * samples
 		for i in range(samples):
 			FixationOrder = np.random.choice(range(self.ObjectNo),size=self.ObjectNo,replace=False,p=distribution)
@@ -61,6 +72,13 @@ class LiteralSpeaker:
 		"""
 		Simple function to normalize a utility function
 		"""
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("\n")
+		# sys.stdout.write("THIS IS WHEN THE normalizeSearchCost() METHOD GETS CALLED!:")
+		# sys.stdout.write("\n")
+		# sys.stdout.write("\n")
+
 		utilities_scaled = [x+3 for x in values] # shift by 3 so we're on a 0-3 scale
 		return(utilities_scaled)
 
@@ -71,6 +89,14 @@ class LiteralSpeaker:
 		methods = 'utilities' or 'visual search'.
 		For utilities it means you're getting word valuers. visual search means you're getting visual cost estimates
 		"""
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("These are the utilities given as input to LS.Softmax_Utilities() BEFORE NORMALIZING:")
+		# sys.stdout.write("\n")
+		# sys.stdout.write(str(utilities))
+		# sys.stdout.write("\n")
+
+
 		if method=='utilities':
 			tau = self.ltau
 		else:
@@ -80,6 +106,15 @@ class LiteralSpeaker:
 				utilities = self.normalizeUtilities(utilities)
 			else:
 				utilities = self.normalizeSearchCost(utilities)
+
+		#
+		# sys.stdout.write("\n")
+		# sys.stdout.write("These are the utilities given as input to LS.Softmax_Utilities() AFTER NORMALIZING:")
+		# sys.stdout.write("\n")
+		# sys.stdout.write(str(utilities))
+		# sys.stdout.write("\n")
+
+
 		if sum(utilities)==0:
 			return [1.0/len(utilities)] * len(utilities)
 		Softmaxed = [np.exp(x*1.0/tau) for x in utilities]
@@ -94,6 +129,11 @@ class LiteralSpeaker:
 		Distance=[-np.abs(x-self.spos) for x in range(self.ObjectNo)]
 		# Now sample objects based on distance
 		Softmaxed = self.Softmax_Utilities(Distance)
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("term is proximal")
+		# sys.stdout.write("\n")
+
 		return(self.GetCost(Softmaxed))
 
 	def Ese_distance_OLD(self):
@@ -118,6 +158,11 @@ class LiteralSpeaker:
 		Utilities = [1] * self.ObjectNo
 		# Now sample objects based on this metric!
 		Softmaxed = self.Softmax_Utilities(Utilities)
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("term is medial")
+		# sys.stdout.write("\n")
+
 		return(self.GetCost(Softmaxed))
 
 	def Aquel_distance(self,):
@@ -128,6 +173,11 @@ class LiteralSpeaker:
 		Distance=[np.abs(x-self.spos) for x in range(self.ObjectNo)]
 		# Now sample objects based on distance
 		Softmaxed = self.Softmax_Utilities(Distance)
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("term is distal")
+		# sys.stdout.write("\n")
+
 		return(self.GetCost(Softmaxed))
 
 
@@ -142,6 +192,11 @@ class LiteralSpeaker:
 		Distance = [Speaker_Distance[x]+Listener_Distance[x] for x in range(len(Speaker_Distance))]
 		# Now sample objects based on distance
 		Softmaxed = self.Softmax_Utilities(Distance)
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("term is medial")
+		# sys.stdout.write("\n")
+
 		return(self.GetCost(Softmaxed))
 
 	def Aquel_person(self):
@@ -156,6 +211,11 @@ class LiteralSpeaker:
 		Distance = [Speaker_Distance[x]+Listener_Distance[x] for x in range(len(Speaker_Distance))]
 		# Now sample objects based on distance!
 		Softmaxed = self.Softmax_Utilities(Distance)
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("term is distal")
+		# sys.stdout.write("\n")
+
 		return(self.GetCost(Softmaxed))
 
 	def Este_attention(self):
@@ -184,6 +244,11 @@ class LiteralSpeaker:
 		Utilities = [sum(x) for x in zip(Utilities_core, Utilities_attention)]
 		# Now sample objects based on distance!
 		Softmaxed = self.Softmax_Utilities(Utilities)
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("term is proximal")
+		# sys.stdout.write("\n")
+
 		if self.verbose:
 			sys.stdout.write("\tprobabilities of visual search: "+str(np.round(Softmaxed,2))+"\n")
 		Costs = self.GetCost(Softmaxed)
@@ -223,6 +288,11 @@ class LiteralSpeaker:
 		Utilities = [sum(x) for x in zip(Utilities_core, Utilities_attention)]
 		# Now sample objects based on distance!
 		Softmaxed = self.Softmax_Utilities(Utilities)
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("term is distal")
+		# sys.stdout.write("\n")
+
 		if self.verbose:
 			sys.stdout.write("\tprobabilities of visual search: "+str(np.round(Softmaxed,2))+"\n")
 		Costs = self.GetCost(Softmaxed)
@@ -277,6 +347,11 @@ class LiteralSpeaker:
 		Utilities = [sum(x) for x in zip(Utilities_core, Utilities_attention)]
 		# Now sample objects based on distance!
 		Softmaxed = self.Softmax_Utilities(Utilities)
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("term is distal")
+		# sys.stdout.write("\n")
+
 		if self.verbose:
 			sys.stdout.write("\tprobabilities of visual search: "+str(np.round(Softmaxed,2))+"\n")
 		Costs = self.GetCost(Softmaxed)
@@ -290,4 +365,5 @@ class LiteralSpeaker:
 			return([['este',self.modelcosts[self.method]['este']()],['aquel',self.modelcosts[self.method]['aquel']()]])
 		else:
 			return([['este',self.modelcosts[self.method]['este']()],['ese',self.modelcosts[self.method]['ese']()],['aquel',self.modelcosts[self.method]['aquel']()]])
+
 
