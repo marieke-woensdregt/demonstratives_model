@@ -16,7 +16,7 @@ tau_start = 0.4
 tau_stop = 2.05
 tau_step = 0.05
 
-models = ['distance', 'person']  # ['distance', 'person'] # ['distance_attention', 'person_attention']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
+models = ['distance_attention', 'person_attention']  # ['distance', 'person'] # ['distance_attention', 'person_attention']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
 
 output_dict = {"Model":[],
 			   "Word":[],
