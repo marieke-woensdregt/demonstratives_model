@@ -22,7 +22,7 @@ listener_positions = [0, 1, 2, 3]  # array of all possible listener positions
 listener_attentions = [0, 1, 2, 3]  # array of all possible listener positions
 tau_start = 0.4
 tau_stop = 2.05
-tau_step = 0.05
+tau_step = 1.0
 
 
 
