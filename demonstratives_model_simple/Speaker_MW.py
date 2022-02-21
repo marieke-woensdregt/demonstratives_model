@@ -3,7 +3,7 @@ import sys
 
 class Speaker:
 
-	def __init__(self, output_dict, method=None, referent=0, lpos=0, latt=0, stau=0.01, ltau=0.01, verbose=False): # MW added output_dict input parameter
+	def __init__(self, output_dict, method=None, referent=0, lpos=0, latt=0, stau=0.01, ltau=0.01, verbose=False, uniform_ese=False): # MW added output_dict input parameter
 		# Static prameters
 		self.ObjectNo = 4 # Four objects!
 		self.spos = 0 # speaker position
@@ -15,6 +15,7 @@ class Speaker:
 		self.stau = stau # speaker rationality
 		self.ltau = ltau # listener rationality
 		self.verbose = verbose
+		self.uniform_ese = uniform_ese # Determines whether the utilities for ese_distance is a uniform distribution (if True) or instead centred around the medial objects (if False)
 		########################################################################################
 		self.output_dict = output_dict # MW added this to easily save output as pandas dataframe
 		########################################################################################
@@ -104,13 +105,17 @@ class Speaker:
 		"""
 		# Look average distance from speaker
 		"""
-		# Prioritize average distance
-		Distance=[np.abs(x-self.spos) for x in range(self.ObjectNo)]
-		Av = np.mean(Distance)
-		# Now score each one based on how far it is from the average.
-		# Use negative so that farther from average has lower utility
-		DFromAv = [-np.abs(x-Av) for x in Distance]
-		Softmaxed = self.Softmax_Utilities(DFromAv)
+		if self.uniform_ese is True:  # Uniform distribution over objects
+			utilities = [1.0 for x in range(self.ObjectNo)]
+			Softmaxed = self.Softmax_Utilities(utilities)
+		else:  # Higher utility for objects at "medial" distance
+			# Prioritize average distance
+			Distance=[np.abs(x-self.spos) for x in range(self.ObjectNo)]
+			Av = np.mean(Distance)
+			# Now score each one based on how far it is from the average.
+			# Use negative so that farther from average has lower utility
+			DFromAv = [-np.abs(x-Av) for x in Distance]
+			Softmaxed = self.Softmax_Utilities(DFromAv)
 		return(self.GetCost(Softmaxed))
 
 	def Aquel_distance(self):
