@@ -6,6 +6,8 @@ from scipy.stats import binom, multinomial
 
 rsa_layer = False  # Can be set to either True or False
 
+ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
+
 experiment = "attention"
 # if experiment == "attention":
 #     models = ["distance_attention", "person_attention"]
@@ -228,13 +230,12 @@ for language in languages:
 
                 if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
                     models_for_filename = ["distance_attention", "person_attention"]
-                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
-
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Attention_Ese_uniform_' + str(ese_uniform) + '_' + str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
 
                 else:
-                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Attention_'+str(models).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Attention_Ese_uniform_' + str(ese_uniform) + '_' + str(models).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
             else:
-                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_' +str(models).replace(" ", "")+'_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Ese_uniform_' + str(ese_uniform) + '_' + str(models).replace(" ", "")+'_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
         if experiment == "attention":
             log_likelihood_df, likelihood_df = likelihood_across_parameter_settings(experiment, model_predictions, data_pd, model, language, tau_start, tau_stop, tau_step, object_positions, listener_attentions=listener_attentions)
@@ -250,10 +251,10 @@ for language in languages:
         # print(likelihood_df)
 
         if experiment == "attention":
-            log_likelihood_df.to_pickle('model_fitting_data/'+'log_likelihood_df_RSA_'+str(rsa_layer)+'_Attention_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
+            log_likelihood_df.to_pickle('model_fitting_data/'+'log_likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' + language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
 
-            likelihood_df.to_pickle('model_fitting_data/'+'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
+            likelihood_df.to_pickle('model_fitting_data/'+'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' + language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
         else:
-            log_likelihood_df.to_pickle('model_fitting_data/'+'log_likelihood_df_RSA_'+str(rsa_layer)+'_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
+            log_likelihood_df.to_pickle('model_fitting_data/'+'log_likelihood_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
 
-            likelihood_df.to_pickle('model_fitting_data/'+'likelihood_df_RSA_'+str(rsa_layer)+'_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
+            likelihood_df.to_pickle('model_fitting_data/'+'likelihood_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pkl')
