@@ -8,7 +8,7 @@ rsa_layer = False  # Can be set to either True or False
 
 ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
 
-experiment = "attention"
+experiment = "attention"  # can be set to either "baseline" or "attention"
 # if experiment == "attention":
 #     models = ["distance_attention", "person_attention"]
 # else:
