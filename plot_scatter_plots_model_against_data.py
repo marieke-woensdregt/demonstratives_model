@@ -1,10 +1,15 @@
 import numpy as np
+from scipy import stats
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 
 # PARAMETER SETTINGS: #
+rsa_layer = True  # Can be set to either True or False
+
+ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
+
 experiment = "attention"  # Can be set to either "baseline" (=Experiment 1) or "attention" (=Experiment 2)
 
 if experiment == "attention":
@@ -28,15 +33,30 @@ transparent_plots = False  # Can be set to True or False
 
 language_combos = [["English", "Italian"], ["Portuguese", "Spanish"]]
 
-best_fit_parameters_exp1_dict = {"English":[0.75, 0.95],
+#TODO: Change the best-fit parameters for Exp. 1 based on the new step size of 0.05:
+best_fit_parameters_exp1_dict_RSA = {"English":[0.75, 0.95],
                                  "Italian":[0.45, 1.2],
                                  "Portuguese":[0.45, 0.9],
                                  "Spanish":[0.45, 0.9]}
 
-best_fit_parameters_exp2_dict = {"English":[1.7, 1.15],
+best_fit_parameters_exp2_dict_RSA = {"English":[1.7, 1.15],
                                  "Italian":[0.65, 1.],
                                  "Portuguese":[0.55, 1.65],
                                  "Spanish":[0.5, 1.95]}
+
+
+
+best_fit_parameters_exp1_dict_Simple = {"English":[0.4, 1.15],
+                                 "Italian":[0.4, 0.45],
+                                 "Portuguese":[0.4, 0.55],
+                                 "Spanish":[0.4, 0.55]}
+
+best_fit_parameters_exp2_dict_Simple = {"English":[1.55, 1.8],
+                                 "Italian":[0.45, 1.05],
+                                 "Portuguese":[0.55, 0.75],
+                                 "Spanish":[0.6, 0.65]}
+
+
 
 
 def create_probs_and_proportions_dataframe(experiment, pd_model_predictions, pd_data, model, language_combo, speaker_tau_per_language, listener_tau_per_language, object_positions, listener_positions, listener_attentions):
@@ -154,10 +174,38 @@ def plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experi
     else:
         plt.title(f"Correlation {model.capitalize()} Model * Experiment 1", fontsize=17)
     if transparent_plots is True:
-        plt.savefig('plots/'+'scatter_'+experiment+'_'+str(language_combo).replace(" ", "")+'_'+model+'.png', transparent=transparent_plots)
+        plt.savefig('plots/'+'scatter_'+experiment+'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' +str(language_combo).replace(" ", "")+'_'+model+'.png', transparent=transparent_plots)
     else:
-        plt.savefig('plots/'+'scatter_'+experiment+'_'+str(language_combo).replace(" ", "")+'_'+model+'.pdf', transparent=transparent_plots)
+        plt.savefig('plots/'+'scatter_'+experiment+'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' +str(language_combo).replace(" ", "")+'_'+model+'.pdf', transparent=transparent_plots)
     plt.show()
+
+
+
+def pearsonr_ci(x,y,alpha=0.05):
+    ''' calculate Pearson correlation along with the confidence interval using scipy and numpy
+    Parameters
+    ----------
+    x, y : iterable object such as a list or np.array
+      Input for correlation calculation
+    alpha : float
+      Significance level. 0.05 by default
+    Returns
+    -------
+    r : float
+      Pearson's correlation coefficient
+    pval : float
+      The corresponding p value
+    lo, hi : float
+      The lower and upper bound of confidence intervals
+    '''
+
+    r, p = stats.pearsonr(x,y)
+    r_z = np.arctanh(r)
+    se = 1/np.sqrt(x.size-3)
+    z = stats.norm.ppf(1-alpha/2)
+    lo_z, hi_z = r_z-z*se, r_z+z*se
+    lo, hi = np.tanh((lo_z, hi_z))
+    return r, p, lo, hi
 
 
 
@@ -179,9 +227,15 @@ for language_combo in language_combos:
             data_pd = pd.read_csv('data/experiment_1/with_counts/ThreeSystem.csv', index_col=0)
 
     if experiment == "attention":
-        best_fit_parameters = best_fit_parameters_exp2_dict
+        if rsa_layer is True:
+            best_fit_parameters = best_fit_parameters_exp2_dict_RSA
+        else:
+            best_fit_parameters = best_fit_parameters_exp2_dict_Simple
     else:
-        best_fit_parameters = best_fit_parameters_exp1_dict
+        if rsa_layer is True:
+            best_fit_parameters = best_fit_parameters_exp1_dict_RSA
+        else:
+            best_fit_parameters = best_fit_parameters_exp1_dict_Simple
 
     for model in models:
 
@@ -194,17 +248,31 @@ for language_combo in language_combos:
             listener_tau_per_language.append(listener_tau)
 
         # LOAD IN MODEL PREDICTIONS: #
-        if experiment == "attention":
+        if rsa_layer is True:
+            if experiment == "attention":
 
-            if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
-                models_for_filename = ["distance_attention", "person_attention"]
-                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+                if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
+                    models_for_filename = ["distance_attention", "person_attention"]
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
 
+                else:
+                    models_for_filename = ["distance", "person"]
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
             else:
-                models_for_filename = ["distance", "person"]
-                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_' +str(models).replace(" ", "")+'_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+
         else:
-            model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_' +str(models).replace(" ", "")+'_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+            if experiment == "attention":
+
+                if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
+                    models_for_filename = ["distance_attention", "person_attention"]
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Attention_Ese_uniform_'+ str(ese_uniform) + '_' + str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+
+                else:
+                    models_for_filename = ["distance", "person"]
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Attention_Ese_uniform_'+ str(ese_uniform) + '_' + str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+            else:
+                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Ese_uniform_'+ str(ese_uniform) + '_' + str(models).replace(" ", "")+'_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
 
         pd_probs_and_proportions_over_trials = create_probs_and_proportions_dataframe(experiment, model_predictions, data_pd, model, language_combo, speaker_tau_per_language, listener_tau_per_language, object_positions, listener_positions, listener_attentions)
@@ -239,6 +307,20 @@ for language_combo in language_combos:
             print('')
             print("pearson_correlation_reverse is:")
             print(pearson_correlation_reverse)
+
+            r, p, lo, hi = pearsonr_ci(model_probs, data_props, alpha=0.05)
+            print('')
+            print('')
+            print("Pearson's r correlation using code from https://zhiyzuo.github.io/Pearson-Correlation-CI-in-Python/")
+            print("r is:")
+            print(r)
+            print("p is:")
+            print(p)
+            print("lo is:")
+            print(lo)
+            print("hi is:")
+            print(hi)
+
 
 
         plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experiment, model, language_combo, transparent_plots)
