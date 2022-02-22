@@ -8,6 +8,10 @@ import pickle
 
 
 # PARAMETER SETTINGS: #
+rsa_layer = False  # Can be set to either True or False
+
+ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
+
 experiment = "baseline"
 
 if experiment == "attention":
@@ -176,10 +180,10 @@ for language in ["English", "Italian"]:
 
         if experiment == "attention":
             log_likelihood_df = pd.read_pickle(
-                'model_fitting_data/' + 'log_likelihood_df_Attention_' + language + '_' + model + '_tau_start_' + str(
+                'model_fitting_data/' + 'log_likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' + language + '_' + model + '_tau_start_' + str(
                     tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         else:
-            with open('model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
+            with open('model_fitting_data/' + 'log_likelihood_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_' + model + '_tau_start_' + str(
                     tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
                 log_likelihood_df = p.load(fh)
         #     log_likelihood_df = pd.read_pickle(
@@ -242,10 +246,10 @@ for language in ["Portuguese", "Spanish"]:
 
         if experiment == "attention":
             log_likelihood_df = pd.read_pickle(
-            'model_fitting_data/' + 'log_likelihood_df_Attention_' + language + '_' + model + '_tau_start_' + str(
+            'model_fitting_data/' + 'log_likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' + language + '_' + model + '_tau_start_' + str(
                 tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         else:
-            with open('model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+            with open('model_fitting_data/' + 'log_likelihood_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
                 log_likelihood_df = p.load(fh)
             # log_likelihood_df = pd.read_pickle(
             # 'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
@@ -290,10 +294,10 @@ for language in languages:
 
         if experiment == "attention":
             log_likelihood_df = pd.read_pickle(
-            'model_fitting_data/' + 'log_likelihood_df_Attention_' + language + '_' + model + '_tau_start_' + str(
+            'model_fitting_data/' + 'log_likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + model + '_tau_start_' + str(
                 tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         else:
-            with open('model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+            with open('model_fitting_data/' + 'log_likelihood_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
                 log_likelihood_df = p.load(fh)
             # log_likelihood_df = pd.read_pickle(
             # 'model_fitting_data/' + 'log_likelihood_df_' + language + '_' + model + '_tau_start_' + str(
@@ -314,10 +318,10 @@ for language in languages:
 
         if experiment == "attention":
             likelihood_df = pd.read_pickle(
-            'model_fitting_data/' + 'likelihood_df_Attention_' + language + '_' + model + '_tau_start_' + str(
+            'model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + model + '_tau_start_' + str(
                 tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         else:
-            with open('model_fitting_data/' + 'likelihood_df_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+            with open('model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
                 likelihood_df = p.load(fh)
             # likelihood_df = pd.read_pickle(
             # 'model_fitting_data/' + 'likelihood_df_' + language + '_' + model + '_tau_start_' + str(
@@ -332,14 +336,14 @@ for language in languages:
     print(language)
 
     if experiment == "attention":
-        bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_Attention_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
     else:
-        bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
     plot_bayes_factor_heatmap(bayes_factor_df, tau_start_for_comparison)
 
     if experiment == "attention":
-        attention_wins_df = pd.read_pickle('model_fitting_data/' + 'attention_wins_df_Attention_' + language + '_tau_start_' + str(
+        attention_wins_df = pd.read_pickle('model_fitting_data/' + 'attention_wins_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(
             tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         # print('')
         # print('')
@@ -351,7 +355,7 @@ for language in languages:
         plot_which_model_wins(attention_wins_df, tau_start_for_comparison)
 
     else:
-        distance_wins_df = pd.read_pickle('model_fitting_data/' + 'distance_wins_df_' + language + '_tau_start_' + str(
+        distance_wins_df = pd.read_pickle('model_fitting_data/' + 'distance_wins_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(
             tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         # print('')
         # print('')
@@ -363,9 +367,9 @@ for language in languages:
         plot_which_model_wins(distance_wins_df, tau_start_for_comparison)
 
     if experiment == "attention":
-        evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_Attention_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
     else:
-        evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
     print('')
     print('')
