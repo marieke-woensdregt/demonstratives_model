@@ -4,19 +4,17 @@ import pickle5 as p
 import pickle
 
 
-
 # PARAMETER SETTINGS: #
 
 rsa_layer = False  # Can be set to either True or False
 
 ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
 
-experiment = "baseline"
-# if experiment == "attention":
-#     models = ["distance_attention", "person_attention"]
-# else:
-#     models = ["distance", "person"]
-models = ['distance', 'person']  # ['distance', 'person'] # ['distance_attention', 'person_attention']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
+experiment = "attention"
+if experiment == "attention":
+    models = ["distance_attention", "person_attention"]
+else:
+    models = ["distance", "person"]
 languages = ["English", "Italian", "Portuguese", "Spanish"]
 tau_start = 0.4
 tau_stop = 2.05
@@ -105,28 +103,43 @@ for language in languages:
     if experiment == "attention":
 
         if language == 'English' or language == 'Italian':
-            likelihood_df_baseline = pd.read_pickle(
-                'model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' + language + '_' + 'distance' + '_tau_start_' + str(
-                    tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-            print("likelihood_df_baseline DISTANCE BEFORE SLICING is:")
-            print(likelihood_df_baseline)
 
-            likelihood_df_comparison = pd.read_pickle(
-                'model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + 'distance_attention' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-            print("likelihood_df_comparison DISTANCE + ATTENTION BEFORE SLICING is:")
-            print(likelihood_df_comparison)
+            with open('model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' + language + '_' + 'distance' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+                likelihood_df_baseline = p.load(fh)
+                print("likelihood_df_baseline DISTANCE BEFORE SLICING is:")
+                print(likelihood_df_baseline)
+            # likelihood_df_baseline = pd.read_pickle(
+            #     'model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' + language + '_' + 'distance' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            # print("likelihood_df_baseline DISTANCE BEFORE SLICING is:")
+            # print(likelihood_df_baseline)
+
+            with open('model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + 'distance_attention' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+                likelihood_df_comparison = p.load(fh)
+                print("likelihood_df_comparison DISTANCE + ATTENTION BEFORE SLICING is:")
+                print(likelihood_df_comparison)
+            # likelihood_df_comparison = pd.read_pickle(
+            #     'model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + 'distance_attention' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            # print("likelihood_df_comparison DISTANCE + ATTENTION BEFORE SLICING is:")
+            # print(likelihood_df_comparison)
 
         if language == 'Spanish' or language == 'Portuguese':
-            likelihood_df_baseline = pd.read_pickle(
-                'model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + 'person' + '_tau_start_' + str(
-                    tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-            print("likelihood_df_baseline PERSON BEFORE SLICING is:")
-            print(likelihood_df_baseline)
+            with open('model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + 'person' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+                likelihood_df_baseline = p.load(fh)
+                print("likelihood_df_baseline PERSON BEFORE SLICING is:")
+                print(likelihood_df_baseline)
+            # likelihood_df_baseline = pd.read_pickle(
+            #     'model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + 'person' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            # print("likelihood_df_baseline PERSON BEFORE SLICING is:")
+            # print(likelihood_df_baseline)
 
-            likelihood_df_comparison = pd.read_pickle(
-                'model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + 'person_attention' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-            print("likelihood_df_comparison PERSON + ATTENTION BEFORE SLICING is:")
-            print(likelihood_df_comparison)
+            with open('model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + 'person_attention' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+                likelihood_df_comparison = p.load(fh)
+                print("likelihood_df_comparison PERSON + ATTENTION BEFORE SLICING is:")
+                print(likelihood_df_comparison)
+            # likelihood_df_comparison = pd.read_pickle(
+            #     'model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + 'person_attention' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            # print("likelihood_df_comparison PERSON + ATTENTION BEFORE SLICING is:")
+            # print(likelihood_df_comparison)
 
     else:
         with open('model_fitting_data/' + 'likelihood_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_' + 'distance' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
@@ -145,7 +158,6 @@ for language in languages:
             print('')
             print("likelihood_df_comparison is:")
             print(likelihood_df_comparison)
-
         # likelihood_df_comparison = pd.read_pickle(
         #     'model_fitting_data/' + 'likelihood_df_' + language + '_' + 'person' + '_tau_start_' + str(
         #         tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
