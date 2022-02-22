@@ -332,14 +332,14 @@ for language in languages:
     print(language)
 
     if experiment == "attention":
-        bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_Attention_' + language + '_' + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_Attention_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
     else:
-        bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_' + language + '_' + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
     plot_bayes_factor_heatmap(bayes_factor_df, tau_start_for_comparison)
 
     if experiment == "attention":
-        attention_wins_df = pd.read_pickle('model_fitting_data/' + 'attention_wins_df_Attention_' + language + '_' + '_tau_start_' + str(
+        attention_wins_df = pd.read_pickle('model_fitting_data/' + 'attention_wins_df_Attention_' + language + '_tau_start_' + str(
             tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         # print('')
         # print('')
@@ -351,7 +351,7 @@ for language in languages:
         plot_which_model_wins(attention_wins_df, tau_start_for_comparison)
 
     else:
-        distance_wins_df = pd.read_pickle('model_fitting_data/' + 'distance_wins_df_' + language + '_' + '_tau_start_' + str(
+        distance_wins_df = pd.read_pickle('model_fitting_data/' + 'distance_wins_df_' + language + '_tau_start_' + str(
             tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         # print('')
         # print('')
@@ -363,9 +363,9 @@ for language in languages:
         plot_which_model_wins(distance_wins_df, tau_start_for_comparison)
 
     if experiment == "attention":
-        evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_Attention_' + language + '_' + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_Attention_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
     else:
-        evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_' + language + '_' + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
     print('')
     print('')
