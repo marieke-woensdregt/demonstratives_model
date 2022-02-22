@@ -46,8 +46,6 @@ def calc_min_log_likelihood(words, object_positions, listener_positions):
     return likelihood_product, max_log_likelihood_sum
 
 
-
-
 def plot_likelihood_heatmap(likelihood_df, tau_start_for_plot, min_log_likelihood):
     """
     Plots the (log) likelihoods of the parameters given the data in a 2D heatmap with speaker_rationality ("SpeakerTau") on the y-axis and listener_rationality ("ListenerTau") on the x-axis.
