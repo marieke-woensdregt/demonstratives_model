@@ -12,7 +12,7 @@ rsa_layer = False  # Can be set to either True or False
 
 ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
 
-experiment = "baseline"
+experiment = "attention"
 
 if experiment == "attention":
     models = ["distance", "person", "distance_attention", "person_attention"]
@@ -77,9 +77,9 @@ def plot_likelihood_heatmap(likelihood_df, tau_start_for_plot, min_log_likelihoo
                      yticklabels=likelihood_df.index.values.round(2))
     plt.title(f"LOG likelihood: {language} + {model}")
     if experiment == "attention":
-        plt.savefig('plots/'+'heatmap_log_likelihood_Attention_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        plt.savefig('plots/'+'heatmap_log_likelihood_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     else:
-        plt.savefig('plots/'+'heatmap_log_likelihood_'+language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        plt.savefig('plots/'+'heatmap_log_likelihood_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' +language+'_'+model+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
@@ -91,9 +91,9 @@ def plot_bayes_factor_heatmap(bayes_factor_df, tau_start_for_comparison):
                      yticklabels=bayes_factor_df.index.values.round(2))
     plt.title(f"Bayes Factors Distance/Person {language}")
     if experiment == "attention":
-        plt.savefig('plots/'+'heatmap_bayes_factors_Attention_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        plt.savefig('plots/'+'heatmap_bayes_factors_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     else:
-        plt.savefig('plots/'+'heatmap_bayes_factors_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        plt.savefig('plots/'+'heatmap_bayes_factors_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
@@ -130,9 +130,9 @@ def plot_which_model_wins(distance_wins_df, tau_start_for_comparison):
 
     plt.title(f"Most likely model: {language}")
     if experiment == "attention":
-        plt.savefig('plots/'+'heatmap_most_likely_model_Attention_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        plt.savefig('plots/'+'heatmap_most_likely_model_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     else:
-        plt.savefig('plots/'+'heatmap_most_likely_model_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        plt.savefig('plots/'+'heatmap_most_likely_model_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
@@ -158,9 +158,9 @@ def plot_strength_of_evidence(evidence_strength_df, tau_start_for_comparison):
 
     plt.title(f"Strength of evidence in favour of likely model: {language}")
     if experiment == "attention":
-        plt.savefig('plots/'+'heatmap_strength_of_evidence_Attention_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        plt.savefig('plots/'+'heatmap_strength_of_evidence_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     else:
-        plt.savefig('plots/'+'heatmap_strength_of_evidence_'+language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        plt.savefig('plots/'+'heatmap_strength_of_evidence_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
