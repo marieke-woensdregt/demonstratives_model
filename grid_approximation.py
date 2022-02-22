@@ -11,7 +11,6 @@ ese_uniform = True  # Can be set to either True or False. Determines whether "es
 experiment = "attention"
 # if experiment == "attention":
 #     models = ["distance_attention", "person_attention"]
-#     # models = ["person_attention"]
 # else:
 #     models = ["distance", "person"]
 models = ['distance_attention', 'person_attention']  # ['distance', 'person'] # ['distance_attention', 'person_attention']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
