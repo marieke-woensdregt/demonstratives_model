@@ -6,7 +6,7 @@ import seaborn as sns
 
 
 # PARAMETER SETTINGS: #
-rsa_layer = False  # Can be set to either True or False
+rsa_layer = True  # Can be set to either True or False
 
 ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
 
