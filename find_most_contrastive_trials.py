@@ -8,13 +8,16 @@ import seaborn as sns
 languages = ["English", "Italian", "Portuguese", "Spanish"]
 baseline_models = ["distance", "person"]
 words = [2, 3]
-object_positions = [1, 2, 3]  # array of all possible object (= referent) positions
-listener_attentions = [0, 1, 2, 3]  # array of all possible listener positions
+object_positions = [0, 1, 2, 3]  # array of all possible object (= referent) positions
+listener_positions = [0, 1, 2, 3]  # array of all possible listener positions
+listener_attentions = [0, 1, 2, 3]  # array of all possible listener attentions
 tau_start = 0.4
 tau_stop = 2.05
 tau_step = 0.05
 
 absolute = False
+
+all_combos = True  # Can be set to either True (to load in predictions for all object_position*listener_attention combinations) or False
 
 numbering = "experiment"  # can be set to either "experiment" ([1, 2, 3, 4]) or "python" ([0, 1, 2, 3])
 
@@ -36,8 +39,8 @@ def get_most_contrastive_trials(pd_difference_per_row, numbering, model, WordNo,
     most_contrastive_trials_dict = {"Word":[],
                                     "SpeakerTau":[],
                                     "ListenerTau":[],
-                                    # "Speaker_pos":[],
-                                    # "Listener_pos":[],
+                                    "Speaker_pos":[],
+                                    "Listener_pos":[],
                                     "Referent": [],
                                     "Listener_att":[],
                                     "Prob_difference":[]}
@@ -54,13 +57,13 @@ def get_most_contrastive_trials(pd_difference_per_row, numbering, model, WordNo,
                 most_contrastive_trials_dict["SpeakerTau"].append(row["SpeakerTau"])
                 most_contrastive_trials_dict["ListenerTau"].append(row["ListenerTau"])
                 if numbering == "experiment":
-                    # most_contrastive_trials_dict["Speaker_pos"].append(row["Speaker_pos"]+1)
-                    # most_contrastive_trials_dict["Listener_pos"].append(row["Listener_pos"]+1)
+                    most_contrastive_trials_dict["Speaker_pos"].append(row["Speaker_pos"]+1)
+                    most_contrastive_trials_dict["Listener_pos"].append(row["Listener_pos"]+1)
                     most_contrastive_trials_dict["Listener_att"].append(row["Listener_att"]+1)
                     most_contrastive_trials_dict["Referent"].append(row["Referent"]+1)
                 else:
-                    # most_contrastive_trials_dict["Speaker_pos"].append(row["Speaker_pos"])
-                    # most_contrastive_trials_dict["Listener_pos"].append(row["Listener_pos"])
+                    most_contrastive_trials_dict["Speaker_pos"].append(row["Speaker_pos"])
+                    most_contrastive_trials_dict["Listener_pos"].append(row["Listener_pos"])
                     most_contrastive_trials_dict["Listener_att"].append(row["Listener_att"])
                     most_contrastive_trials_dict["Referent"].append(row["Referent"])
                 most_contrastive_trials_dict["Prob_difference"].append(row["Prob_difference"])
@@ -71,14 +74,25 @@ def get_most_contrastive_trials(pd_difference_per_row, numbering, model, WordNo,
 
 def contrastive_trials_across_parameters(baseline_models, words):
     for model in baseline_models:
-        if absolute is True:
-            pd_difference_per_row = pd.read_pickle(
-                'model_predictions/' + 'pd_abs_difference_in_model_predictions_' + model + '_tau_start_' + str(
-                    tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+
+        if all_combos is True:
+            if absolute is True:
+                pd_difference_per_row = pd.read_pickle(
+                    'model_predictions/' + 'pd_abs_difference_in_model_predictions_All_Combos_' + model + '_tau_start_' + str(
+                        tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            else:
+                pd_difference_per_row = pd.read_pickle(
+                    'model_predictions/' + 'pd_difference_in_model_predictions_All_Combos_' + model + '_tau_start_' + str(
+                        tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         else:
-            pd_difference_per_row = pd.read_pickle(
-                'model_predictions/' + 'pd_difference_in_model_predictions_' + model + '_tau_start_' + str(
-                    tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            if absolute is True:
+                pd_difference_per_row = pd.read_pickle(
+                    'model_predictions/' + 'pd_abs_difference_in_model_predictions_' + model + '_tau_start_' + str(
+                        tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            else:
+                pd_difference_per_row = pd.read_pickle(
+                    'model_predictions/' + 'pd_difference_in_model_predictions_' + model + '_tau_start_' + str(
+                        tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
         for WordNo in words:
             print('')
@@ -109,14 +123,24 @@ def contrastive_trials_for_best_parameters(best_fit_parameters, languages):
         print("listener_rationality is:")
         print(listener_rationality)
 
-        if absolute is True:
-            pd_difference_per_row = pd.read_pickle(
-                'model_predictions/' + 'pd_abs_difference_in_model_predictions_' + model + '_tau_start_' + str(
-                    tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        if all_combos is True:
+            if absolute is True:
+                pd_difference_per_row = pd.read_pickle(
+                    'model_predictions/' + 'pd_abs_difference_in_model_predictions_All_Combos_' + model + '_tau_start_' + str(
+                        tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            else:
+                pd_difference_per_row = pd.read_pickle(
+                    'model_predictions/' + 'pd_difference_in_model_predictions_All_Combos_' + model + '_tau_start_' + str(
+                        tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
         else:
-            pd_difference_per_row = pd.read_pickle(
-                'model_predictions/' + 'pd_difference_in_model_predictions_' + model + '_tau_start_' + str(
-                    tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            if absolute is True:
+                pd_difference_per_row = pd.read_pickle(
+                    'model_predictions/' + 'pd_abs_difference_in_model_predictions_' + model + '_tau_start_' + str(
+                        tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            else:
+                pd_difference_per_row = pd.read_pickle(
+                    'model_predictions/' + 'pd_difference_in_model_predictions_' + model + '_tau_start_' + str(
+                        tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
         pd_most_contrastive_trials = get_most_contrastive_trials(pd_difference_per_row, numbering, model, WordNo, speaker_rationality=speaker_rationality, listener_rationality=listener_rationality)
         pd.set_option('display.max_columns', None)
