@@ -7,13 +7,16 @@ import seaborn as sns
 # PARAMETER SETTINGS: #
 baseline_models = ["distance", "person"]
 words = [2, 3]
-object_positions = [1, 2, 3]  # array of all possible object (= referent) positions
-listener_attentions = [0, 1, 2, 3]  # array of all possible listener positions
+object_positions = [0, 1, 2, 3]  # array of all possible object (= referent) positions
+listener_positions = [0, 1, 2, 3]  # array of all possible listener positions
+listener_attentions = [0, 1, 2, 3]  # array of all possible listener attentions
 tau_start = 0.4
 tau_stop = 2.05
 tau_step = 0.05
 
 absolute = False
+
+all_combos = True  # Can be set to either True (to load in predictions for all object_position*listener_attention combinations) or False
 
 
 # FUNCTION DEFINITIONS: #
@@ -114,7 +117,10 @@ def plot_scatter_correlate_model_predictions(data_selection_pd, model, words):
     sns.scatterplot(data=data_selection_pd, x="Probability_Baseline", y="Probability_Attention", hue="Word", palette=my_colors)
 
     plt.title(f"Predictions Baseline against Attention-correction: {model} + {words}")
-    plt.savefig('plots/'+'scatterplot_correlate_model_predictions_Attention_'+model+'_'+str(words)+'_words'+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    if all_combos is True:
+        plt.savefig('plots/'+'scatterplot_correlate_model_predictions_All_Combos_'+model+'_'+str(words)+'_words'+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    else:
+        plt.savefig('plots/'+'scatterplot_correlate_model_predictions_Attention_'+model+'_'+str(words)+'_words'+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
@@ -137,8 +143,10 @@ def plot_relplot_correlate_model_predictions(data_selection_pd, model, words):
     plt.suptitle(f"{model} + {words}")
 
     # plt.tight_layout()
-
-    plt.savefig('plots/'+'relplot_correlate_model_predictions_Attention_'+model+'_'+str(words)+'_words'+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    if all_combos is True:
+        plt.savefig('plots/'+'relplot_correlate_model_predictions_All_Combos_'+model+'_'+str(words)+'_words'+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    else:
+        plt.savefig('plots/'+'relplot_correlate_model_predictions_Attention_'+model+'_'+str(words)+'_words'+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
@@ -152,11 +160,18 @@ for model in baseline_models:
 
     # LOAD IN MODEL PREDICTIONS:
 
-    models_for_filename = ["distance", "person"]
-    model_predictions_baseline = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+    if all_combos is True:
+        models_for_filename = ["distance", "person"]
+        model_predictions_baseline = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_All_Combos_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
 
-    models_for_filename = ["distance_attention", "person_attention"]
-    model_predictions_attention = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+        models_for_filename = ["distance_attention", "person_attention"]
+        model_predictions_attention = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_All_Combos_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+    else:
+        models_for_filename = ["distance", "person"]
+        model_predictions_baseline = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+
+        models_for_filename = ["distance_attention", "person_attention"]
+        model_predictions_attention = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
 
     pd.set_option('display.max_columns', None)
 
@@ -180,10 +195,16 @@ for model in baseline_models:
     print("pd_difference_per_row is:")
     print(pd_difference_per_row)
 
-    if absolute is True:
-        pd_difference_per_row.to_pickle('model_predictions/' + 'pd_abs_difference_in_model_predictions_'+ model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+    if all_combos is True:
+        if absolute is True:
+            pd_difference_per_row.to_pickle('model_predictions/' + 'pd_abs_difference_in_model_predictions_All_Combos_'+ model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        else:
+            pd_difference_per_row.to_pickle('model_predictions/' + 'pd_difference_in_model_predictions_All_Combos_'+ model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
     else:
-        pd_difference_per_row.to_pickle('model_predictions/' + 'pd_difference_in_model_predictions_'+ model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        if absolute is True:
+            pd_difference_per_row.to_pickle('model_predictions/' + 'pd_abs_difference_in_model_predictions_'+ model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        else:
+            pd_difference_per_row.to_pickle('model_predictions/' + 'pd_difference_in_model_predictions_'+ model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
 
 
@@ -254,6 +275,6 @@ for model in baseline_models:
         print("subset_pd is:")
         print(subset_pd)
 
-        # plot_scatter_correlate_model_predictions(subset_pd, model, WordNo)
+        plot_scatter_correlate_model_predictions(subset_pd, model, WordNo)
 
-        # plot_relplot_correlate_model_predictions(subset_pd, model, WordNo)
+        plot_relplot_correlate_model_predictions(subset_pd, model, WordNo)
