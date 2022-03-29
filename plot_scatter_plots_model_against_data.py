@@ -10,7 +10,7 @@ rsa_layer = True  # Can be set to either True or False
 
 ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
 
-experiment = "baseline"  # Can be set to either "baseline" (=Experiment 1) or "attention" (=Experiment 2)
+experiment = "attention"  # Can be set to either "baseline" (=Experiment 1) or "attention" (=Experiment 2)
 
 if experiment == "attention":
     models = ["distance", "person", "distance_attention", "person_attention"]
@@ -33,11 +33,10 @@ transparent_plots = False  # Can be set to True or False
 
 language_combos = [["English", "Italian"], ["Portuguese", "Spanish"]]
 
-#TODO: Change the best-fit parameters for Exp. 1 based on the new step size of 0.05:
-best_fit_parameters_exp1_dict_RSA = {"English":[0.75, 0.95],
-                                 "Italian":[0.45, 1.2],
-                                 "Portuguese":[0.45, 0.9],
-                                 "Spanish":[0.45, 0.9]}
+best_fit_parameters_exp1_dict_RSA = {"English":[0.65, 1.15],
+                                 "Italian":[0.5, 0.5],
+                                 "Portuguese":[0.45, 0.95],
+                                 "Spanish":[0.5, 0.8]}
 
 best_fit_parameters_exp2_dict_RSA = {"English":[1.7, 1.15],
                                  "Italian":[0.65, 1.],
@@ -238,6 +237,11 @@ for language_combo in language_combos:
             best_fit_parameters = best_fit_parameters_exp1_dict_Simple
 
     for model in models:
+
+        print('')
+        print('')
+        print("model is:")
+        print(model)
 
         speaker_tau_per_language = []
         listener_tau_per_language = []
