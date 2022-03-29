@@ -5,15 +5,18 @@ import seaborn as sns
 
 
 # PARAMETER SETTINGS: #
-# languages = ["English", "Italian", "Portuguese", "Spanish"]
-languages = ["English", "Portuguese"]
-object_positions = [1, 2, 3]  # array of all possible object (= referent) positions
-listener_attentions = [0, 1, 2, 3]  # array of all possible listener positions
+languages = ["English", "Italian", "Portuguese", "Spanish"]
+object_positions = [0, 1, 2, 3]  # array of all possible object (= referent) positions
+listener_positions = [0, 1, 2, 3]  # array of all possible listener positions
+listener_attentions = [0, 1, 2, 3]  # array of all possible listener attentions
 tau_start = 0.4
 tau_stop = 2.05
 tau_step = 0.05
 
 measure = "probability"  # can be set to either "difference" or "probability"
+
+all_combos = True  # Can be set to either True (to load in predictions for all object_position*listener_attention combinations) or False
+
 
 # FUNCTION DEFINITIONS: #
 
@@ -92,7 +95,10 @@ def plot_displot_probabilities(measure, pd_across_parameters, relevant_word, lan
     # ax.set(ylabel=f"Avg. {relevant_word} prob. difference: Attention - Baseline")
 
     # plt.title(f"Increase in {relevant_word} prob. Attention vs. Baseline: {model} + {WordNo}-word")
-    plt.savefig('plots/'+'displot_model_predictions_'+measure+'_Attention_'+language+'_'+model+'_'+relevant_word+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    if all_combos is True:
+        plt.savefig('plots/'+'displot_model_predictions_'+measure+'_All_Combos_'+language+'_'+model+'_'+relevant_word+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    else:
+        plt.savefig('plots/'+'displot_model_predictions_'+measure+'_Attention_'+language+'_'+model+'_'+relevant_word+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
@@ -152,7 +158,10 @@ def plot_barplot_differences(measure, pd_difference_across_parameters, relevant_
     ax.set(ylabel=f"Avg. {relevant_word} prob. difference: Attention - Baseline")
 
     plt.title(f"Increase in {relevant_word} prob. Attention vs. Baseline: {model} + {WordNo}-word")
-    plt.savefig('plots/'+'barplot_model_predictions_'+measure+'_Attention_'+language+'_'+model+'_'+relevant_word+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    if all_combos is True:
+        plt.savefig('plots/'+'barplot_model_predictions_'+measure+'_All_Combos_'+language+'_'+model+'_'+relevant_word+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+    else:
+        plt.savefig('plots/'+'barplot_model_predictions_'+measure+'_Attention_'+language+'_'+model+'_'+relevant_word+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     plt.show()
 
 
@@ -174,8 +183,10 @@ for language in languages:
     print('')
     print(f"LANGUAGE = {language} + MODEL = {model}:")
 
-
-    pd_across_parameters = pd.read_pickle('model_predictions/' + 'pd_' + measure + '_across_parameters_Attention_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+    if all_combos is True:
+        pd_across_parameters = pd.read_pickle('model_predictions/' + 'pd_' + measure + '_across_parameters_All_Combos_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+    else:
+        pd_across_parameters = pd.read_pickle('model_predictions/' + 'pd_' + measure + '_across_parameters_Attention_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
     pd.set_option('display.max_columns', None)
     print('')
