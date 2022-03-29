@@ -6,13 +6,13 @@ import pickle
 
 # PARAMETER SETTINGS: #
 
-rsa_layer = True  # Can be set to either True or False
+rsa_layer = False  # Can be set to either True or False
 
 ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
 
 comparison = "rsa_contribution"  # Can be set to either "system", "attention_correction" or "rsa_contribution"
 
-experiment = "baseline"  # Can be set to either "baseline" (Experiment 1) or "attention" (Experiment 2)
+experiment = "attention"  # Can be set to either "baseline" (Experiment 1) or "attention" (Experiment 2)
 
 if experiment == "attention":
     models = ["distance_attention", "person_attention"]
@@ -173,34 +173,39 @@ for language in languages:
     elif comparison == "rsa_contribution":
 
         if language == 'English' or language == 'Italian':
+            model = 'distance'
+        elif language == 'Spanish' or language == 'Portuguese':
+            model = 'person'
 
-            with open('model_fitting_data/' + 'likelihood_df_RSA_True_Attention_Ese_uniform_True_' + language + '_' + 'distance' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+        if experiment == "baseline":
+                with open('model_fitting_data/' + 'likelihood_df_RSA_False_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+                    likelihood_df_baseline = p.load(fh)
+                    print("likelihood_df_baseline RSA FALSE is:")
+                    print(likelihood_df_baseline)
+
+                with open('model_fitting_data/' + 'likelihood_df_RSA_True_Ese_uniform_True_' + language + '_' + model + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+                    likelihood_df_comparison = p.load(fh)
+                    print("likelihood_df_comparison RSA TRUE is:")
+                    print(likelihood_df_comparison)
+
+        elif experiment == "attention":
+
+            with open('model_fitting_data/' + 'likelihood_df_RSA_False_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + model + '_attention' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
                 likelihood_df_baseline = p.load(fh)
-                print("likelihood_df_baseline DISTANCE + RSA TRUE is:")
+                print("likelihood_df_baseline RSA FALSE is:")
                 print(likelihood_df_baseline)
 
-            with open('model_fitting_data/' + 'likelihood_df_RSA_False_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + 'distance' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
+            with open('model_fitting_data/' + 'likelihood_df_RSA_True_Attention_Ese_uniform_True_' + language + '_' + model + '_attention' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
                 likelihood_df_comparison = p.load(fh)
-                print("likelihood_df_comparison DISTANCE + RSA FALSE is:")
-                print(likelihood_df_comparison)
-
-        if language == 'Spanish' or language == 'Portuguese':
-            with open('model_fitting_data/' + 'likelihood_df_RSA_True_Attention_Ese_uniform_True_' +  language + '_' + 'person' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
-                likelihood_df_baseline = p.load(fh)
-                print("likelihood_df_baseline PERSON + RSA TRUE is:")
-                print(likelihood_df_baseline)
-
-            with open('model_fitting_data/' + 'likelihood_df_RSA_False_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_' + 'person' + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl', "rb") as fh:
-                likelihood_df_comparison = p.load(fh)
-                print("likelihood_df_comparison PERSON + RSA FALSE is:")
+                print("likelihood_df_comparison RSA TRUE is:")
                 print(likelihood_df_comparison)
 
 
     likelihood_df_baseline = likelihood_df_baseline[likelihood_df_baseline["SpeakerTau"] >= tau_start_for_comparison][likelihood_df_baseline["ListenerTau"] >= tau_start_for_comparison]
-    # print('')
-    # print('')
-    # print("likelihood_df_distance AFTER SLICING is:")
-    # print(likelihood_df_distance)
+    print('')
+    print('')
+    print("likelihood_df_baseline AFTER SLICING is:")
+    print(likelihood_df_baseline)
 
     likelihood_df_comparison = likelihood_df_comparison[likelihood_df_comparison["SpeakerTau"] >= tau_start_for_comparison][likelihood_df_comparison["ListenerTau"] >= tau_start_for_comparison]
     # print('')
@@ -335,18 +340,33 @@ for language in languages:
         print('')
         print("bayes_factor_max_likelihood COMPARISON / BASELINE is:")
         print(bayes_factor_max_likelihood)
-        max_likelihood_coordinates = max_index_likelihood_comparison
+
+        max_likelihood_coordinates_baseline = max_index_likelihood_baseline
         print('')
-        print("max_likelihood_coordinates are:")
-        print(max_likelihood_coordinates)
-        speaker_tau_max_likelihood = index_comparison[max_likelihood_coordinates[0][0]]
+        print("max_likelihood_coordinates_baseline BASELINE are:")
+        print(max_likelihood_coordinates_baseline)
+        speaker_tau_max_likelihood_baseline = index_baseline[max_likelihood_coordinates_baseline[0][0]]
         print('')
-        print("speaker_tau_max_likelihood is:")
-        print(speaker_tau_max_likelihood)
-        listener_tau_max_likelihood = column_comparison[max_likelihood_coordinates[1][0]]
+        print("speaker_tau_max_likelihood_baseline BASELINE is:")
+        print(speaker_tau_max_likelihood_baseline)
+        listener_tau_max_likelihood_baseline = column_baseline[max_likelihood_coordinates_baseline[1][0]]
         print('')
-        print("listener_tau_max_likelihood is:")
-        print(listener_tau_max_likelihood)
+        print("listener_tau_max_likelihood_baseline BASELINE is:")
+        print(listener_tau_max_likelihood_baseline)
+
+
+        max_likelihood_coordinates_comparison = max_index_likelihood_comparison
+        print('')
+        print("max_likelihood_coordinates_comparison COMPARISON are:")
+        print(max_likelihood_coordinates_comparison)
+        speaker_tau_max_likelihood_comparison = index_comparison[max_likelihood_coordinates_comparison[0][0]]
+        print('')
+        print("speaker_tau_max_likelihood_comparison COMPARISON is:")
+        print(speaker_tau_max_likelihood_comparison)
+        listener_tau_max_likelihood_comparison = column_comparison[max_likelihood_coordinates_comparison[1][0]]
+        print('')
+        print("listener_tau_max_likelihood_comparison COMPARISON is:")
+        print(listener_tau_max_likelihood_comparison)
 
 
     index = likelihood_df_comparison.index
@@ -464,9 +484,26 @@ for language in languages:
         print("evidence_strength_df is:")
         print(evidence_strength_df)
 
-        bayes_factor_df.to_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        if experiment == "baseline":
 
-        rsa_wins_df.to_pickle('model_fitting_data/' + 'RSA_wins_df_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            bayes_factor_df.to_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
-        evidence_strength_df.to_pickle('model_fitting_data/' + 'evidence_strength_df_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+            rsa_wins_df.to_pickle('model_fitting_data/' + 'RSA_wins_df_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+
+            evidence_strength_df.to_pickle('model_fitting_data/' + 'evidence_strength_df_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+
+        elif experiment == "attention":
+
+            bayes_factor_df.to_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_Contribution_Attention_Ese_uniform_' + str(
+                ese_uniform) + '_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(
+                tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+
+            rsa_wins_df.to_pickle('model_fitting_data/' + 'RSA_wins_df_RSA_Contribution_Attention_Ese_uniform_' + str(
+                ese_uniform) + '_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(
+                tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+
+            evidence_strength_df.to_pickle(
+                'model_fitting_data/' + 'evidence_strength_df_RSA_Contribution_Attention_Ese_uniform_' + str(
+                    ese_uniform) + '_' + language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(
+                    tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
