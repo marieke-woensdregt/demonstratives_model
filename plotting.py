@@ -8,13 +8,13 @@ import pickle
 
 
 # PARAMETER SETTINGS: #
-rsa_layer = True  # Can be set to either True or False
+rsa_layer = False  # Can be set to either True or False
 
 ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
 
 comparison = "rsa_contribution"  # Can be set to either "system", "attention_correction" or "rsa_contribution"
 
-experiment = "baseline"
+experiment = "attention"
 
 if experiment == "attention":
     models = ["distance", "person", "distance_attention", "person_attention"]
@@ -96,7 +96,10 @@ def plot_bayes_factor_heatmap(bayes_factor_df, tau_start_for_comparison):
     elif comparison == "attention_correction":
         plt.savefig('plots/'+'heatmap_bayes_factors_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     elif comparison == "rsa_contribution":
-        plt.savefig('plots/'+'heatmap_bayes_factors_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        if experiment == "attention":
+            plt.savefig('plots/'+'heatmap_bayes_factors_RSA_Contribution_Attention_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        else:
+            plt.savefig('plots/'+'heatmap_bayes_factors_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
 
     plt.show()
 
@@ -142,7 +145,10 @@ def plot_which_model_wins(distance_wins_df, tau_start_for_comparison):
     elif comparison == "attention_correction":
         plt.savefig('plots/'+'heatmap_most_likely_model_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     elif comparison == "rsa_contribution":
-        plt.savefig('plots/'+'heatmap_most_likely_model_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        if experiment == "attention":
+            plt.savefig('plots/'+'heatmap_most_likely_model_RSA_Contribution_Attention_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        else:
+            plt.savefig('plots/'+'heatmap_most_likely_model_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
 
     plt.show()
 
@@ -174,7 +180,10 @@ def plot_strength_of_evidence(evidence_strength_df, tau_start_for_comparison):
     elif comparison == "attention_correction":
         plt.savefig('plots/'+'heatmap_strength_of_evidence_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
     elif comparison == "rsa_contribution":
-        plt.savefig('plots/'+'heatmap_strength_of_evidence_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        if experiment == "attention":
+            plt.savefig('plots/'+'heatmap_strength_of_evidence_RSA_Contribution_Attention_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
+        else:
+            plt.savefig('plots/'+'heatmap_strength_of_evidence_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' +language+'_tau_start_'+str(tau_start_for_comparison)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.pdf')
 
     plt.show()
 
@@ -366,7 +375,10 @@ for language in languages:
     elif comparison == "attention_correction":
         bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
     elif comparison == "rsa_contribution":
-        bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        if experiment == "attention":
+            bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_Contribution_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        else:
+            bayes_factor_df = pd.read_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
     plot_bayes_factor_heatmap(bayes_factor_df, tau_start_for_comparison)
 
@@ -383,7 +395,10 @@ for language in languages:
         plot_which_model_wins(attention_wins_df, tau_start_for_comparison)
 
     elif comparison == "rsa_contribution":
-        rsa_wins_df = pd.read_pickle('model_fitting_data/' + 'RSA_wins_df_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        if experiment == "attention":
+            rsa_wins_df = pd.read_pickle('model_fitting_data/' + 'RSA_wins_df_RSA_Contribution_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        else:
+            rsa_wins_df = pd.read_pickle('model_fitting_data/' + 'RSA_wins_df_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
         plot_which_model_wins(rsa_wins_df, tau_start_for_comparison)
 
@@ -395,6 +410,9 @@ for language in languages:
         evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
     elif comparison == "rsa_contribution":
-        evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        if experiment == "attention":
+            evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_RSA_Contribution_Attention_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+        else:
+            evidence_strength_df = pd.read_pickle('model_fitting_data/' + 'evidence_strength_df_RSA_Contribution_Ese_uniform_' + str(ese_uniform) + '_' +  language + '_tau_start_' + str(tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
 
     plot_strength_of_evidence(evidence_strength_df, tau_start_for_comparison)
