@@ -29,8 +29,11 @@ import pandas as pd
 start = time.time()
 
 tau_start = 0.4
-tau_stop = 2.01
-tau_step = 0.01
+tau_stop = 2.05
+tau_step = 0.05
+
+listener_attentions = [0,1,2,3,4]
+object_positions = [1,2,3,4]
 
 models = ['distance', 'person'] # ['distance_attention', 'person_attention']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
 
@@ -45,6 +48,7 @@ output_dict = {"Model":[],
 			   "WordNo":[],
 			   "SpeakerTau":[],
 			   "ListenerTau":[]}
+
 ########################################################################################
 
 # sys.stdout.write("Model,Word,Probability,Referent,Speaker_pos,Listener_pos,Listener_att,WordNo,SpeakerTau,ListenerTau\n")
@@ -58,8 +62,8 @@ for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
 		# print(f"speaker_rationality is {speaker_rationality}:")
 		LS = LiteralSpeaker_MW.LiteralSpeaker(stau=speaker_rationality,ltau=listener_rationality,verbose=False) #TODO: Move the rounding to here instead of elsewhere?
 		for model in models:
-			for latt in [0,1,2,3]:
-				for referent in [1,2,3]:  # If I understood the design correctly, Exp. 2 only uses object positions [1, 2, 3]
+			for latt in listener_attentions:
+				for referent in object_positions:  # If I understood the design correctly, Exp. 2 only uses object positions [1, 2, 3]
 					LS.SetEvent(method=model, referent=referent, lpos=referent, latt=latt)
 					for words in [2,3]:
 						PL = PragmaticListener.PragmaticListener(LS,words=words)
@@ -79,7 +83,7 @@ pd.set_option('display.max_columns', None)
 
 # output_file_path = '/Users/U968195/PycharmProjects/demonstratives_model/model_predictions/'
 output_file_path = 'model_predictions/'
-output_file_name = 'HigherSearchD_MW_RSA_Attention_' + str(models).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv'
+output_file_name = 'HigherSearchD_MW_RSA_Attention_n_positions_'+str(len(object_positions)) + str(models).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv'
 output_dataframe.to_csv(output_file_path+output_file_name, index=False)
 
 # end time:
