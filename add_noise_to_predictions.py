@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 from plot_scatter_plots_model_against_data import pearsonr_ci
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 # PARAMETER SETTINGS: #
 
@@ -27,6 +30,31 @@ tau_stop = 2.05
 tau_step = 0.05
 
 sigma = 0.14  # Variance value for Gaussian used to add noise to the model predictions
+
+transparent_plots = False  # Can be set to True or False
+
+
+# FUNCTIONS DEFINITIONS: #
+
+def plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experiment, model, transparent_plots):
+    # set seaborn plotting aesthetics
+    if transparent_plots is True:
+        sns.set(style='white')
+    else:
+        sns.set(style='whitegrid')
+    sns.set_palette("colorblind")
+
+    sns.scatterplot(data=pd_probs_and_proportions_over_trials, x="Probability", y="Noisy_probs")
+
+    if experiment == "attention":
+        plt.title(f"{language.capitalize()}, {model.capitalize()}, Exp. 2,  Model * Model", fontsize=17)
+    else:
+        plt.title(f"{language.capitalize()}, {model.capitalize()}, Exp. 1, Model * Model", fontsize=17)
+    if transparent_plots is True:
+        plt.savefig('plots/'+'scatter_predictions_against_noisy_predictions_'+experiment+'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+model+'.png', transparent=transparent_plots)
+    else:
+        plt.savefig('plots/'+'scatter_predictions_against_noisy_predictions_'+experiment+'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+model+'.pdf', transparent=transparent_plots)
+    plt.show()
 
 
 for language in languages:
@@ -94,13 +122,21 @@ for language in languages:
     # print("noisy_probs are:")
     # print(noisy_probs_array)
 
-    model_predictions_noisy = model_predictions.copy()
-    # print("model_predictions_noisy BEFORE ADDING NOISE are:")
-    # print(model_predictions_noisy)
+    model_predictions["Noisy_probs"] = noisy_probs_array
+    print("model_predictions are:")
+    print(model_predictions)
 
-    model_predictions_noisy["Probability"] = noisy_probs_array
-    # print("model_predictions_noisy AFTER ADDING NOISE are:")
-    # print(model_predictions_noisy)
+    # model_predictions_noisy = model_predictions.copy()
+    # # print("model_predictions_noisy BEFORE ADDING NOISE are:")
+    # # print(model_predictions_noisy)
+    #
+    # model_predictions_noisy["Probability"] = noisy_probs_array
+    # # print("model_predictions_noisy AFTER ADDING NOISE are:")
+    # # print(model_predictions_noisy)
+
+
+
+
 
     print('')
     print('')
@@ -109,7 +145,7 @@ for language in languages:
     print("model_probs are:")
     print(model_probs)
 
-    noisy_probs = model_predictions_noisy["Probability"][model_predictions_noisy["Model"] == model]
+    noisy_probs = model_predictions["Noisy_probs"][model_predictions["Model"] == model]
     print("noisy_probs are:")
     print(noisy_probs)
 
@@ -135,3 +171,5 @@ for language in languages:
     print(lo)
     print("hi is:")
     print(hi)
+
+    plot_scatter_model_against_data(model_predictions, experiment, model, transparent_plots)
