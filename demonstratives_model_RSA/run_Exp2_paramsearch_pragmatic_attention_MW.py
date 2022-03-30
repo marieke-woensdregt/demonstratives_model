@@ -30,12 +30,12 @@ start = time.time()
 
 tau_start = 0.4
 tau_stop = 2.05
-tau_step = 0.5
+tau_step = 0.05
 
-listener_attentions = [0,1,2,3,4]
-object_positions = [1,2,3,4]
+listener_attentions = [0, 1, 2, 3, 4]
+object_positions = [1, 2, 3, 4]
 
-models = ['distance', 'person'] # ['distance_attention', 'person_attention']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
+models = ['distance', 'person']  # ['distance_attention', 'person_attention']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
 
 output_dict = {"Model":[],
 			   "Word":[],
