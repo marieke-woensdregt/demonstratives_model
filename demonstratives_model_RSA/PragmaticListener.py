@@ -20,12 +20,38 @@ class PragmaticListener:
 		"""
 		Compute a matrix beween utterances and referents
 		"""
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("this is the ComputeMatrix method of the PragmaticListener class:")
+		# sys.stdout.write("\n")
+
 		for referent in range(self.LS.ObjectNo):
 			self.LS.referent = referent
+
+			# sys.stdout.write("\n")
+			# sys.stdout.write("referent in PL.ComputeMatrix() is:")
+			# sys.stdout.write("\n")
+			# sys.stdout.write(str(referent))
+			# sys.stdout.write("\n")
+
 			values = self.LS.ComputeUtilities(self.words)
+
+			# sys.stdout.write("\n")
+			# sys.stdout.write("values in PL.ComputeMatrix() are; THESE SHOULD BE THE RAW COST VALUES GIVEN BY LS.ComputeUtilities():")
+			# sys.stdout.write("\n")
+			# sys.stdout.write(str(values))
+			# sys.stdout.write("\n")
+
 			costs = [x[1] for x in values]
 			utterances = [x[0] for x in values]
 			softmaxed = self.LS.Softmax_Utilities(costs,method='visualsearch')
+
+			# sys.stdout.write("\n")
+			# sys.stdout.write("softmaxed in PL.ComputeMatrix() is:")
+			# sys.stdout.write("\n")
+			# sys.stdout.write(str(softmaxed))
+			# sys.stdout.write("\n")
+
 			# TEMPO CODE FOR UNDERSTANDING SOFTMAX
 			#temp = [np.round(x,2) for x in softmaxed]
 			#sys.stdout.write(str(temp)+"\n")
@@ -35,6 +61,13 @@ class PragmaticListener:
 
 	def PragmaticVisualSearch(self, utterance):
 		# If you said "utterance" which object is it worth looking at?
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("self.UtilityMatrix given as input to PL.PragmaticVisualSearch are:")
+		# sys.stdout.write("\n")
+		# sys.stdout.write(str(self.UtilityMatrix))
+		# sys.stdout.write("\n")
+
 		for referent in range(self.LS.ObjectNo):
 			#let's suppose its referent, what's the chance you
 			# woudl've chosen the utterance?
