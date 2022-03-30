@@ -3,9 +3,9 @@ import sys
 
 class LiteralSpeaker:
 
-	def __init__(self, method=None, referent=0, lpos=0, latt=0, stau=0.01, ltau=0.01, verbose=False):
+	def __init__(self, n_objects=4, method=None, referent=0, lpos=0, latt=0, stau=0.01, ltau=0.01, verbose=False):
 		# Static prameters
-		self.ObjectNo = 4 # Four objects!
+		self.ObjectNo = n_objects  # Number of objects
 		self.spos = 0
 		# Dynamic parameters
 		self.method = method
