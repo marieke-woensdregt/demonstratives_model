@@ -60,7 +60,7 @@ for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
 	# for speaker_rationality in np.arange(0.1,1,0.1):
 	for speaker_rationality in np.arange(tau_start, tau_stop, tau_step):
 		# print(f"speaker_rationality is {speaker_rationality}:")
-		LS = LiteralSpeaker_MW.LiteralSpeaker(stau=speaker_rationality,ltau=listener_rationality,verbose=False) #TODO: Move the rounding to here instead of elsewhere?
+		LS = LiteralSpeaker_MW.LiteralSpeaker(n_objects=len(object_positions), stau=speaker_rationality,ltau=listener_rationality,verbose=False) #TODO: Move the rounding to here instead of elsewhere?
 		for model in models:
 			for lpos in listener_positions:
 				for referent in object_positions:
