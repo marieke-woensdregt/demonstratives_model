@@ -35,7 +35,7 @@ tau_step = 0.05
 listener_attentions = [0,1,2,3,4]
 object_positions = [1,2,3,4]
 
-models = ['distance', 'person'] # ['distance_attention', 'person_attention']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
+models = ['distance_attention', 'person_attention'] # ['distance_attention', 'person_attention']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
 
 output_dict = {"Model":[],
 			   "Word":[],
@@ -60,7 +60,7 @@ for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
 	# for speaker_rationality in np.arange(0.1,1,0.1):
 	for speaker_rationality in np.arange(tau_start, tau_stop, tau_step):
 		# print(f"speaker_rationality is {speaker_rationality}:")
-		LS = LiteralSpeaker_MW.LiteralSpeaker(stau=speaker_rationality,ltau=listener_rationality,verbose=False) #TODO: Move the rounding to here instead of elsewhere?
+		LS = LiteralSpeaker_MW.LiteralSpeaker(n_objects=len(object_positions), stau=speaker_rationality,ltau=listener_rationality,verbose=False) #TODO: Move the rounding to here instead of elsewhere?
 		for model in models:
 			for latt in listener_attentions:
 				for referent in object_positions:  # If I understood the design correctly, Exp. 2 only uses object positions [1, 2, 3]
