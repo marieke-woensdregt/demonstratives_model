@@ -19,10 +19,28 @@ class PragmaticSpeaker:
 		if target is not None:
 			self.target=target
 		values = self.ComputeUtilities()
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("Output of PS.ComputeUtilities() is:")
+		# sys.stdout.write("\n")
+		# sys.stdout.write(str(values))
+
 		costs = [x[1] for x in values]
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("cost values for input to PS.Softmax_Utilities are:")
+		# sys.stdout.write("\n")
+		# sys.stdout.write(str(costs))
+
 		softmaxed = self.Softmax_Utilities(costs, method='visualsearch', normalize=True)
+
+		# sys.stdout.write("\n")
+		# sys.stdout.write("Output of PS.SelectUtterance() is:")
+		# sys.stdout.write("\n")
+		# sys.stdout.write(str(softmaxed))
+
 		return(softmaxed)
-		#sys.stdout.write(str(softmaxed))
+
 
 	def ComputeUtilities(self):
 		self.PL.ComputeMatrix()
@@ -112,6 +130,7 @@ class PragmaticSpeaker:
 		Details = str(self.target)+","+str(self.PL.LS.spos)+","+str(self.PL.LS.lpos)+","+str(self.PL.LS.latt)+","+str(self.words)+","+str(self.stau)+","+str(self.PL.LS.ltau)
 		########################################################################################
 		# MW: Commented out the print statements below, because everything is saved to pandas dataframe now
+		# sys.stdout.write("")
 		# sys.stdout.write(self.PL.LS.method+","+utterances[0]+","+str(np.round(probabilities[0],2))+","+Details+"\n")
 		# sys.stdout.write(self.PL.LS.method+","+utterances[1]+","+str(np.round(probabilities[1],2))+","+Details+"\n")
 		# if self.words==3:
