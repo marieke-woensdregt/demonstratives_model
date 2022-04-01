@@ -6,11 +6,11 @@ import pickle
 
 # PARAMETER SETTINGS: #
 
-rsa_layer = False  # Can be set to either True or False
+rsa_layer = True  # Can be set to either True or False
 
 ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
 
-comparison = "rsa_contribution"  # Can be set to either "system", "attention_correction" or "rsa_contribution"
+comparison = "attention_correction"  # Can be set to either "system", "attention_correction" or "rsa_contribution"
 
 experiment = "attention"  # Can be set to either "baseline" (Experiment 1) or "attention" (Experiment 2)
 
