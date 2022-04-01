@@ -29,10 +29,28 @@ tau_start = 0.4
 tau_stop = 2.05
 tau_step = 0.05
 
-sigma_dict = {"English": 0.19,
+sigma_dict_across_parameters = {"English": 0.19,
               "Italian": 0.05,
               "Portuguese": 0.18,
               "Spanish": 0.13}  # Variance values for Gaussian used to add noise to the model predictions
+
+sigma_dict_best_fitting = {"English": 0.12,
+              "Italian": 0.07,
+              "Portuguese": 0.24,
+              "Spanish": 0.2}  # Variance values for Gaussian used to add noise to the model predictions
+
+best_fitting = False  # Can be set to either True (will focus only on best-fitting parameter settings) or False (will do # analysis across whole parameter range)
+
+best_fit_parameters_baseline_exp2_dict = {"English":[1.3, 1.75],
+                                 "Italian":[0.5, 1.5],
+                                 "Portuguese":[0.65, 1.65],
+                                 "Spanish":[0.65, 1.65]}
+
+
+best_fit_parameters_attention_exp2_dict = {"English":[1.7, 1.15],
+                                 "Italian":[0.65, 1.],
+                                 "Portuguese":[0.55, 1.65],
+                                 "Spanish":[0.5, 1.95]}
 
 transparent_plots = False  # Can be set to True or False
 
@@ -57,9 +75,9 @@ def plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experi
     else:
         plt.title(f"{language.capitalize()}, {model.capitalize()}, Exp. 1, Model * Model", fontsize=17)
     if transparent_plots is True:
-        plt.savefig('plots/'+'scatter_predictions_against_noisy_predictions_'+experiment+'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+model+'.png', transparent=transparent_plots)
+        plt.savefig('plots/'+'scatter_predictions_against_noisy_predictions_best_fitting_'+str(best_fitting)+'_'+experiment+'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+language+'_'+model+'.png', transparent=transparent_plots)
     else:
-        plt.savefig('plots/'+'scatter_predictions_against_noisy_predictions_'+experiment+'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+model+'.pdf', transparent=transparent_plots)
+        plt.savefig('plots/'+'scatter_predictions_against_noisy_predictions_best_fitting_'+str(best_fitting)+'_'+experiment+'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+language+'_'+model+'.pdf', transparent=transparent_plots)
     plt.show()
 
 
@@ -69,6 +87,11 @@ for language in languages:
     elif language == "Portuguese" or language == "Spanish":
         models = ['person', 'person_attention']
 
+
+    if best_fitting is True:
+        sigma_dict = sigma_dict_best_fitting
+    else:
+        sigma_dict = sigma_dict_across_parameters
 
     sigma = sigma_dict[language]
     print("sigma is:")
@@ -110,29 +133,50 @@ for language in languages:
             else:
                 model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Ese_uniform_' + str(ese_uniform) + '_' + str(models).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
+
+        if best_fitting is True:
+            if "attention" in model:
+                speaker_tau = best_fit_parameters_attention_exp2_dict[language][0]
+                listener_tau = best_fit_parameters_attention_exp2_dict[language][1]
+            else:
+                speaker_tau = best_fit_parameters_baseline_exp2_dict[language][0]
+                listener_tau = best_fit_parameters_baseline_exp2_dict[language][1]
+            print('')
+            print('')
+            print("speaker_tau is:")
+            print(speaker_tau)
+            print("listener_tau is:")
+            print(listener_tau)
+
+            pd.set_option('display.max_columns', None)
+            # print("model_predictions are:")
+            # print(model_predictions)
+
+            print('')
+            print('')
+            print("model_predictions BEFORE HONING IN ON BEST-FITTING PARAMETERS:")
+            print(model_predictions)
+
+            model_predictions = model_predictions[model_predictions["SpeakerTau"] == speaker_tau][model_predictions["ListenerTau"] == listener_tau]
+
+            print('')
+            print('')
+            print("model_predictions AFTER HONING IN ON BEST-FITTING PARAMETERS:")
+            print(model_predictions)
+
+
         if "attention" in model:
             model_predictions_dict["Attention"] = model_predictions
         else:
             model_predictions_dict["Baseline"] = model_predictions
 
 
-    print('')
-    print('')
-    print("model_predictions_dict is:")
-    print(model_predictions_dict)
-
-
-    attention_model_predictions = model_predictions_dict["Attention"]
-    print('')
-    print("attention_model_predictions are:")
-    print(attention_model_predictions)
-
-
     # ADD NOISE TO ATTENTION MODEL PREDICTIONS: #
 
-    pd.set_option('display.max_columns', None)
-    # print("model_predictions are:")
-    # print(model_predictions)
+    attention_model_predictions = model_predictions_dict["Attention"]
+    # print('')
+    # print("attention_model_predictions are:")
+    # print(attention_model_predictions)
 
     prob_column = attention_model_predictions["Probability"]
     # print("prob_column is:")
@@ -150,6 +194,10 @@ for language in languages:
     # ADD NOISY PREDICTIONS TO BOTH BASELINE AND ATTENTION DATAFRAME: #
 
     for model in models:
+        print('')
+        print('')
+        print("model is:")
+        print(model)
 
         if "attention" in model:
             model_predictions = model_predictions_dict["Attention"]
@@ -157,16 +205,16 @@ for language in languages:
             model_predictions = model_predictions_dict["Baseline"]
 
         model_predictions["Noisy_probs"] = noisy_probs_array
-        print("model_predictions are:")
-        print(model_predictions)
+        # print("model_predictions are:")
+        # print(model_predictions)
 
         model_probs = model_predictions["Probability"][model_predictions["Model"] == model]
-        print("model_probs are:")
-        print(model_probs)
+        # print("model_probs are:")
+        # print(model_probs)
 
         noisy_probs = model_predictions["Noisy_probs"][model_predictions["Model"] == model]
-        print("noisy_probs are:")
-        print(noisy_probs)
+        # print("noisy_probs are:")
+        # print(noisy_probs)
 
 
         # CHECK CORRELATIONS BETWEEN ORIGINAL AND NOISY MODEL PREDICTIONS: #
