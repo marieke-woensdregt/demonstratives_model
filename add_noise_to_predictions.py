@@ -29,7 +29,10 @@ tau_start = 0.4
 tau_stop = 2.05
 tau_step = 0.05
 
-sigma = 0.14  # Variance value for Gaussian used to add noise to the model predictions
+sigma_dict = {"English": 0.19,
+              "Italian": 0.05,
+              "Portuguese": 0.18,
+              "Spanish": 0.13}  # Variance values for Gaussian used to add noise to the model predictions
 
 transparent_plots = False  # Can be set to True or False
 
@@ -47,7 +50,10 @@ def plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experi
     sns.scatterplot(data=pd_probs_and_proportions_over_trials, x="Probability", y="Noisy_probs")
 
     if experiment == "attention":
-        plt.title(f"{language.capitalize()}, {model.capitalize()}, Exp. 2,  Model * Model", fontsize=17)
+        if "attention" in model:
+            plt.title(f"{language.capitalize()}: Attention Model vs. Noisy Attention Model", fontsize=17)
+        else:
+            plt.title(f"{language.capitalize()}: Baseline Model vs. Noisy Attention Model", fontsize=17)
     else:
         plt.title(f"{language.capitalize()}, {model.capitalize()}, Exp. 1, Model * Model", fontsize=17)
     if transparent_plots is True:
@@ -59,58 +65,76 @@ def plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experi
 
 for language in languages:
     if language == "English" or language == "Italian":
-        model = 'distance_attention'
+        models = ['distance', 'distance_attention']
     elif language == "Portuguese" or language == "Spanish":
-        model = 'person_attention'
-    print('')
-    print('')
-    print(f"LANGUAGE = {language} + MODEL = {model}:")
+        models = ['person', 'person_attention']
 
-    # LOAD IN DATA: #
-    if experiment == "attention":
-        if language == "English" or language == "Italian":
-            data_pd = pd.read_csv('data/experiment_2/with_counts/TwoSystem_Attention.csv', index_col=0)
-        elif language == "Portuguese" or language == "Spanish":
-            data_pd = pd.read_csv('data/experiment_2/with_counts/ThreeSystem_Attention.csv', index_col=0)
-    else:
-        if language == "English" or language == "Italian":
-            data_pd = pd.read_csv('data/experiment_1/with_counts/TwoSystem.csv', index_col=0)
-        elif language == "Portuguese" or language == "Spanish":
-            data_pd = pd.read_csv('data/experiment_1/with_counts/ThreeSystem.csv', index_col=0)
+
+    sigma = sigma_dict[language]
+    print("sigma is:")
+    print(sigma)
 
     # LOAD IN MODEL PREDICTIONS: #
-    if rsa_layer is True:
 
-        if experiment == "attention":
+    model_predictions_dict = {}
 
-            if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
-                models_for_filename = ["distance_attention", "person_attention"]
-                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+    for model in models:
 
+        print('')
+        print('')
+        print(f"LANGUAGE = {language} + MODEL = {model}:")
 
-            else:
-                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_'+str(models).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
-        else:
-            model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_' +str(models).replace(" ", "")+'_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+        if rsa_layer is True:
 
-    else:
-        if experiment == "attention":
-
-            if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
-                models_for_filename = ["distance_attention", "person_attention"]
-                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Attention_Ese_uniform_' + str(ese_uniform) + '_' + str(models_for_filename).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
+            if experiment == "attention":
+                if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
+                    models_for_filename = ["distance_attention", "person_attention"]
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_' + str(models_for_filename).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+                else:
+                    models_for_filename = ["distance", "person"]
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_' + str(models_for_filename).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
             else:
-                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Attention_Ese_uniform_' + str(ese_uniform) + '_' + str(models).replace(" ", "")+'_tau_start_'+str(tau_start)+'_tau_stop_'+str(tau_stop)+'_tau_step_'+str(tau_step)+'.csv')
-        else:
-            model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Ese_uniform_' + str(ese_uniform) + '_' + str(models).replace(" ", "")+'_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_' + str(models).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
-    # ADD NOISE TO MODEL PREDICTIONS: #
+        else:
+            if experiment == "attention":
+                if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
+                    models_for_filename = ["distance_attention", "person_attention"]
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Attention_Ese_uniform_' + str(ese_uniform) + '_' + str(models_for_filename).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+
+                else:
+                    models_for_filename = ["distance", "person"]
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Attention_Ese_uniform_' + str(ese_uniform) + '_' + str(models_for_filename).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+
+            else:
+                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Ese_uniform_' + str(ese_uniform) + '_' + str(models).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+
+        if "attention" in model:
+            model_predictions_dict["Attention"] = model_predictions
+        else:
+            model_predictions_dict["Baseline"] = model_predictions
+
+
+    print('')
+    print('')
+    print("model_predictions_dict is:")
+    print(model_predictions_dict)
+
+
+    attention_model_predictions = model_predictions_dict["Attention"]
+    print('')
+    print("attention_model_predictions are:")
+    print(attention_model_predictions)
+
+
+    # ADD NOISE TO ATTENTION MODEL PREDICTIONS: #
+
     pd.set_option('display.max_columns', None)
     # print("model_predictions are:")
     # print(model_predictions)
 
-    prob_column = model_predictions["Probability"]
+    prob_column = attention_model_predictions["Probability"]
     # print("prob_column is:")
     # print(prob_column)
 
@@ -122,54 +146,52 @@ for language in languages:
     # print("noisy_probs are:")
     # print(noisy_probs_array)
 
-    model_predictions["Noisy_probs"] = noisy_probs_array
-    print("model_predictions are:")
-    print(model_predictions)
 
-    # model_predictions_noisy = model_predictions.copy()
-    # # print("model_predictions_noisy BEFORE ADDING NOISE are:")
-    # # print(model_predictions_noisy)
-    #
-    # model_predictions_noisy["Probability"] = noisy_probs_array
-    # # print("model_predictions_noisy AFTER ADDING NOISE are:")
-    # # print(model_predictions_noisy)
+    # ADD NOISY PREDICTIONS TO BOTH BASELINE AND ATTENTION DATAFRAME: #
+
+    for model in models:
+
+        if "attention" in model:
+            model_predictions = model_predictions_dict["Attention"]
+        else:
+            model_predictions = model_predictions_dict["Baseline"]
+
+        model_predictions["Noisy_probs"] = noisy_probs_array
+        print("model_predictions are:")
+        print(model_predictions)
+
+        model_probs = model_predictions["Probability"][model_predictions["Model"] == model]
+        print("model_probs are:")
+        print(model_probs)
+
+        noisy_probs = model_predictions["Noisy_probs"][model_predictions["Model"] == model]
+        print("noisy_probs are:")
+        print(noisy_probs)
 
 
+        # CHECK CORRELATIONS BETWEEN ORIGINAL AND NOISY MODEL PREDICTIONS: #
+        pearson_correlation = model_probs.corr(noisy_probs)
+        print('')
+        print("pearson_correlation is:")
+        print(pearson_correlation)
+        pearson_correlation_reverse = noisy_probs.corr(model_probs)
+        print('')
+        print("pearson_correlation_reverse is:")
+        print(pearson_correlation_reverse)
+
+        r, p, lo, hi = pearsonr_ci(noisy_probs, model_probs, alpha=0.05)
+        print('')
+        print('')
+        print("Pearson's r correlation using code from https://zhiyzuo.github.io/Pearson-Correlation-CI-in-Python/")
+        print("r is:")
+        print(r)
+        print("p is:")
+        print(p)
+        print("lo is:")
+        print(lo)
+        print("hi is:")
+        print(hi)
 
 
-
-    print('')
-    print('')
-
-    model_probs = model_predictions["Probability"][model_predictions["Model"] == model]
-    print("model_probs are:")
-    print(model_probs)
-
-    noisy_probs = model_predictions["Noisy_probs"][model_predictions["Model"] == model]
-    print("noisy_probs are:")
-    print(noisy_probs)
-
-    # CHECK CORRELATIONS BETWEEN ORIGINAL AND NOISY MODEL PREDICTIONS: #
-    pearson_correlation = model_probs.corr(noisy_probs)
-    print('')
-    print("pearson_correlation is:")
-    print(pearson_correlation)
-    pearson_correlation_reverse = noisy_probs.corr(model_probs)
-    print('')
-    print("pearson_correlation_reverse is:")
-    print(pearson_correlation_reverse)
-
-    r, p, lo, hi = pearsonr_ci(noisy_probs, model_probs, alpha=0.05)
-    print('')
-    print('')
-    print("Pearson's r correlation using code from https://zhiyzuo.github.io/Pearson-Correlation-CI-in-Python/")
-    print("r is:")
-    print(r)
-    print("p is:")
-    print(p)
-    print("lo is:")
-    print(lo)
-    print("hi is:")
-    print(hi)
-
-    plot_scatter_model_against_data(model_predictions, experiment, model, transparent_plots)
+        # MAKE SCATTER PLOT: #
+        plot_scatter_model_against_data(model_predictions, experiment, model, transparent_plots)
