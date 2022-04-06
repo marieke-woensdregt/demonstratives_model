@@ -29,8 +29,8 @@ import pandas as pd
 start = time.time()
 
 tau_start = 0.4
-tau_stop = 2.05
-tau_step = 0.05
+tau_stop = 2.01
+tau_step = 0.1
 
 listener_attentions = [0, 1, 2, 3, 4]
 object_positions = [1, 2, 3, 4]
