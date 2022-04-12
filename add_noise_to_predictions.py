@@ -25,21 +25,38 @@ else:
     object_positions = [0, 1, 2, 3]  # array of all possible object (= referent) positions
 listener_positions = [0, 1, 2, 3]  # array of all possible listener positions
 listener_attentions = [0, 1, 2, 3]  # array of all possible listener positions
+
+listener_attentions = [0, 1, 2, 3, 4]
+object_positions = [1, 2, 3, 4]
+
+
 tau_start = 0.4
 tau_stop = 2.05
 tau_step = 0.05
 
-sigma_dict_across_parameters = {"English": 0.19,
-              "Italian": 0.05,
-              "Portuguese": 0.18,
-              "Spanish": 0.13}  # Variance values for Gaussian used to add noise to the model predictions
+if len(listener_attentions) == 4:
+    sigma_dict_across_parameters = {"English": 0.19,
+                  "Italian": 0.05,
+                  "Portuguese": 0.18,
+                  "Spanish": 0.13}  # Variance values for Gaussian used to add noise to the model predictions
 
-sigma_dict_best_fitting = {"English": 0.12,
-              "Italian": 0.07,
-              "Portuguese": 0.24,
-              "Spanish": 0.2}  # Variance values for Gaussian used to add noise to the model predictions
+    sigma_dict_best_fitting = {"English": 0.12,
+                  "Italian": 0.07,
+                  "Portuguese": 0.24,
+                  "Spanish": 0.2}  # Variance values for Gaussian used to add noise to the model predictions
 
-best_fitting = False  # Can be set to either True (will focus only on best-fitting parameter settings) or False (will do # analysis across whole parameter range)
+elif len(listener_attentions) == 5:
+    sigma_dict_across_parameters = {"English": 0.23,
+                  "Italian": 0.06,
+                  "Portuguese": 0.22,
+                  "Spanish": 0.16}  # Variance values for Gaussian used to add noise to the model predictions
+
+    sigma_dict_best_fitting = {"English": 0.11,
+                  "Italian": 0.08,
+                  "Portuguese": 0.28,
+                  "Spanish": 0.22}  # Variance values for Gaussian used to add noise to the model predictions
+
+best_fitting = True  # Can be set to either True (will focus only on best-fitting parameter settings) or False (will do # analysis across whole parameter range)
 
 best_fit_parameters_baseline_exp2_dict = {"English":[1.3, 1.75],
                                  "Italian":[0.5, 1.5],
@@ -51,6 +68,22 @@ best_fit_parameters_attention_exp2_dict = {"English":[1.7, 1.15],
                                  "Italian":[0.65, 1.],
                                  "Portuguese":[0.55, 1.65],
                                  "Spanish":[0.5, 1.95]}
+
+
+
+#
+# best_fit_parameters_baseline_exp2_dict = {"English":[1.3, 1.8],
+#                                  "Italian":[0.5, 1.5],
+#                                  "Portuguese":[0.7, 1.7],
+#                                  "Spanish":[0.7, 1.7]}
+#
+#
+# best_fit_parameters_attention_exp2_dict = {"English":[1.7, 1.2],
+#                                  "Italian":[0.7, 1.],
+#                                  "Portuguese":[0.6, 1.7],
+#                                  "Spanish":[0.5, 2.0]}
+
+
 
 transparent_plots = False  # Can be set to True or False
 
@@ -75,9 +108,9 @@ def plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experi
     else:
         plt.title(f"{language.capitalize()}, {model.capitalize()}, Exp. 1, Model * Model", fontsize=17)
     if transparent_plots is True:
-        plt.savefig('plots/'+'scatter_predictions_against_noisy_predictions_best_fitting_'+str(best_fitting)+'_'+experiment+'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+language+'_'+model+'.png', transparent=transparent_plots)
+        plt.savefig('plots/'+'scatter_predictions_against_noisy_predictions_best_fitting_'+str(best_fitting)+'_'+experiment+'_n_positions_'+str(len(listener_attentions)) +'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+language+'_'+model+'.png', transparent=transparent_plots)
     else:
-        plt.savefig('plots/'+'scatter_predictions_against_noisy_predictions_best_fitting_'+str(best_fitting)+'_'+experiment+'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+language+'_'+model+'.pdf', transparent=transparent_plots)
+        plt.savefig('plots/'+'scatter_predictions_against_noisy_predictions_best_fitting_'+str(best_fitting)+'_'+experiment+'_n_positions_'+str(len(listener_attentions)) +'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+language+'_'+model+'.pdf', transparent=transparent_plots)
     plt.show()
 
 
@@ -111,14 +144,16 @@ for language in languages:
 
             if experiment == "attention":
                 if "attention" in model: #TODO: Get rid of this ad-hoc solution and make it more organised
-                    models_for_filename = ["distance_attention", "person_attention"]
-                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_' + str(models_for_filename).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+                    # models_for_filename = ["distance_attention", "person_attention"]
+                    models_for_filename = [model]
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_n_positions_'+str(len(listener_attentions)) + str(models_for_filename).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
                 else:
-                    models_for_filename = ["distance", "person"]
-                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_' + str(models_for_filename).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+                    # models_for_filename = ["distance", "person"]
+                    models_for_filename = [model]
+                    model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_Attention_n_positions_'+str(len(listener_attentions)) + str(models_for_filename).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
             else:
-                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_' + str(models).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+                model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_RSA_n_positions_'+str(len(listener_attentions)) + str(models).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
 
         else:
             if experiment == "attention":
