@@ -34,6 +34,11 @@ tau_start = 0.4
 tau_stop = 2.05
 tau_step = 0.05
 
+best_fitting = False  # Can be set to either True (will focus only on best-fitting parameter settings) or False (will do # analysis across whole parameter range)
+
+only_misaligned = True  # Can be set to either True (will only analyse misaligned trials) or False (will analyse all trials)
+
+
 if len(listener_attentions) == 4:
     sigma_dict_across_parameters = {"English": 0.19,
                   "Italian": 0.05,
@@ -56,7 +61,8 @@ elif len(listener_attentions) == 5:
                   "Portuguese": 0.28,
                   "Spanish": 0.22}  # Variance values for Gaussian used to add noise to the model predictions
 
-best_fitting = True  # Can be set to either True (will focus only on best-fitting parameter settings) or False (will do # analysis across whole parameter range)
+
+
 
 best_fit_parameters_baseline_exp2_dict = {"English":[1.3, 1.75],
                                  "Italian":[0.5, 1.5],
@@ -167,6 +173,17 @@ for language in languages:
 
             else:
                 model_predictions = pd.read_csv('model_predictions/HigherSearchD_MW_Simple_Ese_uniform_' + str(ese_uniform) + '_' + str(models).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv')
+
+
+        if only_misaligned is True:
+            aligned_column = np.where(model_predictions["Referent"] == model_predictions["Listener_att"], True, False)
+            model_predictions["Aligned"] = aligned_column
+            model_predictions = model_predictions[model_predictions["Aligned"] == False]
+            # pd.set_option('display.max_columns', None)
+            # print('')
+            # print('')
+            # print("model_predictions ONLY MISALIGNED TRIALS are:")
+            # print(model_predictions)
 
 
         if best_fitting is True:
