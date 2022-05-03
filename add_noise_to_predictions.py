@@ -56,11 +56,20 @@ elif len(listener_attentions) == 5:
                   "Portuguese": 0.22,
                   "Spanish": 0.16}  # Variance values for Gaussian used to add noise to the model predictions
 
+    sigma_dict_across_parameters_misaligned_only = {"English": 0.23,
+                  "Italian": 0.06,
+                  "Portuguese": 0.22,
+                  "Spanish": 0.16}  # Variance values for Gaussian used to add noise to the model predictions
+
     sigma_dict_best_fitting = {"English": 0.11,
                   "Italian": 0.08,
                   "Portuguese": 0.28,
                   "Spanish": 0.22}  # Variance values for Gaussian used to add noise to the model predictions
 
+    sigma_dict_best_fitting_misaligned_only = {"English": 0.12,
+                  "Italian": 0.09,
+                  "Portuguese": 0.25,
+                  "Spanish": 0.22}  # Variance values for Gaussian used to add noise to the model predictions
 
 
 
@@ -114,9 +123,9 @@ def plot_scatter_model_against_data(pd_probs_and_proportions_over_trials, experi
     else:
         plt.title(f"{language.capitalize()}, {model.capitalize()}, Exp. 1, Model * Model", fontsize=17)
     if transparent_plots is True:
-        plt.savefig('plots/'+'scatter_predictions_against_noisy_predictions_best_fitting_'+str(best_fitting)+'_'+experiment+'_n_positions_'+str(len(listener_attentions)) +'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+language+'_'+model+'.png', transparent=transparent_plots)
+        plt.savefig('plots/'+'scatter_model_vs_noisy_model_best_fit_'+str(best_fitting)+'_misaligned_only_'+str(only_misaligned)+'_'+experiment+'_n_positions_'+str(len(listener_attentions)) +'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+language+'_'+model+'.png', transparent=transparent_plots)
     else:
-        plt.savefig('plots/'+'scatter_predictions_against_noisy_predictions_best_fitting_'+str(best_fitting)+'_'+experiment+'_n_positions_'+str(len(listener_attentions)) +'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+language+'_'+model+'.pdf', transparent=transparent_plots)
+        plt.savefig('plots/'+'scatter_model_vs_noisy_model_best_fit_'+str(best_fitting)+'_misaligned_only_'+str(only_misaligned)+'_'+experiment+'_n_positions_'+str(len(listener_attentions)) +'_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) +'_'+language+'_'+model+'.pdf', transparent=transparent_plots)
     plt.show()
 
 
@@ -128,9 +137,15 @@ for language in languages:
 
 
     if best_fitting is True:
-        sigma_dict = sigma_dict_best_fitting
+        if only_misaligned is True:
+            sigma_dict = sigma_dict_best_fitting_misaligned_only
+        else:
+            sigma_dict = sigma_dict_best_fitting
     else:
-        sigma_dict = sigma_dict_across_parameters
+        if only_misaligned is True:
+            sigma_dict = sigma_dict_across_parameters_misaligned_only
+        else:
+            sigma_dict = sigma_dict_across_parameters
 
     sigma = sigma_dict[language]
     print("sigma is:")
@@ -204,17 +219,17 @@ for language in languages:
             # print("model_predictions are:")
             # print(model_predictions)
 
-            print('')
-            print('')
-            print("model_predictions BEFORE HONING IN ON BEST-FITTING PARAMETERS:")
-            print(model_predictions)
+            # print('')
+            # print('')
+            # print("model_predictions BEFORE HONING IN ON BEST-FITTING PARAMETERS:")
+            # print(model_predictions)
 
             model_predictions = model_predictions[model_predictions["SpeakerTau"] == speaker_tau][model_predictions["ListenerTau"] == listener_tau]
 
-            print('')
-            print('')
-            print("model_predictions AFTER HONING IN ON BEST-FITTING PARAMETERS:")
-            print(model_predictions)
+            # print('')
+            # print('')
+            # print("model_predictions AFTER HONING IN ON BEST-FITTING PARAMETERS:")
+            # print(model_predictions)
 
 
         if "attention" in model:
