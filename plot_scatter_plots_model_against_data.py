@@ -10,7 +10,7 @@ rsa_layer = True  # Can be set to either True or False
 
 ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
 
-experiment = "attention"  # Can be set to either "baseline" (=Experiment 1) or "attention" (=Experiment 2)
+experiment = "baseline"  # Can be set to either "baseline" (=Experiment 1) or "attention" (=Experiment 2)
 
 if experiment == "attention":
     models = ["distance", "person", "distance_attention", "person_attention"]
@@ -33,12 +33,35 @@ transparent_plots = False  # Can be set to True or False
 
 language_combos = [["English", "Italian"], ["Portuguese", "Spanish"]]
 
-best_fit_parameters_exp1_dict_RSA = {"English":[0.65, 1.15],
+
+
+best_fit_parameters_exp1_dict_RSA_distance = {"English":[0.65, 1.15],
+                                 "Italian":[0.5, 0.5],
+                                 "Portuguese":[0.4, 1.95],
+                                 "Spanish":[0.45, 0.45]}
+
+best_fit_parameters_exp1_dict_RSA_person = {"English":[0.75, 0.7],
+                                 "Italian":[0.5, 0.4],
+                                 "Portuguese":[0.45, 0.95],
+                                 "Spanish":[0.5, 0.8]}
+
+best_fit_parameters_exp1_dict_RSA_winning = {"English":[0.65, 1.15],
                                  "Italian":[0.5, 0.5],
                                  "Portuguese":[0.45, 0.95],
                                  "Spanish":[0.5, 0.8]}
 
-best_fit_parameters_exp2_dict_RSA = {"English":[1.7, 1.15],
+
+best_fit_parameters_exp2_dict_RSA_baseline = {"English":[1.3, 1.75],
+                                 "Italian":[0.5, 1.5],
+                                 "Portuguese":[0.65, 1.65],
+                                 "Spanish":[0.65, 1.65]}
+
+best_fit_parameters_exp2_dict_RSA_attention = {"English":[1.7, 1.15],
+                                 "Italian":[0.65, 1.],
+                                 "Portuguese":[0.55, 1.65],
+                                 "Spanish":[0.5, 1.95]}
+
+best_fit_parameters_exp2_dict_RSA_winning = {"English":[1.7, 1.15],
                                  "Italian":[0.65, 1.],
                                  "Portuguese":[0.55, 1.65],
                                  "Spanish":[0.5, 1.95]}
@@ -226,17 +249,6 @@ if __name__ == "__main__":
             elif language_combo == ["Portuguese", "Spanish"]:
                 data_pd = pd.read_csv('data/experiment_1/with_counts/ThreeSystem.csv', index_col=0)
 
-        if experiment == "attention":
-            if rsa_layer is True:
-                best_fit_parameters = best_fit_parameters_exp2_dict_RSA
-            else:
-                best_fit_parameters = best_fit_parameters_exp2_dict_Simple
-        else:
-            if rsa_layer is True:
-                best_fit_parameters = best_fit_parameters_exp1_dict_RSA
-            else:
-                best_fit_parameters = best_fit_parameters_exp1_dict_Simple
-
         for model in models:
 
             print('')
@@ -244,11 +256,40 @@ if __name__ == "__main__":
             print("model is:")
             print(model)
 
+            if experiment == "attention":
+                if rsa_layer is True:
+                    if "attention" in model:
+                        best_fit_parameters = best_fit_parameters_exp2_dict_RSA_attention
+                    else:
+                        best_fit_parameters = best_fit_parameters_exp2_dict_RSA_baseline
+                else:
+                    best_fit_parameters = best_fit_parameters_exp2_dict_Simple
+            else:
+                if rsa_layer is True:
+                    if model == "distance":
+                        best_fit_parameters = best_fit_parameters_exp1_dict_RSA_winning
+                    elif model == "person":
+                        best_fit_parameters = best_fit_parameters_exp1_dict_RSA_winning
+                else:
+                    best_fit_parameters = best_fit_parameters_exp1_dict_Simple
+
             speaker_tau_per_language = []
             listener_tau_per_language = []
             for language in language_combo:
+
+                print('')
+                print('')
+                print("language is:")
+                print(language)
+
                 speaker_tau = best_fit_parameters[language][0]
                 listener_tau = best_fit_parameters[language][1]
+
+                print("speaker_tau is:")
+                print(speaker_tau)
+                print("listener_tau is:")
+                print(listener_tau)
+
                 speaker_tau_per_language.append(speaker_tau)
                 listener_tau_per_language.append(listener_tau)
 
@@ -295,15 +336,15 @@ if __name__ == "__main__":
                 print("language is:")
                 print(language)
                 model_probs = pd_probs_and_proportions_over_trials["Probability_model"][pd_probs_and_proportions_over_trials["Language"] == language]
-                # print('')
-                # print('')
-                # print("model_probs are:")
-                # print(model_probs)
+                print('')
+                print('')
+                print("model_probs are:")
+                print(model_probs)
                 data_props = pd_probs_and_proportions_over_trials["Proportion_data"][pd_probs_and_proportions_over_trials["Language"] == language]
-                # print('')
-                # print('')
-                # print("data_props are:")
-                # print(data_props)
+                print('')
+                print('')
+                print("data_props are:")
+                print(data_props)
                 pearson_correlation = data_props.corr(model_probs)
                 print('')
                 print("pearson_correlation is:")
