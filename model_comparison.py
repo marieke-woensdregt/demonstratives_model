@@ -10,9 +10,9 @@ rsa_layer = True  # Can be set to either True or False
 
 ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
 
-comparison = "attention_correction"  # Can be set to either "system", "attention_correction" or "rsa_contribution"
+comparison = "system"  # Can be set to either "system", "attention_correction" or "rsa_contribution"
 
-experiment = "attention"  # Can be set to either "baseline" (Experiment 1) or "attention" (Experiment 2)
+experiment = "baseline"  # Can be set to either "baseline" (Experiment 1) or "attention" (Experiment 2)
 
 if experiment == "attention":
     models = ["distance_attention", "person_attention"]
@@ -27,8 +27,8 @@ tau_start_for_comparison = 0.4
 # tau_stop_for_comparison = 1.41
 
 
-def bayes_factor(likelihood_np_array_distance, likelihood_np_array_person):
-    bayes_factor_array = np.divide(likelihood_np_array_distance, likelihood_np_array_person)
+def bayes_factor(likelihood_np_array_a, likelihood_np_array_b):
+    bayes_factor_array = np.divide(likelihood_np_array_a, likelihood_np_array_b)
     return bayes_factor_array
 
 
@@ -302,18 +302,30 @@ for language in languages:
             print('')
             print("bayes_factor_max_likelihood DISTANCE / PERSON is:")
             print(bayes_factor_max_likelihood)
-            max_likelihood_coordinates = max_index_likelihood_baseline
+            max_likelihood_coordinates_baseline = max_index_likelihood_baseline
             print('')
-            print("max_likelihood_coordinates are:")
-            print(max_likelihood_coordinates)
-            speaker_tau_max_likelihood = index_baseline[max_likelihood_coordinates[0][0]]
+            print("max_likelihood_coordinates_baseline are:")
+            print(max_likelihood_coordinates_baseline)
+            speaker_tau_max_likelihood_baseline = index_baseline[max_likelihood_coordinates_baseline[0][0]]
             print('')
-            print("speaker_tau_max_likelihood is:")
-            print(speaker_tau_max_likelihood)
-            listener_tau_max_likelihood = column_baseline[max_likelihood_coordinates[1][0]]
+            print("speaker_tau_max_likelihood_baseline is:")
+            print(speaker_tau_max_likelihood_baseline)
+            listener_tau_max_likelihood_baseline = column_baseline[max_likelihood_coordinates_baseline[1][0]]
             print('')
-            print("listener_tau_max_likelihood is:")
-            print(listener_tau_max_likelihood)
+            print("listener_tau_max_likelihood_baseline is:")
+            print(listener_tau_max_likelihood_baseline)
+            max_likelihood_coordinates_comparison = max_index_likelihood_comparison
+            print('')
+            print("max_likelihood_coordinates_comparison are:")
+            print(max_likelihood_coordinates_comparison)
+            speaker_tau_max_likelihood_comparison = index_comparison[max_likelihood_coordinates_comparison[0][0]]
+            print('')
+            print("speaker_tau_max_likelihood_comparison is:")
+            print(speaker_tau_max_likelihood_comparison)
+            listener_tau_max_likelihood_comparison = column_comparison[max_likelihood_coordinates_comparison[1][0]]
+            print('')
+            print("listener_tau_max_likelihood_comparison is:")
+            print(listener_tau_max_likelihood_comparison)
 
         elif language == "Portuguese" or language == "Spanish":
             bayes_factor_max_likelihood = max_likelihood_comparison / max_likelihood_baseline
@@ -321,18 +333,30 @@ for language in languages:
             print('')
             print("bayes_factor_max_likelihood PERSON / DISTANCE is:")
             print(bayes_factor_max_likelihood)
-            max_likelihood_coordinates = max_index_likelihood_comparison
+            max_likelihood_coordinates_baseline = max_index_likelihood_baseline
             print('')
-            print("max_likelihood_coordinates are:")
-            print(max_likelihood_coordinates)
-            speaker_tau_max_likelihood = index_comparison[max_likelihood_coordinates[0][0]]
+            print("max_likelihood_coordinates_baseline are:")
+            print(max_likelihood_coordinates_baseline)
+            speaker_tau_max_likelihood_baseline = index_baseline[max_likelihood_coordinates_baseline[0][0]]
             print('')
-            print("speaker_tau_max_likelihood is:")
-            print(speaker_tau_max_likelihood)
-            listener_tau_max_likelihood = column_comparison[max_likelihood_coordinates[1][0]]
+            print("speaker_tau_max_likelihood_baseline is:")
+            print(speaker_tau_max_likelihood_baseline)
+            listener_tau_max_likelihood_baseline = column_baseline[max_likelihood_coordinates_baseline[1][0]]
             print('')
-            print("listener_tau_max_likelihood is:")
-            print(listener_tau_max_likelihood)
+            print("listener_tau_max_likelihood_baseline is:")
+            print(listener_tau_max_likelihood_baseline)
+            max_likelihood_coordinates_comparison = max_index_likelihood_comparison
+            print('')
+            print("max_likelihood_coordinates_comparison are:")
+            print(max_likelihood_coordinates_comparison)
+            speaker_tau_max_likelihood_comparison = index_comparison[max_likelihood_coordinates_comparison[0][0]]
+            print('')
+            print("speaker_tau_max_likelihood_comparison is:")
+            print(speaker_tau_max_likelihood_comparison)
+            listener_tau_max_likelihood_comparison = column_comparison[max_likelihood_coordinates_comparison[1][0]]
+            print('')
+            print("listener_tau_max_likelihood_comparison is:")
+            print(listener_tau_max_likelihood_comparison)
 
     else:  # i.e. if comparison == "attention_correction" OR comparison == "rsa_contribution"
         bayes_factor_max_likelihood = max_likelihood_comparison / max_likelihood_baseline
@@ -386,29 +410,45 @@ for language in languages:
     if comparison == "system":
 
         bayes_factor_array = bayes_factor(likelihood_np_array_baseline, likelihood_np_array_comparison)
-        # print('')
-        # print("bayes_factor_array is:")
-        # print(bayes_factor_array)
-        # print("bayes_factor_array.shape is:")
-        # print(bayes_factor_array.shape)
+        print('')
+        print("bayes_factor_array is:")
+        print(bayes_factor_array)
+        print("bayes_factor_array.shape is:")
+        print(bayes_factor_array.shape)
+        print("np.where(bayes_factor_array == np.inf) is:")
+        print(np.where(bayes_factor_array == np.inf))
+        print("np.mean(bayes_factor_array) is:")
+        print(np.mean(bayes_factor_array))
+        print("np.nanmean(bayes_factor_array) is:")
+        print(np.nanmean(bayes_factor_array))
 
         bayes_factor_df = pd.DataFrame(data=bayes_factor_array, index=index, columns=column)
         print('')
         print('')
         print("bayes_factor_df is:")
         print(bayes_factor_df)
+        avg_bayes_factor = bayes_factor_df.mean().mean()
+        print("avg_bayes_factor is:")
+        print(avg_bayes_factor)
+        bayes_factor_df = bayes_factor_df.replace([np.inf, -np.inf], np.nan)
+        print('')
+        print("bayes_factor_df AFTER REPLACING INF WITH NAN is:")
+        print(bayes_factor_df)
+        avg_bayes_factor = bayes_factor_df.mean().mean()
+        print("avg_bayes_factor AFTER REPLACING INF WITH NAN is:")
+        print(avg_bayes_factor)
 
         distance_wins_df = convert_to_distance_wins(bayes_factor_df)
-        print('')
-        print('')
-        print("distance_wins_df is:")
-        print(distance_wins_df)
+        # print('')
+        # print('')
+        # print("distance_wins_df is:")
+        # print(distance_wins_df)
 
         evidence_strength_df = convert_to_strength_of_evidence(bayes_factor_df)
-        print('')
-        print('')
-        print("evidence_strength_df is:")
-        print(evidence_strength_df)
+        # print('')
+        # print('')
+        # print("evidence_strength_df is:")
+        # print(evidence_strength_df)
 
         bayes_factor_df.to_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(
             tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
@@ -430,22 +470,22 @@ for language in languages:
         # print(bayes_factor_array.shape)
 
         bayes_factor_df = pd.DataFrame(data=bayes_factor_array, index=index, columns=column)
-        print('')
-        print('')
-        print("bayes_factor_df is:")
-        print(bayes_factor_df)
+        # print('')
+        # print('')
+        # print("bayes_factor_df is:")
+        # print(bayes_factor_df)
 
         attention_wins_df = convert_to_distance_wins(bayes_factor_df)
-        print('')
-        print('')
-        print("attention_wins_df is:")
-        print(attention_wins_df)
+        # print('')
+        # print('')
+        # print("attention_wins_df is:")
+        # print(attention_wins_df)
 
         evidence_strength_df = convert_to_strength_of_evidence(bayes_factor_df)
-        print('')
-        print('')
-        print("evidence_strength_df is:")
-        print(evidence_strength_df)
+        # print('')
+        # print('')
+        # print("evidence_strength_df is:")
+        # print(evidence_strength_df)
 
         bayes_factor_df.to_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(
             tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
@@ -467,22 +507,22 @@ for language in languages:
         # print(bayes_factor_array.shape)
 
         bayes_factor_df = pd.DataFrame(data=bayes_factor_array, index=index, columns=column)
-        print('')
-        print('')
-        print("bayes_factor_df is:")
-        print(bayes_factor_df)
+        # print('')
+        # print('')
+        # print("bayes_factor_df is:")
+        # print(bayes_factor_df)
 
         rsa_wins_df = convert_to_distance_wins(bayes_factor_df)
-        print('')
-        print('')
-        print("rsa_wins_df is:")
-        print(rsa_wins_df)
+        # print('')
+        # print('')
+        # print("rsa_wins_df is:")
+        # print(rsa_wins_df)
 
         evidence_strength_df = convert_to_strength_of_evidence(bayes_factor_df)
-        print('')
-        print('')
-        print("evidence_strength_df is:")
-        print(evidence_strength_df)
+        # print('')
+        # print('')
+        # print("evidence_strength_df is:")
+        # print(evidence_strength_df)
 
         if experiment == "baseline":
 
