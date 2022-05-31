@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import pickle5 as p
 import pickle
+from scipy.special import logsumexp
 
 
 # PARAMETER SETTINGS: #
@@ -10,9 +11,9 @@ rsa_layer = True  # Can be set to either True or False
 
 ese_uniform = True  # Can be set to either True or False. Determines whether "ese" under the simple distance model is a uniform distribution (if set to True), or rather centred around the medial objects (if set to False)
 
-comparison = "system"  # Can be set to either "system", "attention_correction" or "rsa_contribution"
+comparison = "attention_correction"  # Can be set to either "system", "attention_correction" or "rsa_contribution"
 
-experiment = "baseline"  # Can be set to either "baseline" (Experiment 1) or "attention" (Experiment 2)
+experiment = "attention"  # Can be set to either "baseline" (Experiment 1) or "attention" (Experiment 2)
 
 if experiment == "attention":
     models = ["distance_attention", "person_attention"]
@@ -30,6 +31,9 @@ tau_start_for_comparison = 0.4
 def bayes_factor(likelihood_np_array_a, likelihood_np_array_b):
     bayes_factor_array = np.divide(likelihood_np_array_a, likelihood_np_array_b)
     return bayes_factor_array
+
+
+# def bayes_factor_marginalised_across_parameters(likelihood_np_array_a, likelihood_np_array_b):
 
 
 
@@ -415,6 +419,67 @@ for language in languages:
         print(bayes_factor_array)
         print("bayes_factor_array.shape is:")
         print(bayes_factor_array.shape)
+
+        bayes_factor_df = pd.DataFrame(data=bayes_factor_array, index=index, columns=column)
+        print('')
+        print('')
+        print("bayes_factor_df is:")
+        print(bayes_factor_df)
+        avg_bayes_factor = bayes_factor_df.mean().mean()
+        print("avg_bayes_factor is:")
+        print(avg_bayes_factor)
+        bayes_factor_df = bayes_factor_df.replace([np.inf, -np.inf], np.nan)
+        print('')
+        print("bayes_factor_df AFTER REPLACING INF WITH NAN is:")
+        print(bayes_factor_df)
+
+        distance_wins_df = convert_to_distance_wins(bayes_factor_df)
+        print('')
+        print('')
+        print("distance_wins_df is:")
+        print(distance_wins_df)
+        print("distance_wins_df.mean().mean() is:")
+        print(distance_wins_df.mean().mean())
+
+        print("bayes_factor_df.to_numpy() is:")
+        print(bayes_factor_df.to_numpy())
+        bayes_factors_distance_wins = bayes_factor_df.to_numpy()[distance_wins_df.to_numpy() == 1.0]
+        print("bayes_factors_distance_wins.shape is:")
+        print(bayes_factors_distance_wins.shape)
+        mean_bayes_factors_distance_wins = np.nanmean(bayes_factors_distance_wins)
+        print("mean_bayes_factors_distance_wins is:")
+        print(mean_bayes_factors_distance_wins)
+        bayes_factors_person_wins = bayes_factor_df.to_numpy()[distance_wins_df.to_numpy() == 0.0]
+        print("bayes_factors_person_wins.shape is:")
+        print(bayes_factors_person_wins.shape)
+        mean_bayes_factors_person_wins = np.nanmean(bayes_factors_person_wins)
+        print("mean_bayes_factors_person_wins is:")
+        print(mean_bayes_factors_person_wins)
+
+        evidence_strength_df = convert_to_strength_of_evidence(bayes_factor_df)
+        print('')
+        print('')
+        print("evidence_strength_df is:")
+        print(evidence_strength_df)
+
+        bayes_factor_df.to_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(
+            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+
+        distance_wins_df.to_pickle('model_fitting_data/' + 'distance_wins_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(
+            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+
+        evidence_strength_df.to_pickle('model_fitting_data/' + 'evidence_strength_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(
+            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
+
+
+    elif comparison == "attention_correction":
+
+        bayes_factor_array = bayes_factor(likelihood_np_array_comparison, likelihood_np_array_baseline)
+        print('')
+        print("bayes_factor_array is:")
+        print(bayes_factor_array)
+        print("bayes_factor_array.shape is:")
+        print(bayes_factor_array.shape)
         print("np.where(bayes_factor_array == np.inf) is:")
         print(np.where(bayes_factor_array == np.inf))
         print("np.mean(bayes_factor_array) is:")
@@ -438,54 +503,34 @@ for language in languages:
         print("avg_bayes_factor AFTER REPLACING INF WITH NAN is:")
         print(avg_bayes_factor)
 
-        distance_wins_df = convert_to_distance_wins(bayes_factor_df)
-        # print('')
-        # print('')
-        # print("distance_wins_df is:")
-        # print(distance_wins_df)
-
-        evidence_strength_df = convert_to_strength_of_evidence(bayes_factor_df)
-        # print('')
-        # print('')
-        # print("evidence_strength_df is:")
-        # print(evidence_strength_df)
-
-        bayes_factor_df.to_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(
-            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-
-        distance_wins_df.to_pickle('model_fitting_data/' + 'distance_wins_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(
-            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-
-        evidence_strength_df.to_pickle('model_fitting_data/' + 'evidence_strength_df_RSA_'+str(rsa_layer)+'_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(
-            tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
-
-
-    elif comparison == "attention_correction":
-
-        bayes_factor_array = bayes_factor(likelihood_np_array_comparison, likelihood_np_array_baseline)
-        # print('')
-        # print("bayes_factor_array is:")
-        # print(bayes_factor_array)
-        # print("bayes_factor_array.shape is:")
-        # print(bayes_factor_array.shape)
-
-        bayes_factor_df = pd.DataFrame(data=bayes_factor_array, index=index, columns=column)
-        # print('')
-        # print('')
-        # print("bayes_factor_df is:")
-        # print(bayes_factor_df)
-
         attention_wins_df = convert_to_distance_wins(bayes_factor_df)
-        # print('')
-        # print('')
-        # print("attention_wins_df is:")
-        # print(attention_wins_df)
+        print('')
+        print('')
+        print("attention_wins_df is:")
+        print(attention_wins_df)
+        print("attention_wins_df.mean().mean() is:")
+        print(attention_wins_df.mean().mean())
+
+        print("bayes_factor_df.to_numpy() is:")
+        print(bayes_factor_df.to_numpy())
+        bayes_factors_baseline_wins = bayes_factor_df.to_numpy()[attention_wins_df.to_numpy() == 0.0]
+        print("bayes_factors_baseline_wins.shape is:")
+        print(bayes_factors_baseline_wins.shape)
+        mean_bayes_factors_baseline_wins = np.nanmean(bayes_factors_baseline_wins)
+        print("mean_bayes_factors_baseline_wins is:")
+        print(mean_bayes_factors_baseline_wins)
+        bayes_factors_attention_wins = bayes_factor_df.to_numpy()[attention_wins_df.to_numpy() == 1.0]
+        print("bayes_factors_attention_wins.shape is:")
+        print(bayes_factors_attention_wins.shape)
+        mean_bayes_factors_attention_wins = np.nanmean(bayes_factors_attention_wins)
+        print("mean_bayes_factors_attention_wins is:")
+        print(mean_bayes_factors_attention_wins)
 
         evidence_strength_df = convert_to_strength_of_evidence(bayes_factor_df)
-        # print('')
-        # print('')
-        # print("evidence_strength_df is:")
-        # print(evidence_strength_df)
+        print('')
+        print('')
+        print("evidence_strength_df is:")
+        print(evidence_strength_df)
 
         bayes_factor_df.to_pickle('model_fitting_data/' + 'bayes_factor_df_RSA_'+str(rsa_layer)+'_Attention_Ese_uniform_' + str(ese_uniform) + '_' + language + '_tau_start_' + str(
             tau_start_for_comparison) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.pkl')
