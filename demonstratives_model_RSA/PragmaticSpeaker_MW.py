@@ -6,6 +6,7 @@ import LiteralSpeaker_MW
 class PragmaticSpeaker:
 
 	def __init__(self,PL, target, output_dict):
+		# LS is a pragmaticlistener object
 		self.PL=PL
 		self.stau = self.PL.LS.stau # extract speaker rationality
 		self.words = self.PL.words
