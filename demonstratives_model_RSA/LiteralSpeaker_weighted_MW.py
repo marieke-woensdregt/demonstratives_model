@@ -3,7 +3,7 @@ import sys
 
 class LiteralSpeaker:
 
-	def __init__(self, n_objects=4, method=None, referent=0, lpos=0, latt=0, stau=0.01, ltau=0.01, verbose=False):
+	def __init__(self, n_objects=4, method=None, referent=0, lpos=0, latt=0, stau=0.01, ltau=0.01, wobj=0.1, wlist=0.1, verbose=False):
 		# Static prameters
 		self.ObjectNo = n_objects  # Number of objects
 		self.spos = 0
@@ -14,6 +14,8 @@ class LiteralSpeaker:
 		self.latt = latt
 		self.stau = stau # speaker rationality
 		self.ltau = ltau # listener rationality
+		self.wobj = wobj # weight of object location parameter
+		self.wlist = wlist # weight of listeren location parameter
 		self.verbose = verbose
 		# Semantic models
 		self.modelcosts = {
