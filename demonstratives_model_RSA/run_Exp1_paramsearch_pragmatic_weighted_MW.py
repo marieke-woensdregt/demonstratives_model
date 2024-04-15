@@ -1,6 +1,6 @@
 import LiteralSpeaker_weighted_MW
 import PragmaticListener
-import PragmaticSpeaker_MW
+import PragmaticSpeaker_weighted_MW
 import sys
 import numpy as np
 import itertools
@@ -78,7 +78,7 @@ for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
 						LS.SetEvent(method=model, referent=referent, lpos=lpos)
 						for words in [2,3]:
 							PL = PragmaticListener.PragmaticListener(LS,words=words)
-							PS = PragmaticSpeaker_MW.PragmaticSpeaker(PL,referent, output_dict)
+							PS = PragmaticSpeaker_weighted_MW.PragmaticSpeaker(PL,referent, output_dict)
 							PS.RunEvent()
 			output_dict = PS.output_dict  # MW: has to be updated every time, so each new speaker gets updated with the existing output_dict, and new data is written to the existing output_dict
 
@@ -94,7 +94,7 @@ pd.set_option('display.max_columns', None)
 
 # output_file_path = '/Users/U968195/PycharmProjects/demonstratives_model/model_predictions/'
 output_file_path = 'model_predictions/'
-output_file_name = 'HigherSearchD_MW_RSA_n_positions_'+str(len(object_positions)) + str(models).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '.csv'
+output_file_name = 'HigherSearchD_MW_RSA_n_positions_'+str(len(object_positions)) + str(models).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '_wobj_start_' + str(weight_obj_start) + '_wobj_stop_' + str(weight_obj_stop) + '_wobj_step_' + str(weight_obj_step) +'.csv'
 output_dataframe.to_csv(output_file_path+output_file_name, index=False)
 
 # end time:
