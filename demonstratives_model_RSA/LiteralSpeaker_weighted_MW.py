@@ -3,7 +3,7 @@ import sys
 
 class LiteralSpeaker:
 
-	def __init__(self, n_objects=4, method=None, referent=0, lpos=0, latt=0, stau=0.01, ltau=0.01, wobj=0.1, wlist=0.1, verbose=False):
+	def __init__(self, n_objects=4, method=None, referent=0, lpos=0, latt=0, stau=0.01, ltau=0.01, wobj=0.5, wlist=0.5, verbose=False):
 		# Static prameters
 		self.ObjectNo = n_objects  # Number of objects
 		self.spos = 0
@@ -12,10 +12,10 @@ class LiteralSpeaker:
 		self.referent = referent
 		self.lpos = lpos
 		self.latt = latt
-		self.stau = stau # speaker rationality
-		self.ltau = ltau # listener rationality
-		self.wobj = wobj # weight of object location parameter
-		self.wlist = wlist # weight of listeren location parameter
+		self.stau = stau  # speaker rationality
+		self.ltau = ltau  # listener rationality
+		self.wobj = wobj  # weight of object location parameter
+		self.wlist = wlist  # weight of listener location parameter
 		self.verbose = verbose
 		# Semantic models
 		self.modelcosts = {
@@ -36,7 +36,7 @@ class LiteralSpeaker:
 		self.lpos = lpos
 		self.latt = latt
 
-	def GetCost(self, distribution, samples=10000): #TODO: CHANGE THIS BACK TO 1000
+	def GetCost(self, distribution, samples=1000): #TODO: CHANGE THIS BACK TO 1000
 		"""
 		General function that gets costs given a probability distribution
 		"""
