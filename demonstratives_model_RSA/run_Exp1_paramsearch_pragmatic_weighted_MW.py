@@ -1,4 +1,4 @@
-import LiteralSpeaker_MW
+import LiteralSpeaker_weighted_MW
 import PragmaticListener
 import PragmaticSpeaker_MW
 import sys
@@ -32,6 +32,10 @@ tau_start = 0.4
 tau_stop = 2.05
 tau_step = 0.05
 
+weight_obj_start = 0.0
+weight_obj_stop = 1.0
+weight_obj_step = 0.1
+
 listener_positions = [0,1,2,3,4]
 object_positions = [0,1,2,3,4]
 
@@ -47,7 +51,10 @@ output_dict = {"Model":[],
 			   "Listener_att":[],
 			   "WordNo":[],
 			   "SpeakerTau":[],
-			   "ListenerTau":[]}
+			   "ListenerTau":[],
+			   "WeightObject": [],
+			   "WeightListener": []
+			   }
 
 ########################################################################################
 
@@ -55,21 +62,25 @@ output_dict = {"Model":[],
 
 # for listener_rationality in itertools.chain(np.arange(0.01,0.1,0.01),np.arange(0.1,1.2,0.2)):
 for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
-	# print('')
-	# print(f"listener_rationality is {listener_rationality}:")
+	print('')
+	print(f"listener_rationality is {listener_rationality}:")
 	# for speaker_rationality in np.arange(0.1,1,0.1):
 	for speaker_rationality in np.arange(tau_start, tau_stop, tau_step):
-		# print(f"speaker_rationality is {speaker_rationality}:")
-		LS = LiteralSpeaker_MW.LiteralSpeaker(n_objects=len(object_positions), stau=speaker_rationality,ltau=listener_rationality,verbose=False) #TODO: Move the rounding to here instead of elsewhere?
-		for model in models:
-			for lpos in listener_positions:
-				for referent in object_positions:
-					LS.SetEvent(method=model, referent=referent, lpos=lpos)
-					for words in [2,3]:
-						PL = PragmaticListener.PragmaticListener(LS,words=words)
-						PS = PragmaticSpeaker_MW.PragmaticSpeaker(PL,referent, output_dict)
-						PS.RunEvent()
-		output_dict = PS.output_dict  # MW: has to be updated every time, so each new speaker gets updated with the existing output_dict, and new data is written to the existing output_dict
+		print(f"speaker_rationality is {speaker_rationality}:")
+		for object_weight in np.arange(weight_obj_start, weight_obj_stop, weight_obj_step):
+			listener_weight = 1.0-object_weight
+			print(f"object_weight is {object_weight}:")
+			print(f"listener_weight is {listener_weight}:")
+			LS = LiteralSpeaker_weighted_MW.LiteralSpeaker(n_objects=len(object_positions), stau=speaker_rationality,ltau=listener_rationality, wobj=object_weight, wlist=listener_weight, verbose=False) #TODO: Move the rounding to here instead of elsewhere?
+			for model in models:
+				for lpos in listener_positions:
+					for referent in object_positions:
+						LS.SetEvent(method=model, referent=referent, lpos=lpos)
+						for words in [2,3]:
+							PL = PragmaticListener.PragmaticListener(LS,words=words)
+							PS = PragmaticSpeaker_MW.PragmaticSpeaker(PL,referent, output_dict)
+							PS.RunEvent()
+			output_dict = PS.output_dict  # MW: has to be updated every time, so each new speaker gets updated with the existing output_dict, and new data is written to the existing output_dict
 
 
 output_dataframe = pd.DataFrame(data=output_dict)
