@@ -149,5 +149,7 @@ class PragmaticSpeaker:
 			self.output_dict["WordNo"].append(self.words)
 			self.output_dict["SpeakerTau"].append(round(self.stau, 2))
 			self.output_dict["ListenerTau"].append(round(self.PL.LS.ltau, 2))
+			self.output_dict["WeightObject"].append(round(self.stau, 2))
+			self.output_dict["WeightListener"].append(round(self.PL.LS.ltau, 2))
 		########################################################################################
 
