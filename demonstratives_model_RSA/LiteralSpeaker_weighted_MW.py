@@ -189,11 +189,16 @@ class LiteralSpeaker:
 		"""
 		# Speaker distance
 		Speaker_Distance=[np.abs(x-self.spos) for x in range(self.ObjectNo)]
+		print(str(Speaker_Distance))
 		# Listener distance: negative so that farther-away objects have lower utilities
 		Listener_Distance=[-np.abs(x-self.lpos) for x in range(self.ObjectNo)]
+		print(str(Listener_Distance))
 		Distance = [Speaker_Distance[x]+Listener_Distance[x] for x in range(len(Speaker_Distance))]
+		print(str(Distance))
+		Distance_Weighted = [(Speaker_Distance[x]*self.wobj) + (Listener_Distance[x]*self.wlist) for x in range(len(Speaker_Distance))]
+		print(str(Distance_Weighted))
 		# Now sample objects based on distance
-		Softmaxed = self.Softmax_Utilities(Distance)
+		Softmaxed = self.Softmax_Utilities(Distance_Weighted)
 
 		# sys.stdout.write("\n")
 		# sys.stdout.write("term is medial")
@@ -207,12 +212,16 @@ class LiteralSpeaker:
 		"""
 		# Speaker distance
 		Speaker_Distance=[np.abs(x-self.spos) for x in range(self.ObjectNo)]
+		print(str(Speaker_Distance))
 		# Listener distance
 		Listener_Distance=[np.abs(x-self.lpos) for x in range(self.ObjectNo)]
-		#print(str(Listener_Distance))
+		print(str(Listener_Distance))
 		Distance = [Speaker_Distance[x]+Listener_Distance[x] for x in range(len(Speaker_Distance))]
+		print(str(Distance))
+		Distance_Weighted = [(Speaker_Distance[x]*self.wobj) + (Listener_Distance[x]*self.wlist) for x in range(len(Speaker_Distance))]
+		print(str(Distance_Weighted))
 		# Now sample objects based on distance!
-		Softmaxed = self.Softmax_Utilities(Distance)
+		Softmaxed = self.Softmax_Utilities(Distance_Weighted)
 
 		# sys.stdout.write("\n")
 		# sys.stdout.write("term is distal")
