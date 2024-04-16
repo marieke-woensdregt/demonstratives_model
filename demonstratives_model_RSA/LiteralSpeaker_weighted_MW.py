@@ -187,16 +187,24 @@ class LiteralSpeaker:
 		"""
 		# Far from me and close to you
 		"""
+
+		# print(str(""))
+		# print(str("This is the Ese_person method:"))
+
 		# Speaker distance
 		Speaker_Distance=[np.abs(x-self.spos) for x in range(self.ObjectNo)]
-		print(str(Speaker_Distance))
+		# print(str("Speaker_Distance is:"))
+		# print(str(Speaker_Distance))
 		# Listener distance: negative so that farther-away objects have lower utilities
 		Listener_Distance=[-np.abs(x-self.lpos) for x in range(self.ObjectNo)]
-		print(str(Listener_Distance))
+		# print(str("Listener_Distance is:"))
+		# print(str(Listener_Distance))
 		Distance = [Speaker_Distance[x]+Listener_Distance[x] for x in range(len(Speaker_Distance))]
-		print(str(Distance))
+		# print(str("Distance is:"))
+		# print(str(Distance))
 		Distance_Weighted = [(Speaker_Distance[x]*self.wobj) + (Listener_Distance[x]*self.wlist) for x in range(len(Speaker_Distance))]
-		print(str(Distance_Weighted))
+		# print(str("Distance_Weighted is:"))
+		# print(str(Distance_Weighted))
 		# Now sample objects based on distance
 		Softmaxed = self.Softmax_Utilities(Distance_Weighted)
 
@@ -210,16 +218,24 @@ class LiteralSpeaker:
 		"""
 		# Far from both of us
 		"""
+
+		# print(str(""))
+		# print(str("This is the Aquel_person method:"))
+
 		# Speaker distance
 		Speaker_Distance=[np.abs(x-self.spos) for x in range(self.ObjectNo)]
-		print(str(Speaker_Distance))
+		# print(str("Speaker_Distance is:"))
+		# print(str(Speaker_Distance))
 		# Listener distance
 		Listener_Distance=[np.abs(x-self.lpos) for x in range(self.ObjectNo)]
-		print(str(Listener_Distance))
+		# print("str(Listener_Distance) is:")
+		# print(str(Listener_Distance))
 		Distance = [Speaker_Distance[x]+Listener_Distance[x] for x in range(len(Speaker_Distance))]
-		print(str(Distance))
+		# print("str(Distance) is:")
+		# print(str(Distance))
 		Distance_Weighted = [(Speaker_Distance[x]*self.wobj) + (Listener_Distance[x]*self.wlist) for x in range(len(Speaker_Distance))]
-		print(str(Distance_Weighted))
+		# print("str(Distance_Weighted) is:")
+		# print(str(Distance_Weighted))
 		# Now sample objects based on distance!
 		Softmaxed = self.Softmax_Utilities(Distance_Weighted)
 
