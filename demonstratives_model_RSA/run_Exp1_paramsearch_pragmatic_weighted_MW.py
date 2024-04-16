@@ -28,16 +28,16 @@ import pandas as pd
 # starting time:
 start = time.time()
 
-tau_start = 0.4
-tau_stop = 2.05
-tau_step = 0.05
+tau_start = 0.45  # 0.4
+tau_stop = 1.0  # 2.05
+tau_step = 0.15  # 0.05
 
-weight_obj_start = 0.0
+weight_obj_start = 0.25
 weight_obj_stop = 1.0
-weight_obj_step = 0.1
+weight_obj_step = 0.25
 
-listener_positions = [0,1,2,3,4]
-object_positions = [0,1,2,3,4]
+listener_positions = [0,1,2,3] # [0,1,2,3,4]
+object_positions = [0,1,2,3] # [0,1,2,3,4]
 
 models = ['distance', 'person']  # Can contain: 'distance','person','pdhybrid', 'distance_attention', 'person_attention'
 
@@ -85,15 +85,15 @@ for listener_rationality in np.arange(tau_start, tau_stop, tau_step):
 
 output_dataframe = pd.DataFrame(data=output_dict)
 pd.set_option('display.max_columns', None)
-# print('')
-# print('')
-# print(output_dataframe)
-# print('')
-# print(output_dataframe.columns)
+print('')
+print('')
+print(output_dataframe)
+print('')
+print(output_dataframe.columns)
 
 
-# output_file_path = '/Users/U968195/PycharmProjects/demonstratives_model/model_predictions/'
-output_file_path = 'model_predictions/'
+output_file_path = '/Users/U968195/PycharmProjects/demonstratives_model/model_predictions/'
+# output_file_path = 'model_predictions/'
 output_file_name = 'HigherSearchD_MW_RSA_n_positions_'+str(len(object_positions)) + str(models).replace(" ", "") + '_tau_start_' + str(tau_start) + '_tau_stop_' + str(tau_stop) + '_tau_step_' + str(tau_step) + '_wobj_start_' + str(weight_obj_start) + '_wobj_stop_' + str(weight_obj_stop) + '_wobj_step_' + str(weight_obj_step) +'.csv'
 output_dataframe.to_csv(output_file_path+output_file_name, index=False)
 
