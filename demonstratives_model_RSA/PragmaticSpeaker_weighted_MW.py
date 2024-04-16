@@ -6,7 +6,9 @@ class PragmaticSpeaker:
 	def __init__(self,PL, target, output_dict):
 		# LS is a pragmaticlistener object
 		self.PL=PL
-		self.stau = self.PL.LS.stau # extract speaker rationality
+		self.stau = self.PL.LS.stau  # extract speaker rationality
+		self.wobj = self.PL.LS.wobj  # extract speaker weight of object location parameter
+		self.wlist = self.PL.LS.wlist  # extract speaker weight of listener location parameter
 		self.words = self.PL.words
 		self.ObjectNo = self.PL.LS.ObjectNo
 		self.target = target
@@ -149,7 +151,7 @@ class PragmaticSpeaker:
 			self.output_dict["WordNo"].append(self.words)
 			self.output_dict["SpeakerTau"].append(round(self.stau, 2))
 			self.output_dict["ListenerTau"].append(round(self.PL.LS.ltau, 2))
-			self.output_dict["WeightObject"].append(round(self.stau, 2))
-			self.output_dict["WeightListener"].append(round(self.PL.LS.ltau, 2))
+			self.output_dict["WeightObject"].append(round(self.wobj, 2))
+			self.output_dict["WeightListener"].append(round(self.wlist, 2))
 		########################################################################################
 
